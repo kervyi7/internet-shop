@@ -5,3 +5,8 @@
 /.vs
 /Shop.Server/bin/Debug/net8.0
 /Shop.Server/obj
+/Shop.Web/.angular/cache/16.2.12
+/Shop.Web/obj
+/Shop.Web/shop-web/.vscode
+/Shop.Web/shop-web/node_modules
+/Shop.Web/shop-web/package-lock.json
