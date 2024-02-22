@@ -10,3 +10,11 @@
 /Shop.Web/shop-web/.vscode
 /Shop.Web/shop-web/node_modules
 /Shop.Web/shop-web/package-lock.json
+/Shop.Server/appsettings.Development.json
+/Shop.Web/bin/Debug/net8.0
+/Shop.Postgre.Migrations/obj
+/Shop.Postgre.Migrations/bin/Debug/net8.0
+/Shop.Database/obj
+/Shop.Common/bin/Debug/net8.0
+/Shop.Common/obj
+/Shop.Database/bin/Debug/net8.0
