@@ -1,0 +1,25 @@
+.def-button {
+	padding: 0 25px;
+	cursor: pointer;
+	outline: none;
+	color: white;
+	background: blue;
+	height: 32px;
+	border: none;
+	border-radius: 5px;
+	user-select: none;
+	width: 100%;
+	//font-size: var(--formField_fontSize);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&.def-disabled {
+		pointer-events: none;
+		background-color: grey;
+	}
+
+	&:hover {
+		background: red;
+	}
+}

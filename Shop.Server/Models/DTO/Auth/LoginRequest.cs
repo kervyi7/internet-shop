@@ -1,4 +1,4 @@
-﻿namespace Shop.Server.DTO.Auth
+﻿namespace Shop.Server.Models.DTO.Auth
 {
     public class LoginRequest
     {

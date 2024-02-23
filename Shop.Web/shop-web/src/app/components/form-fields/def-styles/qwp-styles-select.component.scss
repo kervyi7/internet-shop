@@ -1,0 +1,50 @@
+.qwp-input-wrapper {
+	position: relative;
+}
+
+.qwp-select-option-container {
+	position: absolute;
+	width: 100%;
+	border-radius: var(--formField_borderRadius);
+	outline: 2px solid var(--formField_borderColor);
+	background-color: var(--formField_backgroundColor);
+	z-index: 100;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		display: none;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 5px;
+		background-color: rgba(77, 184, 153, 0.5);
+		box-shadow: none;
+
+		&:hover {
+			background-color: #4DB899
+		}
+	}
+
+	&.qwp-select-top {
+		top: 42px;
+	}
+
+	&.qwp-select-bottom {
+		bottom: 42px;
+	}
+}
+
+.qwp-select-option:hover {
+	background-color: var(--formField_select_hoverColor);
+}
+
+.qwp-close-icon {
+	user-select: none;
+	cursor: pointer;
+	color: #e7505a;
+}

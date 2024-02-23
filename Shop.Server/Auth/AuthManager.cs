@@ -218,9 +218,7 @@ namespace Shop.Server.Auth
             return new TokenDto
             {
                 AccessToken = encodedJwt,
-                RefreshToken = refreshToken,
-                AccessExpires = new DateTimeOffset(jwt.ValidTo).ToUnixTimeMilliseconds(),
-                RefreshExpires = new DateTimeOffset(userRefreshToken.Expires).ToUnixTimeMilliseconds()
+                RefreshToken = refreshToken
             };
         }
     }

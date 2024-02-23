@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Server.Auth;
 using Shop.Server.Common;
 using Shop.Server.DTO.Auth;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO.Auth;
-using LoginRequest = Shop.Server.DTO.Auth.LoginRequest;
 
 namespace Shop.Server.Controllers
 {
     [ApiController]
-    [Route(AppConstants.ApiAuthRoute)]
+    [Route(AppConstants.ApiDefoultRoute)]
     public class AuthController : ControllerBase
     {
         private readonly AuthManager _authManager;

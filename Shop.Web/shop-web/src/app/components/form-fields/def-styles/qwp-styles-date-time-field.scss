@@ -1,0 +1,95 @@
+.qwp-input-wrapper {
+	position: relative;
+}
+
+p-calendar::ng-deep {
+	width: 100%;
+
+	.ui-calendar {
+		width: 100%;
+	}
+
+	.ui-inputtext:enabled:focus:not(.ui-state-error) {
+		border: none;
+		box-shadow: none;
+	}
+
+	input {
+		display: block;
+		height: var(--formField_height);
+		width: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		background-color: transparent;
+		border: none;
+		font-size: var(--formField_fontSize);
+		font-family: var(--formField_fontFamily);
+		padding: 0;
+		margin: var(--formField_input_margin);
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&::placeholder {
+		color: var(--formField_placeholderColor);
+		font-size: var(--formField_fontSize);
+	}
+}
+
+.icon {
+	user-select: none;
+	cursor: pointer;
+	color: var(--formField_iconColor);
+	position: absolute;
+	right: 1px
+}
+
+::ng-deep body .ui-datepicker table td>a.ui-state-active,
+::ng-deep body .ui-datepicker table td>span.ui-state-active {
+	background-color: var(--formField_borderColor);
+	padding: 0;
+}
+
+::ng-deep .ui-datepicker .ui-datepicker-prev span,
+::ng-deep .ui-datepicker .ui-datepicker-next span {
+	color: var(--formField_borderColor);
+}
+
+::ng-deep body .ui-datepicker:not(.ui-datepicker-inline) {
+	border: 1px solid var(--formField_borderColor);
+	padding: 0.5em 0 0 0;
+}
+
+::ng-deep .pi-chevron-up:before,
+::ng-deep .pi-chevron-down:before {
+	color: var(--formField_borderColor);
+}
+
+::ng-deep body .ui-datepicker table td {
+	padding: 0;
+}
+
+::ng-deep body .ui-datepicker .ui-timepicker {
+	padding: 0;
+}
+
+::ng-deep .ui-calendar .ui-datepicker {
+	min-width: 250px;
+}
+:host{//*
+	::ng-deep p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
+		border: none !important;
+	}
+}
+
+::ng-deep .qwp-calendar-top {
+	top: 36px !important;
+}
+
+::ng-deep .qwp-calendar-bottom {
+	top: auto !important;
+	bottom: 36px !important;
+}

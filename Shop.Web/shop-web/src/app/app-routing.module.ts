@@ -1,14 +1,15 @@
 import { NgModule, Type, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MainComponent } from './pages/main/main.component';
-import { LoginComponent } from './pages/login/login.component';
 import { AdminModule } from './pages/admin/admin.module';
 import { AdminGuard } from './guards/admin.guard';
+import { MainModule } from './pages/main/main.module';
+import { LoginModule } from 'src/app/pages/login/login.module';
 
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    loadChildren: (): Promise<Type<LoginModule>> =>
+    import('src/app/pages/login/login.module').then(m => m.LoginModule) 
   },
   {
     path: 'admin',
@@ -18,7 +19,8 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: MainComponent
+    loadChildren: (): Promise<Type<MainModule>> =>
+    import('src/app/pages/main/main.module').then(m => m.MainModule) 
   }
 ];
 

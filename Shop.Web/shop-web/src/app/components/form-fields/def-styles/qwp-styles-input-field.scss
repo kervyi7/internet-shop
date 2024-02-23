@@ -1,0 +1,68 @@
+.qwp-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: red;
+  height: 32px;
+  border-radius: 5px;
+  color: white;
+  outline: 2px;
+  border-bottom: 3px;
+}
+
+.qwp-input-wrapper:focus-within {
+  outline: 2px;
+  border-bottom: 3px;
+}
+
+input {
+  display: block;
+  height: 32px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: transparent;
+  border: none;
+  margin: 4px;
+  //font-size: var(--formField_fontSize);
+  line-height: 150%;
+  font-weight: 400;
+  //font-family: var(--formField_fontFamily);
+}
+
+input:disabled {
+  color: grey;
+}
+
+input:focus {
+  outline: none;
+}
+
+input::placeholder {
+  color: blue;
+  //font-size: var(--formField_fontSize);
+}
+
+.qwp-field-icon {
+  margin-left: 5px;
+}
+
+.qwp-icon {
+  user-select: none;
+  cursor: pointer;
+}
+
+.qwp-disabled {
+  .qwp-input-wrapper {
+    pointer-events: none;
+    //background-color: var(--form_disabled_color);
+    //color: var(--form_text_disabled_color);
+  }
+
+  .qwp-icon {
+    pointer-events: none;
+    background-color: transparent;
+    //color: var(--form_text_disabled_color);
+  }
+
+}
