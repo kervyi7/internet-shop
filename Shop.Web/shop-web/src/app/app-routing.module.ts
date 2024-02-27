@@ -13,6 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'admin',
+    runGuardsAndResolvers: 'always',
     canActivate: [() => inject(AdminGuard).canActivate()],
     loadChildren: (): Promise<Type<AdminModule>> =>
     import('src/app/pages/admin/admin.module').then(m => m.AdminModule) 

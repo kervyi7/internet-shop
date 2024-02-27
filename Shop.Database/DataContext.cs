@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Shop.Common.Settings;
 using Shop.Database.Identity;
+using Shop.Database.Models;
 
 namespace Shop.Database
 {
@@ -14,6 +15,8 @@ namespace Shop.Database
             : base(options) { }
 
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {
@@ -46,13 +49,17 @@ namespace Shop.Database
             RemoveCascadeDeleteConvention(modelBuilder);
             modelBuilder.HasDefaultSchema("public");
             modelBuilder.Entity<ApplicationUser>().ToTable("IdentityUser");
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<ApplicationUser>().OwnsOne(x => x.Properties,
                 builder =>
                 {
                     builder.ToTable("IdentityUser");
                     builder.ToJson();
                 });
+            modelBuilder.Entity<Category>()
+               .HasOne(x => x.Image)
+               .WithOne(x => x.Category)
+               .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void RemovePluralizingTableNameConvention(ModelBuilder modelBuilder)

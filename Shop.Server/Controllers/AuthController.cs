@@ -10,7 +10,7 @@ using Shop.Server.Models.DTO.Auth;
 namespace Shop.Server.Controllers
 {
     [ApiController]
-    [Route(AppConstants.ApiDefoultRoute)]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly AuthManager _authManager;

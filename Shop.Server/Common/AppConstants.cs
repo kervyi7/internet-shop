@@ -4,8 +4,6 @@
     {
         public const string ClientCorsPolicy = "CorsPolicy";
 
-        public const string ApiDefoultRoute = "api/[controller]";
-
         public const int BytesBufferSize = 65536;
     }
 }

@@ -5,6 +5,6 @@ import { Injectable } from "@angular/core";
 })
 export class AdminGuard {
   public canActivate(): boolean {
-    return false;
+    return true;
   }
 }

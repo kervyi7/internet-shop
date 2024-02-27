@@ -1,0 +1,9 @@
+<div *ngFor="let category of categories" class="categories-container" (click)="selectCategory(category)">
+  <div class="category-name">{{category.name}}</div>
+  <div class="category-control">
+    <span class="material-icons delete">
+      delete
+    </span>
+  </div>
+</div>
+<router-outlet></router-outlet>
