@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -17,6 +17,15 @@ namespace Shop.Database
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Property<string>> StringProperties { get; set; }
+        public DbSet<Property<int>> IntProperties { get; set; }
+        public DbSet<Property<bool>> BoolProperties { get; set; }
+        public DbSet<Property<DateTime>> DateProperties { get; set; }
+        public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<ProductBrand> ProductBrands { get; set; }
+
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {
@@ -57,9 +66,33 @@ namespace Shop.Database
                     builder.ToJson();
                 });
             modelBuilder.Entity<Category>()
-               .HasOne(x => x.Image)
-               .WithOne(x => x.Category)
-               .OnDelete(DeleteBehavior.Cascade);
+             .HasOne(x => x.Image)
+             .WithOne(x => x.Category)
+             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<bool>>()
+             .HasOne(x => x.Product)
+             .WithMany(x => x.BoolProperties)
+             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<int>>()
+             .HasOne(x => x.Product)
+             .WithMany(x => x.IntProperties)
+             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<string>>()
+             .HasOne(x => x.Product)
+             .WithMany(x => x.StringProperties)
+             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<DateTime>>()
+             .HasOne(x => x.Product)
+             .WithMany(x => x.DateProperties)
+             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ProductImage>()
+             .HasOne(x => x.Product)
+             .WithMany(x => x.ProductImages)
+             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ProductImage>()
+             .HasOne(x => x.Image)
+             .WithMany(x => x.ProductImages)
+             .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void RemovePluralizingTableNameConvention(ModelBuilder modelBuilder)

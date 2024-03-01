@@ -1,6 +1,4 @@
-﻿using Shop.Database.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Shop.Server.Models.DTO
 {
@@ -19,5 +17,8 @@ namespace Shop.Server.Models.DTO
 
         [Required]
         public string MimeType { get; set; }
+
+        [Required]
+        public int ReferenceKey { get; set; }
     }
 }

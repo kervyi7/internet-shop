@@ -18,6 +18,8 @@ namespace Shop.Database.Models
 
         public int FileSize { get; set; }
 
+        public bool IsTitle { get; set; }
+
         [Required]
         public string FileName { get; set; }
 
@@ -28,5 +30,8 @@ namespace Shop.Database.Models
 
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
+
+        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<ProductImage> ProductImages { get; } = new List<ProductImage>();
     }
 }

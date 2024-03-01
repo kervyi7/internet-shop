@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Database.Models;
+using Shop.Server.Controllers.Abstract;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System;
@@ -11,19 +12,17 @@ using System.Threading.Tasks;
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class AdminCategoryController : ControllerBase
+    public class AdminCategoryController : BaseEntityController<Category>
     {
-        private readonly DataContext _dataContext;
-        public AdminCategoryController(DataContext dataContext)
+
+        public AdminCategoryController(DataContext dataContext) : base(dataContext)
         {
-            _dataContext = dataContext;
         }
 
         [HttpGet()]
         public async Task<ActionResult<Category[]>> GetAll()
         {
-            var categories = await _dataContext.Categories
+            var categories = await DataContext.Categories
                 .Include(x => x.Image)
                 .Select(x => new Category
                 {
@@ -48,7 +47,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Category>> GetById(int id)
         {
-            var category = await _dataContext.Categories
+            var category = await DataContext.Categories
                 .Include(x => x.Image)
                 .Select(x => new Category
                 {
@@ -88,8 +87,8 @@ namespace Shop.Server.Controllers.Admin
                 CreatedByUser = user,
                 UpdatedByUser = user
             };
-            _dataContext.Categories.Add(item);
-            await _dataContext.SaveChangesAsync();
+            DataContext.Categories.Add(item);
+            await DataContext.SaveChangesAsync();
             return Ok();
         }
 
@@ -101,7 +100,7 @@ namespace Shop.Server.Controllers.Admin
             {
                 return BadRequest();
             }
-            var item = await _dataContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await DataContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new NotFoundException(nameof(Category), nameof(Category.Id), id);
@@ -111,7 +110,7 @@ namespace Shop.Server.Controllers.Admin
             item.Position = model.Position;
             item.UpdatedAt = DateTime.UtcNow;
             item.UpdatedByUser = user;
-            await _dataContext.SaveChangesAsync();
+            await DataContext.SaveChangesAsync();
             return Ok();
         }
 
@@ -123,26 +122,15 @@ namespace Shop.Server.Controllers.Admin
             {
                 return BadRequest();
             }
-            var item = await _dataContext.Categories.Include(x => x.Image).FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
+            var isExist = DataContext.Categories.Any(x => x.Id == id);
+            if (isExist)
             {
-                throw new NotFoundException(nameof(Category), nameof(Category.Id), id);
+                throw new ConflictException("reference model not found");
             }
-            item.Image = CreateImage(model, user);
-            await _dataContext.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var item = await _dataContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
-            {
-                throw new NotFoundException(nameof(Category), nameof(Category.Id), id);
-            }
-            _dataContext.Categories.Remove(item);
-            await _dataContext.SaveChangesAsync();
+            var image = CreateImage(model, user);
+            image.CategoryId = model.Id;
+            DataContext.Images.Add(image);
+            await DataContext.SaveChangesAsync();
             return Ok();
         }
 
