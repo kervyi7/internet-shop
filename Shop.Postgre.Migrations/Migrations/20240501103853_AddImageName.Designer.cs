@@ -12,8 +12,8 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240229153119_AddProduct")]
-    partial class AddProduct
+    [Migration("20240501103853_AddImageName")]
+    partial class AddImageName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,21 +25,6 @@ namespace Shop.Postgre.Migrations.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ImageProduct", b =>
-                {
-                    b.Property<int>("ImagesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ImagesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ImageProduct (Dictionary<string, object>)", "public");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -317,18 +302,24 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int?>("Position")
                         .HasColumnType("integer");
@@ -338,11 +329,15 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("ImageId")
                         .IsUnique();
 
                     b.HasIndex("Name")
@@ -363,19 +358,18 @@ namespace Shop.Postgre.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<int>("FileSize")
                         .HasColumnType("integer");
@@ -385,7 +379,13 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("MimeType")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<byte[]>("SmallBody")
                         .HasColumnType("bytea");
@@ -395,12 +395,10 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId")
-                        .IsUnique();
 
                     b.ToTable("Image", "public");
                 });
@@ -416,16 +414,21 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Currency")
                         .HasColumnType("text");
@@ -435,7 +438,8 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
@@ -448,11 +452,14 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("Code")
                         .IsUnique();
@@ -475,25 +482,29 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
@@ -540,25 +551,29 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
@@ -581,17 +596,20 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
@@ -601,33 +619,36 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<DateTime>("Value")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("Code", "ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("Name", "ProductId")
+                        .IsUnique();
 
                     b.ToTable("Property<DateTime>", "public");
                 });
@@ -642,17 +663,20 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
@@ -662,33 +686,36 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<bool>("Value")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("Code", "ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("Name", "ProductId")
+                        .IsUnique();
 
                     b.ToTable("Property<bool>", "public");
                 });
@@ -703,17 +730,20 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
@@ -723,33 +753,36 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<int>("Value")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("Code", "ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("Name", "ProductId")
+                        .IsUnique();
 
                     b.ToTable("Property<int>", "public");
                 });
@@ -764,17 +797,20 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
@@ -784,50 +820,38 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedByUser")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("Code", "ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("Name", "ProductId")
+                        .IsUnique();
+
                     b.ToTable("Property<string>", "public");
-                });
-
-            modelBuilder.Entity("ImageProduct", b =>
-                {
-                    b.HasOne("Shop.Database.Models.Image", null)
-                        .WithMany()
-                        .HasForeignKey("ImagesId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Shop.Database.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -915,15 +939,15 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Shop.Database.Models.Image", b =>
+            modelBuilder.Entity("Shop.Database.Models.Category", b =>
                 {
-                    b.HasOne("Shop.Database.Models.Category", "Category")
-                        .WithOne("Image")
-                        .HasForeignKey("Shop.Database.Models.Image", "CategoryId")
+                    b.HasOne("Shop.Database.Models.Image", "Image")
+                        .WithOne("Category")
+                        .HasForeignKey("Shop.Database.Models.Category", "ImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Product", b =>
@@ -934,6 +958,12 @@ namespace Shop.Postgre.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Shop.Database.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Shop.Database.Models.ProductType", "Type")
                         .WithMany("Products")
                         .HasForeignKey("TypeId")
@@ -941,6 +971,8 @@ namespace Shop.Postgre.Migrations.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Type");
                 });
@@ -1015,11 +1047,13 @@ namespace Shop.Postgre.Migrations.Migrations
 
             modelBuilder.Entity("Shop.Database.Models.Category", b =>
                 {
-                    b.Navigation("Image");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Image", b =>
                 {
+                    b.Navigation("Category");
+
                     b.Navigation("ProductImages");
                 });
 

@@ -1,0 +1,41 @@
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.editor-images {
+  display: flex;
+  justify-content: space-between;
+  height: 500px;
+}
+
+.editor-tools {
+  display: flex;
+  width: 15%;
+  min-width: 200px;
+  justify-content: space-between;
+}
+
+image-cropper {
+  max-height: 500px;
+  max-width: 500px;
+}
+
+.cropper {
+  max-height: 700px;
+  position: relative;
+}
+
+.img-large-preview {
+  width: 400px;
+  height: 400px;
+}
+
+.img-small-preview {
+  width: 200px;
+  height: 200px;
+}
+
+.rotate {
+  transform: rotate(90deg);
+}

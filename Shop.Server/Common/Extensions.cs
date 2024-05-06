@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using Shop.Common;
+using Shop.Database.Models;
+using Shop.Server.Models.DTO;
 
 namespace Shop.Server.Common
 {
@@ -56,53 +61,90 @@ namespace Shop.Server.Common
             }
         }
 
-        //public static UserViewModel ToViewModel(this ApplicationUser source, bool withAvatar = false)
-        //{
-        //    var model = source.ToViewModelWithoutPage(withAvatar);
-        //    return model;
-        //}
+        public static IEnumerable<ProductDto> ToViewModels(this IEnumerable<Product> sources)
+        {
+            return sources.Select(ToViewModel);
+        }
 
-        //public static UserViewModel ToViewModelWithoutPage(this ApplicationUser source, bool withAvatar = false)
-        //{
-        //    return new UserViewModel
-        //    {
-        //        UserId = source.Id,
-        //        FirstName = source.FirstName,
-        //        LastName = source.LastName,
-        //        Patronymic = source.Patronymic,
-        //        Login = source.UserName,
-        //        Email = source.Email,
-        //        PhoneNumber = source.PhoneNumber,
-        //        Address = source.Address,
-        //        Avatar = withAvatar ? source.Avatar : null,
-        //        UseEDS = source.UseEDS,
-        //        INN = source.INN,
-        //        Active = source.Active,
-        //        RequireConfirmEmail = !source.Confirmed,
-        //        DashboardPageCode = source.DashboardPageCode,
-        //        Properties = source.Properties?.ToViewModel()
-        //    };
-        //}
+        public static ProductDto ToViewModel(this Product source)
+        {
+            var productDto = new ProductDto()
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+                Type = CreateCodeNameDto(source.Type),
+                Brand = CreateCodeNameDto(source.Brand),
+                Category = CreateCodeNameDto(source.Category),
+                Price = source.Price,
+                Currency = source.Currency,
+                StringProperties = CreatePropertiesDto(source.StringProperties),
+                IntProperties = CreatePropertiesDto(source.IntProperties),
+                BoolProperties = CreatePropertiesDto(source.BoolProperties),
+                DateProperties = CreatePropertiesDto(source.DateProperties),
+                Images = ToViewModels(source.ProductImages.Select(x => x.Image))
+            };
+            return productDto;
+        }
 
-        //public static UserPropertiesViewModel ToViewModel(this UserProperties source)
-        //{
-        //    return new UserPropertiesViewModel
-        //    {
-        //       NotificationMute = source.NotificationMute,
-        //       NotificationVolume = source.NotificationVolume,
-        //       TwoFactorAuthType = source.TwoFactorAuthType
-        //    };
-        //}
+        public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<Image> sources)
+        {
+            return sources.Select(ToViewModel);
+        }
 
-        //public static UserProperties ToModel(this UserPropertiesViewModel source)
-        //{
-        //    return new UserProperties
-        //    {
-        //        NotificationMute = source.NotificationMute,
-        //        NotificationVolume = source.NotificationVolume,
-        //        TwoFactorAuthType = source.TwoFactorAuthType
-        //    };
-        //}
+        private static ImageDto ToViewModel(Image source)
+        {
+            var imageDto = new ImageDto
+            {
+                Id = source.Id,
+                Body = Convert.ToBase64String(source.Body),
+                SmallBody = Convert.ToBase64String(source.SmallBody),
+                Name = source.Name,
+                FileName = source.FileName,
+                FileSize = source.FileSize,
+                MimeType = source.MimeType,
+                IsBinding = source.ProductImages.Any() || source.Category != null
+            };
+            return imageDto;
+        }
+
+        private static CodeNameDto CreateCodeNameDto(BaseCodeName source)
+        {
+            var codeNameDto = new CodeNameDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+            };
+            return codeNameDto;
+        }
+
+        private static IEnumerable<PropertyDto<T>> CreatePropertiesDto<T>(IEnumerable<Property<T>> sources)
+        {
+            var propertiesDto = new List<PropertyDto<T>>();
+            foreach (var property in sources)
+            {
+                propertiesDto.Add(CreatePropertyDto(property));
+            }
+            return propertiesDto;
+        }
+
+        private static PropertyDto<T> CreatePropertyDto<T>(Property<T> source)
+        {
+            var propertyDto = new PropertyDto<T>
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+                IsPrimary = source.IsPrimary,
+                IsTitle = source.IsTitle,
+                Description = source.Description,
+                Suffix = source.Suffix,
+                Value = source.Value,
+                ProductId = source.ProductId,
+            };
+            return propertyDto;
+        }
 
         public static byte[] ToBytes(this Stream input)
         {

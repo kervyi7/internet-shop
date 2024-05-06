@@ -52,7 +52,10 @@ namespace Shop.Server.Controllers.Abstract
             };
             DataContext.Set<T>().Add(item);
             await DataContext.SaveChangesAsync();
-            return Ok();
+            return Ok(new BaseDto
+            {
+                Id = item.Id
+            });
         }
 
         [HttpPut("{id:int}")]

@@ -1,0 +1,161 @@
+<div class="header-container">
+  <p-button [text]="true" (onClick)="goToPreviousPage()">
+    <span class="material-icons-reg">arrow_back</span>
+  </p-button>
+  <div *ngIf="product" class="admin-section-title">Product: {{product.name}}</div>
+</div>
+
+<p-toast></p-toast>
+
+<p class="admin-section-header">Default values</p>
+<div class="inputs-wrapper">
+  <div class="input-container">
+    <input class="input" type="text" pInputText placeholder="Name" [(ngModel)]="editedProduct.name" />
+    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.name)">
+      <p-button [text]="true" (onClick)="editedProduct.name = null">
+        <span class="material-icons-reg">close</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <input class="input" type="text" pInputText placeholder="Code" [(ngModel)]="editedProduct.code" />
+    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.code)">
+      <p-button [text]="true" (onClick)="editedProduct.code = null">
+        <span class="material-icons-reg">close</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <input class="input" type="text" pInputText placeholder="Price" [(ngModel)]="editedProduct.price" />
+    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.price)">
+      <p-button [text]="true" (onClick)="editedProduct.price = null">
+        <span class="material-icons-reg">close</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <input class="input" type="text" pInputText placeholder="Currency" [(ngModel)]="editedProduct.currency" />
+    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.currency)">
+      <p-button [text]="true" (onClick)="editedProduct.currency = null">
+        <span class="material-icons-reg">close</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="true" filterBy="name"
+      optionLabel="name" [showClear]="true" placeholder="Category" (onClick)="getCategories()"
+      [style]="{'width':'100%'}"></p-dropdown>
+  </div>
+  <div class="input-container">
+    <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="true" filterBy="name"
+      optionLabel="name" [showClear]="true" placeholder="Type" (onClick)="getTypes()"
+      [style]="{'width':'100%'}"></p-dropdown>
+    <div class="button-container">
+      <p-button [text]="true" (onClick)="editTypes()">
+        <span class="material-icons-reg">edit</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="true" filterBy="name"
+      optionLabel="name" [showClear]="true" placeholder="Brand" (onClick)="getBrands()"
+      [style]="{'width':'100%'}"></p-dropdown>
+    <div class="button-container">
+      <p-button [text]="true" (onClick)="editBrands()">
+        <span class="material-icons-reg">edit</span>
+      </p-button>
+    </div>
+  </div>
+</div>
+<p-button (onClick)="saveProduct()">
+  <span class="material-icons-reg">done</span><span>Save</span>
+</p-button>
+<div *ngIf="id">
+  <p class="admin-section-header">Photo</p>
+  <div class="uploaded-images-container">
+    <div *ngFor="let image of images">
+      <div class="image-container">
+        <img [src]="image | toBase64" class="image">
+        <span class="material-icons-reg delete-image" (click)="deleteImage(image)">close</span>
+      </div>
+    </div>
+    <div *ngIf="images.length < 6" class="pic" (click)="editImages()">
+      <span class="material-icons-reg">add</span>
+    </div>
+  </div>
+  <p class="admin-section-header">Additional values</p>
+  <p-button [text]="true" (onClick)="addProperty()">
+    <span class="material-icons-reg">add</span><span>Add property</span>
+  </p-button>
+  <div class="property-section" *ngIf="product">
+    <div *ngFor="let property of product.stringProperties" class="property-container">
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
+      </div>
+      <p-button [text]="true" (onClick)="editProperty(property)">
+        <span class="material-icons-reg">edit</span>
+      </p-button>
+      <p-button [text]="true" (onClick)="deleteProperty(property)">
+        <span class="material-icons-outline">delete</span>
+      </p-button>
+    </div>
+    <div *ngFor="let property of product.intProperties" class="property-container">
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
+      </div>
+      <p-button [text]="true" (onClick)="editProperty(property)">
+        <span class="material-icons-reg">edit</span>
+      </p-button>
+      <p-button [text]="true" (onClick)="deleteProperty(property)">
+        <span class="material-icons-outline">delete</span>
+      </p-button>
+    </div>
+    <div *ngFor="let property of product.boolProperties" class="property-container">
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <p-checkbox [(ngModel)]="property.value" [binary]="true" inputId="propertyBoolValue"
+          [disabled]="true"></p-checkbox>
+      </div>
+      <p-button [text]="true" (onClick)="editProperty(property)">
+        <span class="material-icons-reg">edit</span>
+      </p-button>
+      <p-button [text]="true" (onClick)="deleteProperty(property)">
+        <span class="material-icons-outline">delete</span>
+      </p-button>
+    </div>
+    <div *ngFor="let property of product.dateProperties" class="property-container">
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+      </div>
+      <div class="property-item">
+        <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
+      </div>
+      <p-button [text]="true" (onClick)="editProperty(property)">
+        <span class="material-icons-reg">edit</span>
+      </p-button>
+      <p-button [text]="true" (onClick)="deleteProperty(property)">
+        <span class="material-icons-outline">delete</span>
+      </p-button>
+    </div>
+  </div>
+</div>

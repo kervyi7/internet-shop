@@ -2,11 +2,17 @@
   <div class="admin-menu">
     <div class="menu-header">Products</div>
     <div class="menu-list">
-      <div class="menu-list-item">
-        <span>Category management</span>
+      <div class="menu-list-item" (click)="openCategories()">
+        <span class="material-icons-outline menu-list-item-icon">category</span>
+        <span class="menu-list-item-name">Category management</span>
       </div>
-      <div class="menu-list-item">
-        <span>Product management</span>
+      <div class="menu-list-item" (click)="openProducts()">
+        <span class="material-icons-outline menu-list-item-icon">shopping_cart</span>
+        <span class="menu-list-item-name">Product management</span>
+      </div>
+      <div class="menu-list-item" (click)="openProducts()">
+        <span class="material-icons-outline menu-list-item-icon">dataset</span>
+        <span class="menu-list-item-name">Template management</span>
       </div>
     </div>
   </div>

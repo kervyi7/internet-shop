@@ -1,4 +1,4 @@
-export const enum ButtonTypes {
+export enum ButtonTypes {
 	submit = 'submit',
 	button = 'button'
 }

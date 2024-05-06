@@ -1,5 +1,5 @@
 <form (ngSubmit)="submit()" [formGroup]="userForm" novalidate>
-  <shop-def-input [formGroup]="userForm" fieldCode="userName"></shop-def-input>
-  <shop-def-input [formGroup]="userForm" fieldCode="password" type="password"></shop-def-input>
+  <shop-def-input [group]="userForm" fieldCode="userName"></shop-def-input>
+  <shop-def-input [group]="userForm" fieldCode="password" type="password"></shop-def-input>
   <shop-def-button [isDisabled]="!userForm.valid" type="submit">button</shop-def-button>
 </form>

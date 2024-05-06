@@ -1,16 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shop.Database.Models
 {
     public class Image : BaseCreateUpdate
     {
-        public Image()
-        {
-        }
-
         [Required]
         public byte[] Body { get; set; }
 
@@ -21,17 +15,19 @@ namespace Shop.Database.Models
         public bool IsTitle { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string FileName { get; set; }
 
         [Required]
+        [MaxLength(250)]
+        public string Name { get; set; }
+
+        [Required]
+        [MaxLength(30)]
         public string MimeType { get; set; }
 
-        public int CategoryId { get; set; }
-
-        [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
 
-        public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<ProductImage> ProductImages { get; } = new List<ProductImage>();
     }
 }

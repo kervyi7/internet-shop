@@ -5,7 +5,7 @@
 }
 
 .admin-menu {
-  background-color: #c4dbdd;
+  background-color: #88C2CE;
   width: 300px;
   flex-shrink: 0;
   padding: 30px 20px;
@@ -13,19 +13,44 @@
 
 .admin-content {
   width: 100%;
-  background-color: #eee;
+  background-color: #F4F9FC;
   padding: 40px;
+  overflow-y: auto;
+}
+
+.menu-header {
+  font-size: 24px;
+  color: #10100F;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .menu-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 .menu-list-item {
   width: 100%;
-  height: 70px;
-  background-color: #fff;
+  height: 50px;
+  background-color: #F4F9FC;
   border-radius: 3px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 25px;
+  box-shadow: 0px 0px 5px 0.1px #fff;
+  transition-duration: 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 0px 7px 1px #fff;
+  }
+}
+
+.menu-list-item-name {}
+
+.menu-list-item-icon {
+  width: 20%;
 }

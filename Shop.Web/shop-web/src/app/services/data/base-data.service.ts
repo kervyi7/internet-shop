@@ -19,11 +19,15 @@ export abstract class BaseDataService {
     this._apiUrl = this.appConfigService.apiUrl;
   }
 
-  public getUrl(endpoint: string): string {
-    return `${this.apiUrl}/${endpoint}`;
+  public getUrl(...endpoints: string[]): string {
+    let url = `${this.apiUrl}/${this.baseUrl}`
+    for (const endpoint of endpoints) {
+      url += `/${endpoint}`
+    }
+    return url;
   }
 
-  public getUrlById(endpoint: string, id: number | string): string {
-    return `${this.apiUrl}/${endpoint}/${id}`;
+  public getUrlById(id: number | string): string {
+    return `${this.apiUrl}/${this.baseUrl}/${id}`;
   }
 }

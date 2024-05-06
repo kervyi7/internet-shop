@@ -1,0 +1,21 @@
+.def-field-wrapper {
+	padding-left: 5px;
+	padding-right: 5px;
+
+	&div[hidden] {
+		display: none;
+	}
+
+	.def-label {
+		font-weight: 500;
+		line-height: 150%;
+	}
+
+	&.def-disabled {
+		.def-label {
+			span {
+				display: none;
+			}
+		}
+	}
+}

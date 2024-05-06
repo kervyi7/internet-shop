@@ -1,0 +1,1 @@
+declare type propertyValue = string | number | boolean | Date;

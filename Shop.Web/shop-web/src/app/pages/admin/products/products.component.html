@@ -1,0 +1,10 @@
+<p-button (click)="create()">New product</p-button>
+<div *ngFor="let product of products" class="products-container" (click)="edit(product)">
+  <div class="product-name">{{product.name}}</div>
+  <div class="product-control">
+    <span class="material-icons-reg delete" (click)="delete($event, product)">
+      delete
+    </span>
+  </div>
+</div>
+<router-outlet></router-outlet>

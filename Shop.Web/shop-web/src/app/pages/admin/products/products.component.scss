@@ -1,0 +1,31 @@
+.products-container {
+  display: flex;
+  width: 100%;
+  background-color: #fff;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0.1px #989898;
+  transition-duration: .2s;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 7px 1px #666666;
+  }
+
+  .product-name {
+    width: 80%;
+  }
+
+  .product-control {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .delete {
+    color: #d25a5a;
+  }
+}

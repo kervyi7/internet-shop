@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'shop-admin',
@@ -7,4 +8,15 @@ import { Component } from '@angular/core';
 })
 export class AdminComponent {
 
+  constructor(
+    private _router: Router) {
+  }
+
+  public openCategories() {
+    this._router.navigate(['/admin/categories']);
+  }
+
+  public openProducts() {
+    this._router.navigate(['/admin/products']);
+  }
 }

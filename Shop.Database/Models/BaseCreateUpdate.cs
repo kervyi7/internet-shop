@@ -10,9 +10,11 @@ namespace Shop.Database.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
+        [MaxLength(50)]
         public string CreatedByUser { get; set; }
 
         [Required]
+        [MaxLength(600)]
         public string UpdatedByUser { get; set; }
     }
 }

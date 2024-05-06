@@ -4,19 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
 import { ICategory } from "../../models/interfaces/category";
+import { IImage } from "../../models/interfaces/image";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminCategoryDataService extends BaseDataService {
-  public baseUrl = 'category';
-  public readonly categories: ICategory[] = [
-    { id: 1, code: 'telephones', name: 'Telephones', avatar: '' },
-    { id: 2, code: 'computers', name: 'Computers', avatar: '' },
-    { id: 3, code: 'sport', name: 'Sport', avatar: '' },
-    { id: 4, code: 'music', name: 'Music', avatar: '' },
-    { id: 5, code: '1346', name: 'Zoo', avatar: '' }
-  ];
+  public baseUrl = 'adminCategory';
 
   constructor(public readonly http: HttpClient,
     appConfigService: AppConfigService) {
@@ -24,24 +18,26 @@ export class AdminCategoryDataService extends BaseDataService {
   }
 
   public getAll(): Observable<ICategory[]> {
-    const obs = new Observable<ICategory[]>((sub) => {
-      sub.next(this.categories);
-      sub.complete();
-    });
-    return obs;
+    return this.http.get<ICategory[]>(this.getUrl(), this.defaultHttpOptions);
   }
 
   public getById(id: number): Observable<ICategory> {
-    const obs = new Observable<ICategory>((sub) => {
-      const item = this.categories.find(x => x.id === id);
-      if (!item) {
-        sub.error('not found');
-        sub.complete();
-      } else {
-        sub.next(item);
-        sub.complete()
-      }
-    });
-    return obs;
+    return this.http.get<ICategory>(this.getUrlById(id), this.defaultHttpOptions);
+  }
+
+  public create(category: ICategory): Observable<void> {
+    return this.http.post<void>(this.getUrl(), category, this.defaultHttpOptions);
+  }
+
+  public editCategory(id: number, category: ICategory): Observable<ICategory> {
+    return this.http.put<ICategory>(this.getUrlById(id), category, this.defaultHttpOptions);
+  }
+
+  public editImage(image: IImage): Observable<IImage> {
+    return this.http.post<IImage>(this.getUrl("edit-image"), image, this.defaultHttpOptions);
+  }
+
+  public delete(id: number): Observable<void> {
+    return this.http.delete<void>(this.getUrlById(id), this.defaultHttpOptions);
   }
 }

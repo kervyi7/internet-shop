@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Shop.Database.Models
 {
-    [Index(nameof(Name), IsUnique = true)]
-    [Index(nameof(Code), IsUnique = true)]
     public abstract class BaseCodeName : BaseCreateUpdate
     {
         [Required]
+        [MaxLength(200)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(200)]
         public string Code { get; set; }
     }
 }

@@ -45,31 +45,30 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Category>> GetById(int id)
+        public async Task<ActionResult<CategoryDto>> GetById(int id)
         {
             var category = await DataContext.Categories
                 .Include(x => x.Image)
-                .Select(x => new Category
+                .Select(x => new CategoryDto
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Code = x.Code,
                     Position = x.Position,
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt,
-                    CreatedByUser = x.CreatedByUser,
-                    UpdatedByUser = x.UpdatedByUser,
-                    Image = new Image
+                    Image = new ImageDto
                     {
+                        Id = x.Image.Id,
                         FileName = x.Image.FileName,
                         MimeType = x.Image.MimeType,
-                        Body = x.Image.Body
+                        Body = Convert.ToBase64String(x.Image.Body),
+                        SmallBody = Convert.ToBase64String(x.Image.SmallBody),
+                        ReferenceKey = x.Id
                     }
                 })
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (category == null)
             {
-                throw new NotFoundException(nameof(Category), nameof(Category.Id), id);
+                throw new NotFoundException(nameof(CategoryDto), nameof(CategoryDto.Id), id);
             }
             return Ok(category);
         }
@@ -78,9 +77,10 @@ namespace Shop.Server.Controllers.Admin
         public async Task<ActionResult> Create(CategoryDto model)
         {
             var user = "my user";
+            var image = await DataContext.Images.FirstOrDefaultAsync(x => x.Id == model.Image.Id);
             var item = new Category
             {
-                Image = CreateImage(model, user),
+                Image = image,
                 Position = model.Position,
                 Name = model.Name,
                 Code = model.Code,
@@ -105,6 +105,8 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new NotFoundException(nameof(Category), nameof(Category.Id), id);
             }
+            var image = await DataContext.Images.FirstOrDefaultAsync(x => x.Id == model.Image.Id);
+            item.Image = image;
             item.Name = model.Name;
             item.Code = model.Code;
             item.Position = model.Position;
@@ -112,40 +114,6 @@ namespace Shop.Server.Controllers.Admin
             item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
             return Ok();
-        }
-
-        [HttpPatch("{id:int}")]
-        public async Task<ActionResult> EditImage(int id, CategoryDto model)
-        {
-            var user = "my user";
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
-            var isExist = DataContext.Categories.Any(x => x.Id == id);
-            if (isExist)
-            {
-                throw new ConflictException("reference model not found");
-            }
-            var image = CreateImage(model, user);
-            image.CategoryId = model.Id;
-            DataContext.Images.Add(image);
-            await DataContext.SaveChangesAsync();
-            return Ok();
-        }
-
-        private Image CreateImage(CategoryDto model, string user)
-        {
-            return new Image
-            {
-                FileName = model.Image.FileName,
-                FileSize = model.Image.FileSize,
-                MimeType = model.Image.MimeType,
-                Body = Convert.FromBase64String(model.Image.Body),
-                SmallBody = string.IsNullOrEmpty(model.Image.SmallBody) ? null : Convert.FromBase64String(model.Image.SmallBody),
-                CreatedByUser = user,
-                UpdatedByUser = user
-            };
         }
     }
 }

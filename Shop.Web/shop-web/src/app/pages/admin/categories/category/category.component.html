@@ -1,1 +1,19 @@
-<div *ngIf="category">{{category.name}},{{category.code}}</div>
+<p-button [text]="true" (click)="goToPreviousPage()"><span class="material-icons-reg">arrow_back</span></p-button>
+<p *ngIf="category" class="admin-section-title">{{category.name}} {{category.code}}</p>
+
+<p class="admin-section-header">Photo</p>
+<div *ngIf="!image" class="pic" (click)="showImageStorage()">
+  <span class="material-icons-reg">add</span>
+</div>
+<div *ngIf="image" class="uploaded-images-container">
+  <div class="image-container">
+    <img [src]="image| toBase64" class="image">
+    <span class="material-icons-reg delete-image" (click)="showImageStorage()">edit</span>
+  </div>
+</div>
+<p class="admin-section-header">Category Information</p>
+<div class="inputs-wrapper">
+  <input class="input" type="text" pInputText placeholder="Category name" [(ngModel)]="categoryName" />
+  <input class="input" type="text" pInputText placeholder="Category code" [(ngModel)]="categoryCode" />
+  <p-button (onClick)="submit()">Save</p-button>
+</div>

@@ -1,12 +1,14 @@
-<div class="def-field-wrapper" [formGroup]="formGroup" [class.def-disabled]="isDisabled()">
+<div class="def-field-wrapper" [formGroup]="group" [class.def-disabled]="isDisabled()">
   <label class="def-label">{{label}}
     <span *ngIf="isRequired()">*</span>
   </label>
   <div class="def-input-wrapper" [class.def-invalid]="isInvalid()">
     <span class="material-icons def-field-icon def-icon" *ngIf="icon">
       {{ icon }} </span>
-    <input [formControlName]="fieldCode" [type]="thisType" [placeholder]="placeholder" [autocomplete]="autocomplete">
+    <input class="def-input" [formControlName]="fieldCode" [type]="thisType" [placeholder]="placeholder"
+      [autocomplete]="autocomplete" [value]="value">
     <span class="material-icons def-field-icon def-icon" *ngIf="isNeedShowPassword" (mousedown)="setVisible(true)"
       (mouseup)="setVisible(false)">{{visible ? 'visibility' : 'visibility_off'}}</span>
+    <span class="def-focus-bg"></span>
   </div>
 </div>

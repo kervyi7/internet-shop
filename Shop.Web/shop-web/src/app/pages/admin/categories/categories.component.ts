@@ -21,7 +21,11 @@ export class CategoriesComponent extends BaseCompleteComponent implements OnInit
     super();
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
+    this.get();
+  }
+
+  public get() {
     this._adminCategoryDataService.getAll().pipe(
       takeUntil(this.__unsubscribe$)).subscribe((data: ICategory[]) => {
         this.categories = data;
@@ -29,7 +33,18 @@ export class CategoriesComponent extends BaseCompleteComponent implements OnInit
       });
   }
 
-  public selectCategory(category: ICategory): void {
+  public select(category: ICategory): void {
     this._router.navigate(['admin/categories/edit', category.id]);
+  }
+
+  public create(): void {
+    this._router.navigate(['admin/categories/create']);
+  }
+
+  public delete(e: Event, category: ICategory) {
+    e.stopPropagation();
+    this._adminCategoryDataService.delete(category.id).subscribe(()=> {
+      this.get();
+    });
   }
 }

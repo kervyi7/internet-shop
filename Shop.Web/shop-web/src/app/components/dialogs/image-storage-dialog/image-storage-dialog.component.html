@@ -1,0 +1,15 @@
+<div class="tools-container">
+  <input class="input" type="text" pInputText placeholder="Search image" [(ngModel)]="searchText" />
+  <shop-image-uploader (onSave)="saveImage($event)" (onFileChanged)="fileChanged($event)"></shop-image-uploader>
+</div>
+<div class="images-container">
+  <div *ngFor="let image of images" class="image-block">
+    <img [src]="image | toBase64" class="image">
+    <span class="image-name">{{image.name}}</span>
+    <div class="image-overflow">
+      <span class="material-icons-outline tool" (click)="deleteImage(image)">delete</span>
+      <span class="material-icons-outline tool" (click)="editImage(image)">edit</span>
+      <span class="material-icons-outline tool" (click)="selectImage(image)">check_circle</span>
+    </div>
+  </div>
+</div>

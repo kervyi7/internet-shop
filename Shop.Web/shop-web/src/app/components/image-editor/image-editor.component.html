@@ -1,0 +1,23 @@
+<div class="editor-images">
+  <div class="cropper">
+    <image-cropper [imageFile]="imageFile" [maintainAspectRatio]="true" [aspectRatio]="1" format="jpeg"
+      [cropperMinWidth]="128" [resizeToWidth]="800" [resizeToHeight]="800" (imageCropped)="imageCropped($event)"
+      (imageLoaded)="imageLoaded()" (loadImageFailed)="loadImageFailed()" [canvasRotation]="canvasRotation"
+      [(transform)]="transform"></image-cropper>
+  </div>
+  <img class="img-large-preview" [src]="croppedImage" />
+  <img class="img-small-preview" [src]="resizedImage" />
+</div>
+<div class="editor-tools">
+  <p-button [text]="true" (click)="rotateLeft()">
+    <span class="material-icons-outline">rotate_left</span></p-button>
+  <p-button [text]="true" (click)="rotateRight()">
+    <span class="material-icons-outline">rotate_right</span></p-button>
+  <p-button [text]="true" (click)="flipHorizontal()">
+    <span class="material-icons-outline">flip</span></p-button>
+  <p-button [text]="true" (click)="flipVertical()">
+    <span class="material-icons-outline rotate">flip</span></p-button>
+</div>
+<input class="input" type="text" pInputText placeholder="Image Name"
+  pTooltip="This name will be used when searching for an image in the Image Storage." [(ngModel)]="imageName" />
+<p-button (click)="save()">Save</p-button>

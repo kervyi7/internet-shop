@@ -1,0 +1,33 @@
+.select-type-container {
+  display: flex;
+  justify-content: space-between;
+  width: 550px;
+  height: 30px;
+  align-items: center;
+}
+
+.inputs-container {
+  display: flex;
+  justify-content: space-between;
+  width: 800px;
+  margin-top: 36px;
+  align-items: center;  
+}
+
+.save-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.label {
+  margin-left: 12px;
+}
+
+.checkbox-container {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  justify-content: space-between;
+}

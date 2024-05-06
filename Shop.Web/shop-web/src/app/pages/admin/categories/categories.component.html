@@ -1,7 +1,8 @@
-<div *ngFor="let category of categories" class="categories-container" (click)="selectCategory(category)">
+<p-button (click)="create()">New category</p-button>
+<div *ngFor="let category of categories" class="categories-container" (click)="select(category)">
   <div class="category-name">{{category.name}}</div>
   <div class="category-control">
-    <span class="material-icons delete">
+    <span class="material-icons-reg delete" (click)="delete($event, category)">
       delete
     </span>
   </div>

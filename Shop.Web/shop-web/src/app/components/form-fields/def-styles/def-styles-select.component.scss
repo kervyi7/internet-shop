@@ -1,8 +1,8 @@
-.qwp-input-wrapper {
+.def-input-wrapper {
 	position: relative;
 }
 
-.qwp-select-option-container {
+.def-select-option-container {
 	position: absolute;
 	width: 100%;
 	border-radius: var(--formField_borderRadius);
@@ -30,20 +30,20 @@
 		}
 	}
 
-	&.qwp-select-top {
+	&.def-select-top {
 		top: 42px;
 	}
 
-	&.qwp-select-bottom {
+	&.def-select-bottom {
 		bottom: 42px;
 	}
 }
 
-.qwp-select-option:hover {
+.def-select-option:hover {
 	background-color: var(--formField_select_hoverColor);
 }
 
-.qwp-close-icon {
+.def-close-icon {
 	user-select: none;
 	cursor: pointer;
 	color: #e7505a;

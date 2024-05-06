@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { BaseFieldComponent } from '../base-field/base-field.component';
 import { InputTypes } from '../../../models/enums/input-types';
-import { UntypedFormGroup } from '@angular/forms';
 import { AutocompleteTypes } from '../../../models/enums/autocomplete-types';
 
 @Component({
   selector: 'shop-def-input',
   templateUrl: './def-input.component.html',
-  styleUrls: ['./def-input.component.scss', '../def-styles/qwp-styles-input-field.scss', '../def-styles/qwp-styles-field.scss'],
+  styleUrls: ['./def-input.component.scss', '../def-styles/def-styles-input-field.scss', '../def-styles/def-styles-field.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DefInputComponent extends BaseFieldComponent {
   @Input() label: string;
   @Input() icon: string;
+  @Input() value: string = '';
   @Input() placeholder: string = '';
   @Input() autocomplete: AutocompleteTypes = AutocompleteTypes.off;
   @Input() set type(value: InputTypes | string) {
