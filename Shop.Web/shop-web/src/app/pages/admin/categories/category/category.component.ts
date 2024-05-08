@@ -5,7 +5,6 @@ import { BaseCompleteComponent } from '../../../../components/base/base-complete
 import { takeUntil } from 'rxjs';
 import { ICategory } from '../../../../models/interfaces/category';
 import { IImage } from '../../../../models/interfaces/image';
-import { Converter } from '../../../../common/converter';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 
@@ -87,7 +86,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
 
   public showImageStorage() {
     this._dialogRef = this._dialogService.open(ImageStorageDialogComponent, {
-      header: `Image Storage`,
+      header: this.lang.headers.imageStorage,
       width: '1100px',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 4,

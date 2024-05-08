@@ -1,4 +1,4 @@
-<p-button (click)="create()">New product</p-button>
+<p-button (click)="create()">{{lang.buttons.newProduct}}</p-button>
 <div *ngFor="let product of products" class="products-container" (click)="edit(product)">
   <div class="product-name">{{product.name}}</div>
   <div class="product-control">

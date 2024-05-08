@@ -125,7 +125,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
 
   public addProperty(): void {
     const data = { id: this.product.id };
-    const config = { header: DialogOptions.propertyHeader, width: DialogOptions.standardWidth, maximizable: false, data: data };
+    const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
     this.openDialog(PropertyDialogComponent, config);
     this._dialogRef.onClose.subscribe(() => {
       this.updateProperties();
@@ -134,7 +134,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
 
   public editProperty(property: IProperty): void {
     const data = { items: property };
-    const config = { header: DialogOptions.propertyHeader, width: DialogOptions.standardWidth, maximizable: false, data: data };
+    const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
     this.openDialog(PropertyDialogComponent, config);
     this._dialogRef.onClose.subscribe(() => {
       this.updateProperties();
@@ -142,7 +142,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public editImages() {
-    const config = { header: DialogOptions.imageStorageHeader, width: DialogOptions.standardWidth, maximizable: true };
+    const config = { header: this.lang.headers.imageStorage, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(ImageStorageDialogComponent, config);
     this._dialogRef.onClose.subscribe(data => {
       if (!data) {
@@ -154,7 +154,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
 
   public editTypes(): void {
     const data = { items: this.types, itemsName: ProductItems.type };
-    const config = { header: DialogOptions.typesHeader, width: DialogOptions.standardWidth, maximizable: true, data: data };
+    const config = { header: this.lang.headers.types, width: DialogOptions.standardWidth, maximizable: true, data: data };
     this.openDialog(SelectItemDialogComponent, config);
     this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe(data => {
       if (!data) {
@@ -166,7 +166,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
 
   public editBrands(): void {
     const data = { items: this.brands, itemsName: ProductItems.brand };
-    const config = { header: DialogOptions.brandsHeader, width: DialogOptions.standardWidth, maximizable: true, data: data };
+    const config = { header: this.lang.headers.brands, width: DialogOptions.standardWidth, maximizable: true, data: data };
     this.openDialog(SelectItemDialogComponent, config);
     this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe(data => {
       if (!data) {

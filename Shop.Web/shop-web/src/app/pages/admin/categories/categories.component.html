@@ -1,4 +1,4 @@
-<p-button (click)="create()">New category</p-button>
+<p-button (click)="create()">{{lang.buttons.newCategory}}</p-button>
 <div *ngFor="let category of categories" class="categories-container" (click)="select(category)">
   <div class="category-name">{{category.name}}</div>
   <div class="category-control">

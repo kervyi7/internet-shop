@@ -7,13 +7,14 @@ import { MessageTypes } from '../../../models/enums/message-types';
 import { NotificationService } from '../../../services/notification.service';
 import { IDialogData } from '../../../models/interfaces/dialog-data';
 import { Util } from '../../../common/util';
+import { BaseCompleteComponent } from '../../base/base-complete.component';
 
 @Component({
   selector: 'shop-property-dialog',
   templateUrl: './property-dialog.component.html',
   styleUrls: ['./property-dialog.component.scss']
 })
-export class PropertyDialogComponent implements OnInit {
+export class PropertyDialogComponent extends BaseCompleteComponent implements OnInit {
   private data: IDialogData;
   public selectedType: PropertyTypes = PropertyTypes.string;
   public propertyTypes = PropertyTypes;
@@ -26,6 +27,7 @@ export class PropertyDialogComponent implements OnInit {
     private _ref: DynamicDialogRef,
     private _refConfig: DynamicDialogConfig,
     private _notificationService: NotificationService) {
+    super();
   }
 
   public ngOnInit(): void {

@@ -2,51 +2,51 @@
   <div class="radio-button-container">
     <p-radioButton name="type" [value]="propertyType.string" [(ngModel)]="selectedType" inputId="typeStr"
       [disabled]="isDisabled"></p-radioButton>
-    <label for="typeStr" class="label">String</label>
+    <label for="typeStr" class="label">{{lang.propertyTypes.string}}</label>
   </div>
   <div class="radio-button-container">
     <p-radioButton name="type" [value]="propertyTypes.number" [(ngModel)]="selectedType" inputId="typeNum"
       [disabled]="isDisabled"></p-radioButton>
-    <label for="typeNum" class="label">Number</label>
+    <label for="typeNum" class="label">{{lang.propertyTypes.number}}</label>
   </div>
   <div class="radio-button-container">
     <p-radioButton name="type" [value]="propertyTypes.bool" [(ngModel)]="selectedType" inputId="typeBool"
       [disabled]="isDisabled"></p-radioButton>
-    <label for="typeBool" class="label">Boolean</label>
+    <label for="typeBool" class="label">{{lang.propertyTypes.boolean}}</label>
   </div>
   <div class="radio-button-container">
     <p-radioButton name="type" [value]="propertyTypes.date" [(ngModel)]="selectedType" inputId="typeDate"
       [disabled]="isDisabled"></p-radioButton>
-    <label for="typeDate" class="label">DateTime</label>
+    <label for="typeDate" class="label">{{lang.propertyTypes.dateTime}}</label>
   </div>
 </div>
 <div class="inputs-container" [ngSwitch]="selectedType">
-  <input [(ngModel)]="editedProperty.name" class="input" type="text" pInputText placeholder="Property name" />
-  <input [(ngModel)]="editedProperty.code" class="input" type="text" pInputText placeholder="Property code" />
+  <input [(ngModel)]="editedProperty.name" class="input" type="text" pInputText placeholder="{{lang.placeholders.propertyName}}<" />
+  <input [(ngModel)]="editedProperty.code" class="input" type="text" pInputText placeholder="{{lang.placeholders.propertyCode}}" />
   <div *ngSwitchCase="propertyTypes.string">
-    <input class="input" [(ngModel)]="editedProperty.value" type="text" pInputText placeholder="Property value" />
+    <input class="input" [(ngModel)]="editedProperty.value" type="text" pInputText placeholder="{{lang.placeholders.propertyValue}}" />
   </div>
   <div *ngSwitchCase="propertyTypes.number">
-    <input class="input" [(ngModel)]="editedProperty.value" type="number" pInputText placeholder="Property value" />
+    <input class="input" [(ngModel)]="editedProperty.value" type="number" pInputText placeholder="{{lang.placeholders.propertyValue}}" />
   </div>
   <div *ngSwitchCase="propertyTypes.bool">
     <p-checkbox [(ngModel)]="editedProperty.value" [binary]="true" inputId="propertyBoolValue"></p-checkbox>
     <label for="propertyBoolValue" class="label">{{editedProperty.value === true ? 'Have' : 'Have not'}}</label>
   </div>
   <div *ngSwitchCase="propertyTypes.date">
-    <p-calendar [(ngModel)]="editedProperty.value" placeholder="Property value"></p-calendar>
+    <p-calendar [(ngModel)]="editedProperty.value" placeholder="{{lang.placeholders.propertyValue}}"></p-calendar>
   </div>
 </div>
 <div class="checkbox-container">
   <div>
     <p-checkbox [(ngModel)]="editedProperty.isPrimary" [binary]="true" inputId="isPrimary"></p-checkbox>
-    <label for="isPrimary" class="label">Show in the list of products (isPrimary)</label>
+    <label for="isPrimary" class="label">{{lang.placeholders.isPrimary}}</label>
   </div>
   <div>
     <p-checkbox [(ngModel)]="editedProperty.isTitle" [binary]="true" inputId="isTitle"></p-checkbox>
-    <label for="isTitle" class="label">Show in product title (isTitle)</label>
+    <label for="isTitle" class="label">{{lang.placeholders.isTitle}}</label>
   </div>
 </div>
 <div class="save-button">
-  <p-button (click)="save()" label="Save"></p-button>
+  <p-button (click)="save()" label="{{lang.buttons.save}}"></p-button>
 </div>

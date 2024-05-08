@@ -7,10 +7,10 @@
 
 <p-toast></p-toast>
 
-<p class="admin-section-header">Default values</p>
+<p class="admin-section-header">{{lang.headers.defaultValues}}</p>
 <div class="inputs-wrapper">
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="Name" [(ngModel)]="editedProduct.name" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="editedProduct.name" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.name)">
       <p-button [text]="true" (onClick)="editedProduct.name = null">
         <span class="material-icons-reg">close</span>
@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="Code" [(ngModel)]="editedProduct.code" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="editedProduct.code" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.code)">
       <p-button [text]="true" (onClick)="editedProduct.code = null">
         <span class="material-icons-reg">close</span>
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="Price" [(ngModel)]="editedProduct.price" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.productPrice}}" [(ngModel)]="editedProduct.price" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.price)">
       <p-button [text]="true" (onClick)="editedProduct.price = null">
         <span class="material-icons-reg">close</span>
@@ -34,7 +34,7 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="Currency" [(ngModel)]="editedProduct.currency" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.currency}}" [(ngModel)]="editedProduct.currency" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.currency)">
       <p-button [text]="true" (onClick)="editedProduct.currency = null">
         <span class="material-icons-reg">close</span>
@@ -43,12 +43,12 @@
   </div>
   <div class="input-container">
     <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="true" filterBy="name"
-      optionLabel="name" [showClear]="true" placeholder="Category" (onClick)="getCategories()"
+      optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.category}}" (onClick)="getCategories()"
       [style]="{'width':'100%'}"></p-dropdown>
   </div>
   <div class="input-container">
     <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="true" filterBy="name"
-      optionLabel="name" [showClear]="true" placeholder="Type" (onClick)="getTypes()"
+      optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.type}}" (onClick)="getTypes()"
       [style]="{'width':'100%'}"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editTypes()">
@@ -58,7 +58,7 @@
   </div>
   <div class="input-container">
     <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="true" filterBy="name"
-      optionLabel="name" [showClear]="true" placeholder="Brand" (onClick)="getBrands()"
+      optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.brand}}" (onClick)="getBrands()"
       [style]="{'width':'100%'}"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editBrands()">
@@ -68,10 +68,10 @@
   </div>
 </div>
 <p-button (onClick)="saveProduct()">
-  <span class="material-icons-reg">done</span><span>Save</span>
+  <span class="material-icons-reg">done</span><span>{{lang.buttons.save}}</span>
 </p-button>
 <div *ngIf="id">
-  <p class="admin-section-header">Photo</p>
+  <p class="admin-section-header">{{lang.headers.photo}}</p>
   <div class="uploaded-images-container">
     <div *ngFor="let image of images">
       <div class="image-container">
@@ -83,9 +83,9 @@
       <span class="material-icons-reg">add</span>
     </div>
   </div>
-  <p class="admin-section-header">Additional values</p>
+  <p class="admin-section-header">{{lang.headers.additionalValues}}</p>
   <p-button [text]="true" (onClick)="addProperty()">
-    <span class="material-icons-reg">add</span><span>Add property</span>
+    <span class="material-icons-reg">add</span><span>{{lang.buttons.addProperty}}</span>
   </p-button>
   <div class="property-section" *ngIf="product">
     <div *ngFor="let property of product.stringProperties" class="property-container">

@@ -1,5 +1,5 @@
 <div class="tools-container">
-  <input class="input" type="text" pInputText placeholder="Search image" [(ngModel)]="searchText" />
+  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.searchImage}}" [(ngModel)]="searchText" />
   <shop-image-uploader (onSave)="saveImage($event)" (onFileChanged)="fileChanged($event)"></shop-image-uploader>
 </div>
 <div class="images-container">

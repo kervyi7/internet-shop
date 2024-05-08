@@ -7,13 +7,14 @@ import { IBaseImage } from '../../models/interfaces/image';
 import { Converter } from '../../common/converter';
 import { MimeTypes } from '../../models/enums/mime-types';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { BaseCompleteComponent } from '../base/base-complete.component';
 
 @Component({
   selector: 'shop-image-editor',
   templateUrl: './image-editor.component.html',
   styleUrls: ['./image-editor.component.scss']
 })
-export class ImageEditorComponent implements OnInit {
+export class ImageEditorComponent extends BaseCompleteComponent implements OnInit {
   @Output() public onSave: EventEmitter<IBaseImage> = new EventEmitter();
   private _croppedImage: Blob;
   private _resizedImage: Blob;
@@ -33,6 +34,7 @@ export class ImageEditorComponent implements OnInit {
     private _refConfig: DynamicDialogConfig,
     private sanitizer: DomSanitizer,
     private _ref: DynamicDialogRef) {
+    super();
   }
 
   public ngOnInit() {

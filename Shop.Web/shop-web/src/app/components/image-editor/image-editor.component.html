@@ -18,6 +18,6 @@
   <p-button [text]="true" (click)="flipVertical()">
     <span class="material-icons-outline rotate">flip</span></p-button>
 </div>
-<input class="input" type="text" pInputText placeholder="Image Name"
+<input class="input" type="text" pInputText placeholder="{{lang.placeholders.imageName}}"
   pTooltip="This name will be used when searching for an image in the Image Storage." [(ngModel)]="imageName" />
-<p-button (click)="save()">Save</p-button>
+<p-button (click)="save()">{{lang.buttons.save}}</p-button>
