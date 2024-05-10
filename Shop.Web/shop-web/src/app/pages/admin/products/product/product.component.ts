@@ -271,6 +271,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       takeUntil(this.__unsubscribe$)).subscribe((data: IProduct) => {
         this.product.images = data.images;
         this.images = data.images;
+        this._cd.detectChanges();
       })
   }
 }

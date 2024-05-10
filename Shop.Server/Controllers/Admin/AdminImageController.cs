@@ -18,8 +18,8 @@ namespace Shop.Server.Controllers.Admin
         {
         }
 
-        [HttpGet("{page:int}")]
-        public async Task<ActionResult<ImageDto[]>> GetAll(int page)
+        [HttpGet()]
+        public async Task<ActionResult<ImageDto[]>> GetAll()
         {
             var images = await DataContext.Images.Include(x => x.Category).Include(x => x.ProductImages).ToListAsync();
             return Ok(images.ToViewModels());

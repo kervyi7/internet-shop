@@ -16,12 +16,11 @@ import { BaseCompleteComponent } from '../../base/base-complete.component';
 })
 export class PropertyDialogComponent extends BaseCompleteComponent implements OnInit {
   private data: IDialogData;
-  public selectedType: PropertyTypes = PropertyTypes.string;
+  public selectedType = PropertyTypes.string;
   public propertyTypes = PropertyTypes;
   public property: IProperty;
   public editedProperty: IProperty;
   public isDisabled = false;
-  public propertyType = PropertyTypes;
 
   constructor(private _adminProductService: AdminProductDataService,
     private _ref: DynamicDialogRef,

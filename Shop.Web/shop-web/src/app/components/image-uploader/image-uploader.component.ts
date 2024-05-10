@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IBaseImage } from '../../models/interfaces/image';
+import { BaseCompleteComponent } from '../base/base-complete.component';
 
 @Component({
   selector: 'shop-image-uploader',
@@ -7,7 +8,7 @@ import { IBaseImage } from '../../models/interfaces/image';
   styleUrls: ['./image-uploader.component.scss'],
 
 })
-export class ImageUploaderComponent {
+export class ImageUploaderComponent extends BaseCompleteComponent {
   @Output() public onSave: EventEmitter<IBaseImage> = new EventEmitter();
   @Output() public onFileChanged: EventEmitter<File> = new EventEmitter();
   @Input() public images: IBaseImage[] = [];

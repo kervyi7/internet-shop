@@ -10,13 +10,13 @@
 </div>
 <div class="editor-tools">
   <p-button [text]="true" (click)="rotateLeft()">
-    <span class="material-icons-outline">rotate_left</span></p-button>
+    <span class="material-icons-outline">{{mIcons.rotate_left}}</span></p-button>
   <p-button [text]="true" (click)="rotateRight()">
-    <span class="material-icons-outline">rotate_right</span></p-button>
+    <span class="material-icons-outline">{{mIcons.rotate_right}}</span></p-button>
   <p-button [text]="true" (click)="flipHorizontal()">
-    <span class="material-icons-outline">flip</span></p-button>
+    <span class="material-icons-outline">{{mIcons.flip}}</span></p-button>
   <p-button [text]="true" (click)="flipVertical()">
-    <span class="material-icons-outline rotate">flip</span></p-button>
+    <span class="material-icons-outline rotate">{{mIcons.flip}}</span></p-button>
 </div>
 <input class="input" type="text" pInputText placeholder="{{lang.placeholders.imageName}}"
   pTooltip="This name will be used when searching for an image in the Image Storage." [(ngModel)]="imageName" />

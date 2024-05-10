@@ -1,6 +1,6 @@
 <div class="header-container">
   <p-button [text]="true" (onClick)="goToPreviousPage()">
-    <span class="material-icons-reg">arrow_back</span>
+    <span class="material-icons-reg">{{mIcons.arrow_back}}</span>
   </p-button>
   <div *ngIf="product" class="admin-section-title">Product: {{product.name}}</div>
 </div>
@@ -13,7 +13,7 @@
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="editedProduct.name" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.name)">
       <p-button [text]="true" (onClick)="editedProduct.name = null">
-        <span class="material-icons-reg">close</span>
+        <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
@@ -21,7 +21,7 @@
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="editedProduct.code" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.code)">
       <p-button [text]="true" (onClick)="editedProduct.code = null">
-        <span class="material-icons-reg">close</span>
+        <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
@@ -29,7 +29,7 @@
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.productPrice}}" [(ngModel)]="editedProduct.price" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.price)">
       <p-button [text]="true" (onClick)="editedProduct.price = null">
-        <span class="material-icons-reg">close</span>
+        <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
@@ -37,7 +37,7 @@
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.currency}}" [(ngModel)]="editedProduct.currency" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.currency)">
       <p-button [text]="true" (onClick)="editedProduct.currency = null">
-        <span class="material-icons-reg">close</span>
+        <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
@@ -52,7 +52,7 @@
       [style]="{'width':'100%'}"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editTypes()">
-        <span class="material-icons-reg">edit</span>
+        <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
     </div>
   </div>
@@ -62,13 +62,13 @@
       [style]="{'width':'100%'}"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editBrands()">
-        <span class="material-icons-reg">edit</span>
+        <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
     </div>
   </div>
 </div>
 <p-button (onClick)="saveProduct()">
-  <span class="material-icons-reg">done</span><span>{{lang.buttons.save}}</span>
+  <span class="material-icons-reg">{{mIcons.done}}</span><span>{{lang.buttons.save}}</span>
 </p-button>
 <div *ngIf="id">
   <p class="admin-section-header">{{lang.headers.photo}}</p>
@@ -80,12 +80,12 @@
       </div>
     </div>
     <div *ngIf="images.length < 6" class="pic" (click)="editImages()">
-      <span class="material-icons-reg">add</span>
+      <span class="material-icons-reg">{{mIcons.add}}</span>
     </div>
   </div>
   <p class="admin-section-header">{{lang.headers.additionalValues}}</p>
   <p-button [text]="true" (onClick)="addProperty()">
-    <span class="material-icons-reg">add</span><span>{{lang.buttons.addProperty}}</span>
+    <span class="material-icons-reg">{{mIcons.add}}</span><span>{{lang.buttons.addProperty}}</span>
   </p-button>
   <div class="property-section" *ngIf="product">
     <div *ngFor="let property of product.stringProperties" class="property-container">
@@ -99,10 +99,10 @@
         <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">edit</span>
+        <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
       <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">delete</span>
+        <span class="material-icons-outline">{{mIcons.delete}}</span>
       </p-button>
     </div>
     <div *ngFor="let property of product.intProperties" class="property-container">
@@ -116,10 +116,10 @@
         <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">edit</span>
+        <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
       <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">delete</span>
+        <span class="material-icons-outline">{{mIcons.delete}}</span>
       </p-button>
     </div>
     <div *ngFor="let property of product.boolProperties" class="property-container">
@@ -134,10 +134,10 @@
           [disabled]="true"></p-checkbox>
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">edit</span>
+        <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
       <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">delete</span>
+        <span class="material-icons-outline">{{mIcons.delete}}</span>
       </p-button>
     </div>
     <div *ngFor="let property of product.dateProperties" class="property-container">
@@ -151,10 +151,10 @@
         <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">edit</span>
+        <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
       <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">delete</span>
+        <span class="material-icons-outline">{{mIcons.delete}}</span>
       </p-button>
     </div>
   </div>

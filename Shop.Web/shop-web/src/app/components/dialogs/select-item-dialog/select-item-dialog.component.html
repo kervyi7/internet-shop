@@ -1,5 +1,5 @@
 <p-button [text]="true" (onClick)="showAddItem()">
-  <span class="material-icons-reg">add</span><span>{{lang.buttons.newItem}}</span>
+  <span class="material-icons-reg">{{mIcons.add}}</span><span>{{lang.buttons.newItem}}</span>
 </p-button>
 <div class="input-container" *ngIf="isShowAddItem">
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="newItem.name"
