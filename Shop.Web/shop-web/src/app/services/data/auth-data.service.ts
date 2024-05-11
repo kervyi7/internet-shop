@@ -5,6 +5,7 @@ import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
 import { ILogin } from "../../models/interfaces/login";
 import { IAuthResponse } from "../../models/interfaces/auth-response";
+import { IToken } from "../../models/interfaces/token";
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +13,21 @@ import { IAuthResponse } from "../../models/interfaces/auth-response";
 export class AuthDataService extends BaseDataService {
   public baseUrl = 'auth';
 
-  constructor(public readonly http: HttpClient,
+  constructor(private readonly _http: HttpClient,
     appConfigService: AppConfigService) {
     super(appConfigService);
   }
 
   public login(value: ILogin): Observable<IAuthResponse> {
-    return this.http.post<IAuthResponse>(this.getUrl(`${this.baseUrl}/login`), value, this.defaultHttpOptions);
+    return this._http.post<IAuthResponse>(this.getUrl("login"), value, this.defaultHttpOptions);
   }
 
   public logout(): Observable<void> {
-    return this.http.get<void>(this.getUrl(`${this.baseUrl}/logout`), this.defaultHttpOptions);
+    return this._http.get<void>(this.getUrl("logout"), this.defaultHttpOptions);
+  }
+
+  public refresh(accessToken: string, refreshToken: string): Observable<IToken> {
+    const body: IToken = { accessToken, refreshToken };
+    return this._http.post<IToken>("refresh", body);
   }
 }

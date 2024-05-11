@@ -8,7 +8,6 @@ using Shop.Server.Models.DTO;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
-using Shop.Common.Enums;
 using Shop.Server.Common;
 using Shop.Common.Constants;
 

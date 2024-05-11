@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Server.Auth;
-using Shop.Server.Common;
 using Shop.Server.DTO.Auth;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO.Auth;

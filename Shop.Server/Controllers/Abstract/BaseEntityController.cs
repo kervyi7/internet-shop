@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Database.Models;
 using Shop.Database;
 using Shop.Server.Exceptions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Shop.Server.Controllers.Abstract
 {
     [ApiController]
+    [Authorize]
     public class BaseEntityController<T> : ControllerBase where T : BaseModel
     {
         protected readonly DataContext DataContext;

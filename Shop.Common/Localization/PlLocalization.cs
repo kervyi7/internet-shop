@@ -24,6 +24,7 @@
         public string NewImage => "New image";
         public string NewItem => "New item";
         public string Add => "Add";
+        public string Login => "Login";
     }
 
     public class PlLocalizationHeaders : IHeadersLocalization
@@ -56,6 +57,8 @@
         public string IsTitle => "Show in product title (isTitle)";
         public string Name => "Name";
         public string Code => "Code";
+        public string Login => "Login";
+        public string Password => "Password";
     }
 
     public class PlLocalizationPropertyTypes : IPropertyTypesLocalization

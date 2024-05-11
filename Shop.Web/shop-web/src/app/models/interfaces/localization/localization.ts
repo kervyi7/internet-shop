@@ -15,6 +15,7 @@ export interface IButtonsLocalization {
   newImage: string;
   newItem: string;
   add: string;
+  login: string;
 }
 
 export interface IHeadersLocalization {
@@ -45,6 +46,8 @@ export interface IPlaceholdersLocalization {
   isTitle: string;
   name: string;
   code: string;
+  login: string;
+  password: string;
 }
 
 export interface IPropertyTypesLocalization {

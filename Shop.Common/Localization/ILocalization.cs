@@ -19,6 +19,7 @@
         string NewImage { get; }
         string NewItem { get; }
         string Add { get; }
+        string Login { get; }
     }
 
     public interface IHeadersLocalization
@@ -51,6 +52,8 @@
         string Brand { get; }
         string IsPrimary { get; }
         string IsTitle { get; }
+        string Login { get; }
+        string Password { get; }
     }
 
     public interface IPropertyTypesLocalization

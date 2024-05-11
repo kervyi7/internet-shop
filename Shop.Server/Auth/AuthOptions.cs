@@ -6,7 +6,7 @@ namespace Shop.Server.Auth
 {
     public class AuthOptions
     {
-        private const string Key = "P6q8H5qK3SxGohA0tg8Gu73Tr5cuqBuB9qIMmbEE/aYg6eP1i20WwHajcUCpo8xEx0AHk0krygffkQu1kfmTfA==";
+        private const string Key = "1NGjtLG9xr95o/0w3HRPhQZLKkB5g0bvAtkIyhrbh+oaWkYj3HnsgyWOtPzEsmtGz74eA3jfZa4sOKR3HxHJFQ==";
         private const int SizeRandomBytes = 32;
         private readonly static SymmetricSecurityKey _secretKey;
 

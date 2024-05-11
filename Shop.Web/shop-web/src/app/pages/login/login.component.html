@@ -1,5 +1,5 @@
 <form (ngSubmit)="submit()" [formGroup]="userForm" novalidate>
-  <shop-def-input [group]="userForm" fieldCode="userName"></shop-def-input>
-  <shop-def-input [group]="userForm" fieldCode="password" type="password"></shop-def-input>
-  <shop-def-button [isDisabled]="!userForm.valid" type="submit">button</shop-def-button>
+  <input class="input" type="text" pInputText [placeholder]="lang.placeholders.login" [formControl]="userForm.controls.userName"/>
+  <input class="input" type="password" pInputText [placeholder]="lang.placeholders.password" [formControl]="userForm.controls.password"/>
+  <p-button type="submit">{{lang.buttons.login}}</p-button>
 </form>

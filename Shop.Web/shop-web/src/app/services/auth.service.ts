@@ -9,13 +9,23 @@ export class AuthService {
   public getToken(): string | null {
     return localStorage.getItem(Constants.X_AUTH_TOKEN_LABEL);
   }
+
+  public getRefreshToken(): string | null {
+    return localStorage.getItem(Constants.X_REFRESH_TOKEN_LABEL);
+  }
+
   public setToken(token: IToken): void {
     localStorage.setItem(Constants.X_AUTH_TOKEN_LABEL, token.accessToken);
     localStorage.setItem(Constants.X_REFRESH_TOKEN_LABEL, token.refreshToken);
   }
 
-  private removeTokenInfo(): void {
+  public removeTokenInfo(): void {
     localStorage.removeItem(Constants.X_AUTH_TOKEN_LABEL);
     localStorage.removeItem(Constants.X_REFRESH_TOKEN_LABEL);
+  }
+
+  public isLoggedIn(): boolean {
+    const token = this.getToken();
+    return Boolean(token);
   }
 }

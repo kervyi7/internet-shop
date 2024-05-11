@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthDataService } from '../../services/data/auth-data.service';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
 import { ILogin } from '../../models/interfaces/login';
 import { takeUntil } from 'rxjs';
 import { IAuthResponse } from '../../models/interfaces/auth-response';
 import { AuthService } from '../../services/auth.service';
+import { ILoginForm } from '../../models/interfaces/forms/login-form';
 
 @Component({
   selector: 'shop-login',
@@ -13,10 +14,9 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent extends BaseCompleteComponent {
-  public userForm: UntypedFormGroup;
+  public userForm: FormGroup<ILoginForm>;
 
   constructor(
-    private _formBuilder: UntypedFormBuilder,
     private _authDataService: AuthDataService,
     private _authService: AuthService) {
     super();
@@ -24,7 +24,11 @@ export class LoginComponent extends BaseCompleteComponent {
   }
 
   public submit() {
-    const login: ILogin = { userName: this.userForm.controls["userName"].value, password: this.userForm.controls["password"].value }
+    if (this.userForm.invalid) {
+			this.userForm.markAllAsTouched();
+			return;
+		}
+    const login: ILogin = { ...this.userForm.getRawValue() }
     this._authDataService.login(login)
       .pipe(
         takeUntil(this.__unsubscribe$))
@@ -35,10 +39,10 @@ export class LoginComponent extends BaseCompleteComponent {
       });
   }
 
-  private getUserForm(): UntypedFormGroup {
-    return this._formBuilder.group({
-      userName: ['', Validators.required],
-      password: ['', Validators.required]
+  private getUserForm(): FormGroup<ILoginForm> {
+    return new FormGroup<ILoginForm>({
+      userName: new FormControl("", Validators.required),
+      password: new FormControl("", Validators.required),
     });
   }
 }

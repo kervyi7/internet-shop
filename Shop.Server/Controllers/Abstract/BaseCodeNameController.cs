@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Database.Models;
@@ -7,10 +6,12 @@ using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Shop.Server.Controllers.Abstract
 {
     [ApiController]
+    [Authorize]
     public abstract class BaseCodeNameController<T> : ControllerBase where T : BaseCodeName, new()
     {
         protected readonly DataContext DataContext;
