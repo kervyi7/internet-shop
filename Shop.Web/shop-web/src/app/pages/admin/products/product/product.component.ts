@@ -211,7 +211,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     this.editedProduct.typeId = this.selectedType.id;
     this.editedProduct.brandId = this.selectedBrand.id
     this._adminProductDataService.create(this.editedProduct).subscribe(data => {
-      this._router.navigate([`/admin/products/edit/${data}`])
+      this._router.navigate([`/admin/products/edit/${data.id}`])
     });
   }
 

@@ -64,8 +64,12 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       id: this.editedProperty.id,
     };
     if (!this.isDataValid(property)) {
-      this._notificationService.showMessage(MessageTypes.error, "Error", "Invalid data");
-      return;
+      if (this.isBoolProperty() && this.isValueEmpty(property.value)) {
+        property.value = false;
+      } else {
+        this._notificationService.showMessage(MessageTypes.error, "Error", "Invalid data");
+        return;
+      }
     }
     if (this.property) {
       if (Util.isDataEqual(property, this.property)) {
@@ -88,6 +92,14 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
         }
       });
     }
+  }
+
+  private isBoolProperty(): boolean {
+    return this.selectedType == 'bool';
+  }
+
+  private isValueEmpty(value: propertyValue): boolean {
+    return value == '';
   }
 
   private isDataValid(editedString: IProperty): boolean {

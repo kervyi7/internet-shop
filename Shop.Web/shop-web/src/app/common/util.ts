@@ -17,6 +17,6 @@ export class Util {
   }
 
   public static isDataEqual<T>(data1: T, data2: T): boolean {
-    return JSON.stringify(data1) !== JSON.stringify(data2);
+    return JSON.stringify(data1) === JSON.stringify(data2);
   }
 }
