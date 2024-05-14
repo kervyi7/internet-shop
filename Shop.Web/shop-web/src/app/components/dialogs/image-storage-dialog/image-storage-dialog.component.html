@@ -9,6 +9,7 @@
     <span class="image-name">{{image.name}}</span>
     <div class="image-overflow">
       <span class="material-icons-outline tool" (click)="deleteImage(image)">{{mIcons.delete}}</span>
+      <p-confirmPopup></p-confirmPopup>
       <span class="material-icons-outline tool" (click)="editImage(image)">{{mIcons.edit}}</span>
       <span class="material-icons-outline tool" (click)="selectImage(image)">{{mIcons.check_circle}}</span>
     </div>

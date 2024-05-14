@@ -5,6 +5,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseCompleteComponent } from '../../base/base-complete.component';
 import { takeUntil } from 'rxjs';
 import { ImageEditorComponent } from '../../image-editor/image-editor.component';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'shop-image-storage-dialog',
@@ -18,7 +19,8 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
 
   constructor(private _adminImageDataService: AdminImageDataService,
     private _dialogRef: DynamicDialogRef,
-    private _dialogService: DialogService) {
+    private _dialogService: DialogService,
+    private confirmationService: ConfirmationService) {
     super();
   }
   public ngOnInit(): void {
@@ -28,9 +30,19 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   public deleteImage(image: IBaseImage): void {
-    this._adminImageDataService.delete(image.id).subscribe(() => {
-      this.updateImages();
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure that you want to proceed?',//todo localization
+      accept: () => {
+        this._adminImageDataService.delete(image.id).subscribe(() => {
+          this.updateImages();
+        });
+      },
+      reject: () => {
+        return;
+      }
     });
+
   }
 
   public editImage(image: IBaseImage): void {

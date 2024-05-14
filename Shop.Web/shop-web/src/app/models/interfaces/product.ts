@@ -13,7 +13,7 @@ export interface IProduct extends ICodeName {
   intProperties: IProperty[];
   boolProperties: IProperty[];
   dateProperties: IProperty[];
-  images: IImage[]
+  images: IImage[];
 }
 
 export interface ICreateProduct extends ICodeName {
@@ -23,4 +23,8 @@ export interface ICreateProduct extends ICodeName {
   price: number;
   currency: string;
   isExist: boolean;
+}
+
+export interface IProductResponse extends IProduct {
+  dateProperties: IProperty<string>[];
 }

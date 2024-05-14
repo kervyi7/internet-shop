@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
-import { ICreateProduct, IProduct, } from "../../models/interfaces/product";
+import { ICreateProduct, IProduct, IProductResponse, } from "../../models/interfaces/product";
 import { IImage } from "../../models/interfaces/image";
 import { IBaseModel } from "../../models/interfaces/base/base-model";
 import { IProperty } from "../../models/interfaces/property";
@@ -25,7 +25,17 @@ export class AdminProductDataService extends BaseDataService {
   }
 
   public getById(id: number): Observable<IProduct> {
-    return this.http.get<IProduct>(this.getUrlById(id), this.defaultHttpOptions);
+    return new Observable<IProduct>((subscriber) => {
+      this.http.get<IProductResponse>(this.getUrlById(id), this.defaultHttpOptions)
+        .subscribe({
+          next: (response: IProductResponse) => {
+            const product = { ...response, dateProperties: response.dateProperties.map(x => new Date(x)) };
+            subscriber.next(product);
+          },
+          error: (errorResponse: HttpErrorResponse) => subscriber.error(errorResponse),
+          complete: () => subscriber.complete()
+        });
+    });
   }
 
   public create(product: ICreateProduct): Observable<IBaseModel> {
