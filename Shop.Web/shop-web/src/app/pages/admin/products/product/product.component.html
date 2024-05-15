@@ -10,7 +10,8 @@
 <p class="admin-section-header">{{lang.headers.defaultValues}}</p>
 <div class="inputs-wrapper">
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="editedProduct.name" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}"
+      [(ngModel)]="editedProduct.name" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.name)">
       <p-button [text]="true" (onClick)="editedProduct.name = null">
         <span class="material-icons-reg">{{mIcons.close}}</span>
@@ -18,7 +19,8 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="editedProduct.code" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}"
+      [(ngModel)]="editedProduct.code" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.code)">
       <p-button [text]="true" (onClick)="editedProduct.code = null">
         <span class="material-icons-reg">{{mIcons.close}}</span>
@@ -26,7 +28,8 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.productPrice}}" [(ngModel)]="editedProduct.price" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.productPrice}}"
+      [(ngModel)]="editedProduct.price" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.price)">
       <p-button [text]="true" (onClick)="editedProduct.price = null">
         <span class="material-icons-reg">{{mIcons.close}}</span>
@@ -34,7 +37,8 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.currency}}" [(ngModel)]="editedProduct.currency" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.currency}}"
+      [(ngModel)]="editedProduct.currency" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.currency)">
       <p-button [text]="true" (onClick)="editedProduct.currency = null">
         <span class="material-icons-reg">{{mIcons.close}}</span>
@@ -148,7 +152,7 @@
         <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
       </div>
       <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
+        <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}" [disabled]="true"></p-calendar>
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
         <span class="material-icons-reg">{{mIcons.edit}}</span>

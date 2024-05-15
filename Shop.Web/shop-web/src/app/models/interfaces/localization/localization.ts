@@ -3,6 +3,7 @@ export interface ILocalization {
   headers: IHeadersLocalization;
   placeholders: IPlaceholdersLocalization;
   propertyTypes: IPropertyTypesLocalization;
+  popups: IPopupsLocalization;
 }
 
 export interface IButtonsLocalization {
@@ -55,4 +56,9 @@ export interface IPropertyTypesLocalization {
   number: string;
   boolean: string;
   dateTime: string;
+}
+
+export interface IPopupsLocalization {
+  imageDelete: string;
+  imageBoundDelete: string;
 }

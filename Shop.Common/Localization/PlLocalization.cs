@@ -1,4 +1,6 @@
-﻿namespace Shop.Common.Localization
+﻿using System.Diagnostics;
+
+namespace Shop.Common.Localization
 {
     public class PlLocalization : ILocalization
     {
@@ -11,6 +13,8 @@
         public IPropertyTypesLocalization PropertyTypes => new PlLocalizationPropertyTypes();
 
         public ITooltipsLocalization Tooltips => new PlLocalizationTooltips();
+
+        public IPopupsLocalization Popups => new PlLocalizationPopups();
     }
 
     public class PlLocalizationButtons : IButtonsLocalization
@@ -73,5 +77,11 @@
     public class PlLocalizationTooltips : ITooltipsLocalization
     {
         public string ImageName => "This name will be used when searching for an image in the Image Storage.";
+    }
+
+    public class PlLocalizationPopups : IPopupsLocalization
+    {
+        public string ImageDelete => "Image is not linked. Are you sure that you want to proceed?";
+        public string ImageBoundDelete => "Image is linked with product(s). Are you sure that you want to proceed?";
     }
 }

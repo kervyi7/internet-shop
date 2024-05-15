@@ -17,6 +17,7 @@ import { NotificationService } from '../../../services/notification.service';
 import { ImageUploaderModule } from '../../../components/image-uploader/image-uploader.module';
 import { ImageStorageModule } from '../../../components/dialogs/image-storage-dialog/image-storage-dialog.module';
 import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
     ToastModule,
     ImageUploaderModule,
     ImageStorageModule,
-    Base64Pipe
+    Base64Pipe,
+    CalendarModule
   ],
   providers: [DialogService, NotificationService],
   exports: [

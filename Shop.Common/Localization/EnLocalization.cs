@@ -11,6 +11,8 @@
         public IPropertyTypesLocalization PropertyTypes => new EnLocalizationPropertyTypes();
 
         public ITooltipsLocalization Tooltips => new EnLocalizationTooltips();
+
+        public IPopupsLocalization Popups => new EnLocalizationPopups();
     }
 
     public class EnLocalizationButtons : IButtonsLocalization
@@ -72,5 +74,11 @@
     public class EnLocalizationTooltips : ITooltipsLocalization
     {
         public string ImageName => "This name will be used when searching for an image in the Image Storage.";
+    }
+
+    public class EnLocalizationPopups : IPopupsLocalization
+    {
+        public string ImageDelete => "Image is not linked. Are you sure that you want to proceed?";
+        public string ImageBoundDelete => "Image is linked with product(s). Are you sure that you want to proceed?";
     }
 }

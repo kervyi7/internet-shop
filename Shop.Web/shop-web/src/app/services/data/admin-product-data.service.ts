@@ -29,8 +29,10 @@ export class AdminProductDataService extends BaseDataService {
       this.http.get<IProductResponse>(this.getUrlById(id), this.defaultHttpOptions)
         .subscribe({
           next: (response: IProductResponse) => {
-            const product = { ...response, dateProperties: response.dateProperties.map(x => new Date(x)) };
-            subscriber.next(product);
+            for (const property of response.dateProperties) {
+              (property.value as unknown) = new Date(property.value);
+            }
+            subscriber.next(response);
           },
           error: (errorResponse: HttpErrorResponse) => subscriber.error(errorResponse),
           complete: () => subscriber.complete()

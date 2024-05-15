@@ -30,19 +30,11 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   public deleteImage(image: IBaseImage): void {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Are you sure that you want to proceed?',//todo localization
-      accept: () => {
-        this._adminImageDataService.delete(image.id).subscribe(() => {
-          this.updateImages();
-        });
-      },
-      reject: () => {
-        return;
-      }
-    });
-
+    if (image.isBinding) {
+      this.delete(image.id, this.lang.popups.imageBoundDelete);
+    } else {
+      this.delete(image.id, this.lang.popups.imageDelete);
+    }
   }
 
   public editImage(image: IBaseImage): void {
@@ -80,7 +72,8 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       smallBody: baseImage.smallBody,
       fileName: baseImage.fileName,
       fileSize: baseImage.fileSize,
-      mimeType: baseImage.mimeType
+      mimeType: baseImage.mimeType,
+      isBinding: baseImage.isBinding
     }
     this._adminImageDataService.create(image).subscribe(() => {
       this.images.push(image);
@@ -92,5 +85,20 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       takeUntil(this.__unsubscribe$)).subscribe((data: IImage[]) => {
         this.images = data;
       })
+  }
+
+  private delete(id: number, message: string) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: message,
+      accept: () => {
+        this._adminImageDataService.delete(id).subscribe(() => {
+          this.updateImages();
+        });
+      },
+      reject: () => {
+        return;
+      }
+    });
   }
 }

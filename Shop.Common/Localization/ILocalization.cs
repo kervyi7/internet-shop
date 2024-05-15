@@ -6,6 +6,7 @@
         IHeadersLocalization Headers { get; }
         IPlaceholdersLocalization Placeholders { get; }
         IPropertyTypesLocalization PropertyTypes { get; }
+        IPopupsLocalization Popups { get; }
     }
 
     public interface IButtonsLocalization
@@ -67,5 +68,11 @@
     public interface ITooltipsLocalization
     {
         string ImageName { get; }
+    }
+
+    public interface IPopupsLocalization
+    {
+        string ImageDelete { get; }
+        string ImageBoundDelete { get; }
     }
 }

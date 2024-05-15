@@ -49,7 +49,8 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
       fileSize: this._croppedImage.size,
       name: this.imageName,
       fileName: this.getFileName(this.imageFile.name),
-      mimeType: MimeTypes.JPEG
+      mimeType: MimeTypes.JPEG,
+      isBinding: false
     };
     this._ref.close(image);
   }

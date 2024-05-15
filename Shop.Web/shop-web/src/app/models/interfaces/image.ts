@@ -11,4 +11,5 @@ export interface IBaseImage extends IBaseModel {
   fileName: string;
   name: string;
   mimeType: string;
+  isBinding: boolean;
 }
