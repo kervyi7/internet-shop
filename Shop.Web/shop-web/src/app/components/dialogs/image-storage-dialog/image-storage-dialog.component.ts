@@ -6,6 +6,7 @@ import { BaseCompleteComponent } from '../../base/base-complete.component';
 import { takeUntil } from 'rxjs';
 import { ImageEditorComponent } from '../../image-editor/image-editor.component';
 import { ConfirmationService } from 'primeng/api';
+import { PaginatorState } from 'primeng/paginator';
 
 @Component({
   selector: 'shop-image-storage-dialog',
@@ -13,9 +14,16 @@ import { ConfirmationService } from 'primeng/api';
   styleUrls: ['./image-storage-dialog.component.scss']
 })
 export class ImageStorageDialogComponent extends BaseCompleteComponent implements OnInit {
-  public searchText: string = '';
+  public searchText = '';
   public imageChangedFile: File;
   public images: IImage[];
+  public skip = 0;
+  public count = 10;
+  public countOptions = [
+    { label: 10, value: 10 },
+    { label: 20, value: 20 },
+    { label: 30, value: 30 }
+  ];
 
   constructor(private _adminImageDataService: AdminImageDataService,
     private _dialogRef: DynamicDialogRef,
@@ -24,7 +32,23 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     super();
   }
   public ngOnInit(): void {
-    this._adminImageDataService.getAll().subscribe(data => {
+    this._adminImageDataService.getAll(this.skip, this.count).subscribe(data => {
+      this.images = data;
+    });
+  }
+
+  public onPageChange(event: PaginatorState): void {
+    this.skip = event.first;
+    this.count = event.rows;
+    this._adminImageDataService.getAll(this.skip, this.count).subscribe(data => {
+      this.images = data;
+    });
+  }
+
+  public onCountChange(count: number) {
+    this.skip = 0;
+    this.count = count;
+    this._adminImageDataService.getAll(this.skip, this.count).subscribe(data => {
       this.images = data;
     });
   }
@@ -81,7 +105,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   private updateImages(): void {
-    this._adminImageDataService.getAll().pipe(
+    this._adminImageDataService.getAll(this.skip, this.count).pipe(
       takeUntil(this.__unsubscribe$)).subscribe((data: IImage[]) => {
         this.images = data;
       })

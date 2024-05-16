@@ -8,6 +8,7 @@ import { ImageUploaderModule } from "../../image-uploader/image-uploader.module"
 import { Base64Pipe } from "../../../pipes/image-to-base64.pipe";
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from "primeng/api";
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ConfirmationService } from "primeng/api";
     ButtonModule,
     ImageUploaderModule,
     Base64Pipe,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    PaginatorModule
   ],
   exports: [
     ImageStorageDialogComponent

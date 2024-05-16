@@ -16,8 +16,8 @@ export class AdminImageDataService extends BaseDataService {
     super(appConfigService);
   }
 
-  public getAll(): Observable<IImage[]> {
-    return this.http.get<IImage[]>(this.getUrl(), this.defaultHttpOptions);
+  public getAll(skip: number, count: number): Observable<IImage[]> {
+    return this.http.get<IImage[]>(this.getUrl(`skip/${skip}/count/${count}`), this.defaultHttpOptions);
   }
 
   public create(category: IImage): Observable<void> {

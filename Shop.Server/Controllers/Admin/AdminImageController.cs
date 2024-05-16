@@ -8,6 +8,7 @@ using Shop.Server.Models.DTO;
 using System;
 using System.Threading.Tasks;
 using Shop.Server.Common;
+using System.Linq;
 
 namespace Shop.Server.Controllers.Admin
 {
@@ -18,10 +19,16 @@ namespace Shop.Server.Controllers.Admin
         {
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<ImageDto[]>> GetAll()
+        [HttpGet("skip/{skip:int}/count/{count:int}")]
+        public async Task<ActionResult<ImageDto[]>> GetAll(int skip, int count)
         {
-            var images = await DataContext.Images.Include(x => x.Category).Include(x => x.ProductImages).ToListAsync();
+            var allImages = DataContext.Images
+                .Include(x => x.Category)
+                .Include(x => x.ProductImages);
+            var images = await allImages.OrderByDescending(x => x.Id)
+            .Skip(skip)
+            .Take(count)
+            .ToListAsync();
             return Ok(images.ToViewModels());
         }
 

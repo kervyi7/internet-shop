@@ -2,6 +2,13 @@
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.searchImage}}"
     [(ngModel)]="searchText" />
   <shop-image-uploader (onSave)="saveImage($event)" (onFileChanged)="fileChanged($event)"></shop-image-uploader>
+  <div class="paginator">
+    <p-paginator [first]="skip" [rows]="count" [totalRecords]="20" (onPageChange)="onPageChange($event)"
+      [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+      [showPageLinks]="false"></p-paginator>
+    <p-dropdown [options]="countOptions" optionLabel="label" optionValue="value" [(ngModel)]="count"
+      (ngModelChange)="onCountChange($event)"></p-dropdown>
+  </div>
 </div>
 <div class="images-container">
   <div *ngFor="let image of images" class="image-block">
