@@ -9,6 +9,7 @@ import { Base64Pipe } from "../../../pipes/image-to-base64.pipe";
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from "primeng/api";
 import { PaginatorModule } from 'primeng/paginator';
+import { KeyupListenerDirective } from "../../../directives/keyup-listener.directive";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { PaginatorModule } from 'primeng/paginator';
     ImageUploaderModule,
     Base64Pipe,
     ConfirmPopupModule,
-    PaginatorModule
+    PaginatorModule,
+    KeyupListenerDirective
   ],
   exports: [
     ImageStorageDialogComponent

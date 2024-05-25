@@ -66,11 +66,11 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
 
   public imageLoaded(): void {
     this.showCropper = true;
-    console.log('Image loaded');
+    console.log('Image loaded');//todo messages
   }
 
   public loadImageFailed(): void {
-    console.error('Load image failed');
+    console.error('Load image failed');//todo messages
   }
 
   public rotateLeft(): void {

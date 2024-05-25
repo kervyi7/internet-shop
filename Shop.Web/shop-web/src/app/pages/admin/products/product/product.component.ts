@@ -237,7 +237,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       data: config.data,
       header: config.header,
       width: config.width,
-      maximizable: config.maximizable
+      maximizable: config.maximizable,
+      contentStyle: { overflow: 'visible' }
     });
   }
 

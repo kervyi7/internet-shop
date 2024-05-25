@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
 import { IImage } from "../../models/interfaces/image";
+import { IPaginationParams } from "../../models/interfaces/pagination-params";
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,16 @@ export class AdminImageDataService extends BaseDataService {
     super(appConfigService);
   }
 
-  public getAll(skip: number, count: number): Observable<IImage[]> {
-    return this.http.get<IImage[]>(this.getUrl(`skip/${skip}/count/${count}`), this.defaultHttpOptions);
+  public getAll(params: IPaginationParams): Observable<IImage[]> {
+    return this.http.post<IImage[]>(this.getUrl('get-all'), params, this.defaultHttpOptions);
   }
 
-  public create(category: IImage): Observable<void> {
-    return this.http.post<void>(this.getUrl(), category, this.defaultHttpOptions);
+  public getCount(): Observable<number> {
+    return this.http.get<number>(this.getUrl('count'), this.defaultHttpOptions);
+  }
+
+  public create(image: IImage): Observable<void> {
+    return this.http.post<void>(this.getUrl(), image, this.defaultHttpOptions);
   }
 
   public edit(image: IImage): Observable<IImage> {

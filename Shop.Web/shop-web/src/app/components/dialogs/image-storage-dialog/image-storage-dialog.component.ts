@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs';
 import { ImageEditorComponent } from '../../image-editor/image-editor.component';
 import { ConfirmationService } from 'primeng/api';
 import { PaginatorState } from 'primeng/paginator';
+import { IPaginationParams } from '../../../models/interfaces/pagination-params';
 
 @Component({
   selector: 'shop-image-storage-dialog',
@@ -14,11 +15,13 @@ import { PaginatorState } from 'primeng/paginator';
   styleUrls: ['./image-storage-dialog.component.scss']
 })
 export class ImageStorageDialogComponent extends BaseCompleteComponent implements OnInit {
+  private _searchBy = '';
   public searchText = '';
   public imageChangedFile: File;
   public images: IImage[];
   public skip = 0;
-  public count = 10;
+  public countPerPage = 10;
+  public count = 0;
   public countOptions = [
     { label: 10, value: 10 },
     { label: 20, value: 20 },
@@ -32,37 +35,27 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     super();
   }
   public ngOnInit(): void {
-    this._adminImageDataService.getAll(this.skip, this.count).subscribe(data => {
-      this.images = data;
-    });
+    this.getImages();
+    this.getCount();
   }
 
   public onPageChange(event: PaginatorState): void {
     this.skip = event.first;
-    this.count = event.rows;
-    this._adminImageDataService.getAll(this.skip, this.count).subscribe(data => {
-      this.images = data;
-    });
+    this.countPerPage = event.rows;
+    this.getImages();
   }
 
-  public onCountChange(count: number) {
+  public onCountChange() {
     this.skip = 0;
-    this.count = count;
-    this._adminImageDataService.getAll(this.skip, this.count).subscribe(data => {
-      this.images = data;
-    });
+    this.getImages();
   }
 
-  public deleteImage(image: IBaseImage): void {
+  public deleteImage(e: Event, image: IBaseImage): void {
     if (image.isBinding) {
-      this.delete(image.id, this.lang.popups.imageBoundDelete);
+      this.delete(image.id, this.lang.popups.imageBoundDelete, e.target);
     } else {
-      this.delete(image.id, this.lang.popups.imageDelete);
+      this.delete(image.id, this.lang.popups.imageDelete, e.target);
     }
-  }
-
-  public editImage(image: IBaseImage): void {
-
   }
 
   public selectImage(image: IBaseImage): void {
@@ -70,55 +63,78 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   public fileChanged(file: File): void {
-    this._dialogRef = this._dialogService.open(ImageEditorComponent, {
+    this._dialogRef = this._dialogService.open(ImageEditorComponent, {//create service
       data: {
         imageFile: file,
         imageName: file.name
       },
-      header: `Image Editor`,
-      width: '80%',
+      header: `Image Editor`,//to localization
+      width: '80%',//dialog options
       contentStyle: { overflow: 'auto' },
       baseZIndex: 5,
       maximizable: true
     });
-    this._dialogRef.onClose.subscribe((data) => {
+    this._dialogRef.onClose.subscribe((data: IBaseImage) => {
       if (!data) {
         return;
       }
-      this.saveImage(data);
+      this.createImage(data);
     })
   }
 
-  public saveImage(baseImage: IBaseImage): void {
-    const image: IImage = {
-      body: baseImage.body,
-      name: baseImage.name,
-      smallBody: baseImage.smallBody,
-      fileName: baseImage.fileName,
-      fileSize: baseImage.fileSize,
-      mimeType: baseImage.mimeType,
-      isBinding: baseImage.isBinding
+  public searchImage(): void {
+    this.skip = 0;
+    if (this._searchBy == this.searchText) {
+      return;
     }
-    this._adminImageDataService.create(image).subscribe(() => {
-      this.images.push(image);
-    });
+    this._searchBy = this.searchText;
+    this.getImages();
+    this.getCount();
   }
 
-  private updateImages(): void {
-    this._adminImageDataService.getAll(this.skip, this.count).pipe(
-      takeUntil(this.__unsubscribe$)).subscribe((data: IImage[]) => {
+  private createImage(image: IBaseImage): void {
+    this._adminImageDataService.create(image)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        this.getImages();
+        this.getCount();
+      });
+  }
+
+  private getImages(): void {
+    const params: IPaginationParams = {
+      skip: this.skip,
+      count: this.countPerPage,
+      searchValue: this._searchBy
+    }
+    this._adminImageDataService.getAll(params)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: IImage[]) => {
         this.images = data;
-      })
+      });
   }
 
-  private delete(id: number, message: string) {
+  private getCount(): void {
+    if (this.skip != 0) {
+      return;
+    }
+    this._adminImageDataService.getCount()
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: number) => {
+        this.count = data;
+      });
+  }
+
+  private delete(id: number, message: string, target: EventTarget) {
     this.confirmationService.confirm({
-      target: event.target as EventTarget,
+      target: target,
       message: message,
       accept: () => {
-        this._adminImageDataService.delete(id).subscribe(() => {
-          this.updateImages();
-        });
+        this._adminImageDataService.delete(id)
+          .pipe(takeUntil(this.__unsubscribe$))
+          .subscribe(() => {
+            this.getImages();
+          });
       },
       reject: () => {
         return;

@@ -7,7 +7,6 @@ using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System;
 using System.Threading.Tasks;
-using Shop.Server.Common;
 using System.Linq;
 
 namespace Shop.Server.Controllers.Admin
@@ -19,17 +18,32 @@ namespace Shop.Server.Controllers.Admin
         {
         }
 
-        [HttpGet("skip/{skip:int}/count/{count:int}")]
-        public async Task<ActionResult<ImageDto[]>> GetAll(int skip, int count)
+        [HttpPost("get-all")]
+        public async Task<ActionResult<ImageDto[]>> GetAll(PaginationDto model)
         {
-            var allImages = DataContext.Images
-                .Include(x => x.Category)
-                .Include(x => x.ProductImages);
+            var allImages = DataContext.Images.Select(x => new ImageDto
+            {
+                Id = x.Id,
+                SmallBody = Convert.ToBase64String(x.SmallBody),
+                Name = x.Name,
+                IsBinding = x.ProductImages.Any() || x.Category != null
+            });
+            if (!string.IsNullOrEmpty(model.SearchValue))
+            {
+                allImages = allImages.Where(x => x.Name.Contains(model.SearchValue));
+            }
             var images = await allImages.OrderByDescending(x => x.Id)
-            .Skip(skip)
-            .Take(count)
+            .Skip(model.Skip)
+            .Take(model.Count)
             .ToListAsync();
-            return Ok(images.ToViewModels());
+            return Ok(images);
+        }
+
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetImageCount()
+        {
+            var count = await DataContext.Images.CountAsync();
+            return Ok(count);
         }
 
         [HttpPost()]

@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IBaseImage } from '../../models/interfaces/image';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { BaseCompleteComponent } from '../base/base-complete.component';
 
 @Component({
@@ -9,18 +8,7 @@ import { BaseCompleteComponent } from '../base/base-complete.component';
 
 })
 export class ImageUploaderComponent extends BaseCompleteComponent {
-  @Output() public onSave: EventEmitter<IBaseImage> = new EventEmitter();
   @Output() public onFileChanged: EventEmitter<File> = new EventEmitter();
-  @Input() public images: IBaseImage[] = [];
-  @Input() public typeText: boolean = false;
-  public imageChangedFile: File;
-  public showImage: string = '';
-
-  public addImage(image: IBaseImage): void {
-    this.imageChangedFile = null;
-    this.images.push(image);
-    this.onSave.next(image);
-  }
 
   public fileChangeEvent(event: Event): void {
     const target = event.target as HTMLInputElement;
