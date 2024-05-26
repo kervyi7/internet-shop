@@ -44,7 +44,7 @@ export class HttpClientInterceptor implements HttpInterceptor {
   private handleError(errorResponse: HttpErrorResponse, subscriber: Subscriber<unknown>, httpRequest: HttpRequest<unknown>) {
     if (errorResponse.status === 401) {
       const tokenExpired = errorResponse.headers.get("Token-Expired");
-      if (tokenExpired !== "true") {
+      if (tokenExpired === "true") {
         this.handleTokenExpiredError(subscriber, httpRequest);
         return;
       }
