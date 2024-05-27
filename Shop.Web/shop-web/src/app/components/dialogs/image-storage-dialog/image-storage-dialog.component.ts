@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs';
 import { ImageEditorComponent } from '../../image-editor/image-editor.component';
 import { ConfirmationService } from 'primeng/api';
 import { PaginatorState } from 'primeng/paginator';
-import { IPaginationParams } from '../../../models/interfaces/pagination-params';
+import { IGetModelsRequest } from '../../../models/interfaces/get-models-request';
 
 @Component({
   selector: 'shop-image-storage-dialog',
@@ -35,26 +35,26 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     super();
   }
   public ngOnInit(): void {
-    this.getImages();
-    this.getCount();
+    this.loadImages();
+    this.loadCount();
   }
 
   public onPageChange(event: PaginatorState): void {
     this.skip = event.first;
     this.countPerPage = event.rows;
-    this.getImages();
+    this.loadImages();
   }
 
   public onCountChange() {
     this.skip = 0;
-    this.getImages();
+    this.loadImages();
   }
 
   public deleteImage(e: Event, image: IBaseImage): void {
     if (image.isBinding) {
-      this.delete(image.id, this.lang.popups.imageBoundDelete, e.target);
+      this.tryDelete(image.id, this.lang.popups.imageBoundDelete, e.target);
     } else {
-      this.delete(image.id, this.lang.popups.imageDelete, e.target);
+      this.tryDelete(image.id, this.lang.popups.imageDelete, e.target);
     }
   }
 
@@ -88,21 +88,21 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       return;
     }
     this._searchBy = this.searchText;
-    this.getImages();
-    this.getCount();
+    this.loadImages();
+    this.loadCount();
   }
 
   private createImage(image: IBaseImage): void {
     this._adminImageDataService.create(image)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe(() => {
-        this.getImages();
-        this.getCount();
+        this.loadImages();
+        this.loadCount();
       });
   }
 
-  private getImages(): void {
-    const params: IPaginationParams = {
+  private loadImages(): void {
+    const params: IGetModelsRequest = {
       skip: this.skip,
       count: this.countPerPage,
       searchValue: this._searchBy
@@ -114,7 +114,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       });
   }
 
-  private getCount(): void {
+  private loadCount(): void {
     if (this.skip != 0) {
       return;
     }
@@ -125,7 +125,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       });
   }
 
-  private delete(id: number, message: string, target: EventTarget) {
+  private tryDelete(id: number, message: string, target: EventTarget): void {
     this.confirmationService.confirm({
       target: target,
       message: message,
@@ -133,7 +133,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
         this._adminImageDataService.delete(id)
           .pipe(takeUntil(this.__unsubscribe$))
           .subscribe(() => {
-            this.getImages();
+            this.loadImages();
           });
       },
       reject: () => {

@@ -21,7 +21,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost("get-all")]
         public async Task<ActionResult<ImageDto[]>> GetAll(PaginationDto model)
         {
-            var allImages = DataContext.Images.Select(x => new ImageDto
+            var allImages = DataContext.Images.Include(x => x.ProductImages).Include(x => x.Category).Select(x => new ImageDto
             {
                 Id = x.Id,
                 SmallBody = Convert.ToBase64String(x.SmallBody),

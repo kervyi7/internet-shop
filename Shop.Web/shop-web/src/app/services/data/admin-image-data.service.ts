@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
 import { IImage } from "../../models/interfaces/image";
-import { IPaginationParams } from "../../models/interfaces/pagination-params";
+import { IGetModelsRequest } from "../../models/interfaces/get-models-request";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class AdminImageDataService extends BaseDataService {
     super(appConfigService);
   }
 
-  public getAll(params: IPaginationParams): Observable<IImage[]> {
+  public getAll(params: IGetModelsRequest): Observable<IImage[]> {
     return this.http.post<IImage[]>(this.getUrl('get-all'), params, this.defaultHttpOptions);
   }
 
