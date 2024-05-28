@@ -12,7 +12,7 @@
 </div>
 <div class="images-container">
   <div *ngFor="let image of images" class="image-block">
-    <img [src]="image | toBase64" class="image">
+    <img [src]="image.smallBody" class="image">
     <span class="image-name">{{image.name}}</span>
     <div class="image-overflow">
       <span class="material-icons-outline tool" (click)="deleteImage($event, image)">{{mIcons.delete}}</span>

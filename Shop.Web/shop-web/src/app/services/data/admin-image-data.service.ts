@@ -5,6 +5,7 @@ import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
 import { IImage } from "../../models/interfaces/image";
 import { IGetModelsRequest } from "../../models/interfaces/get-models-request";
+import { IPageData } from "../../models/interfaces/page-data";
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,8 @@ export class AdminImageDataService extends BaseDataService {
     super(appConfigService);
   }
 
-  public getAll(params: IGetModelsRequest): Observable<IImage[]> {
-    return this.http.post<IImage[]>(this.getUrl('get-all'), params, this.defaultHttpOptions);
-  }
-
-  public getCount(): Observable<number> {
-    return this.http.get<number>(this.getUrl('count'), this.defaultHttpOptions);
+  public getAll(params: IGetModelsRequest): Observable<IPageData<IImage[]>> {
+    return this.http.post<IPageData<IImage[]>>(this.getUrl('get-all'), params, this.defaultHttpOptions);
   }
 
   public create(image: IImage): Observable<void> {

@@ -8,6 +8,7 @@ using Shop.Server.Models.DTO;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Shop.Server.Controllers.Admin
 {
@@ -19,7 +20,7 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPost("get-all")]
-        public async Task<ActionResult<ImageDto[]>> GetAll(PaginationDto model)
+        public async Task<ActionResult<PageDataDto<ImageDto[]>>> GetAll(PaginationDto model)
         {
             var allImages = DataContext.Images.Include(x => x.ProductImages).Include(x => x.Category).Select(x => new ImageDto
             {
@@ -36,14 +37,13 @@ namespace Shop.Server.Controllers.Admin
             .Skip(model.Skip)
             .Take(model.Count)
             .ToListAsync();
-            return Ok(images);
-        }
-
-        [HttpGet("count")]
-        public async Task<ActionResult<int>> GetImageCount()
-        {
-            var count = await DataContext.Images.CountAsync();
-            return Ok(count);
+            var count = allImages.Count();
+            var response = new PageDataDto<List<ImageDto>>
+            {
+                Data = images,
+                Count = count
+            };
+            return Ok(response);
         }
 
         [HttpPost()]

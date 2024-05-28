@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IBaseImage, IImage } from '../../../models/interfaces/image';
 import { AdminImageDataService } from '../../../services/data/admin-image-data.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -8,11 +8,14 @@ import { ImageEditorComponent } from '../../image-editor/image-editor.component'
 import { ConfirmationService } from 'primeng/api';
 import { PaginatorState } from 'primeng/paginator';
 import { IGetModelsRequest } from '../../../models/interfaces/get-models-request';
+import { IPageData } from '../../../models/interfaces/page-data';
+import { Converter } from '../../../common/converter';
 
 @Component({
   selector: 'shop-image-storage-dialog',
   templateUrl: './image-storage-dialog.component.html',
-  styleUrls: ['./image-storage-dialog.component.scss']
+  styleUrls: ['./image-storage-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageStorageDialogComponent extends BaseCompleteComponent implements OnInit {
   private _searchBy = '';
@@ -31,12 +34,12 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   constructor(private _adminImageDataService: AdminImageDataService,
     private _dialogRef: DynamicDialogRef,
     private _dialogService: DialogService,
-    private confirmationService: ConfirmationService) {
+    private _confirmationService: ConfirmationService,
+    private _cd: ChangeDetectorRef) {
     super();
   }
   public ngOnInit(): void {
     this.loadImages();
-    this.loadCount();
   }
 
   public onPageChange(event: PaginatorState): void {
@@ -89,7 +92,6 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     }
     this._searchBy = this.searchText;
     this.loadImages();
-    this.loadCount();
   }
 
   private createImage(image: IBaseImage): void {
@@ -97,7 +99,6 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe(() => {
         this.loadImages();
-        this.loadCount();
       });
   }
 
@@ -109,24 +110,18 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     }
     this._adminImageDataService.getAll(params)
       .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: IImage[]) => {
-        this.images = data;
-      });
-  }
-
-  private loadCount(): void {
-    if (this.skip != 0) {
-      return;
-    }
-    this._adminImageDataService.getCount()
-      .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: number) => {
-        this.count = data;
+      .subscribe((data: IPageData<IImage[]>) => {
+        this.images = data.data;
+        this.images.map(image => {
+          image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
+        });
+        this.count = data.count;
+        this._cd.detectChanges();
       });
   }
 
   private tryDelete(id: number, message: string, target: EventTarget): void {
-    this.confirmationService.confirm({
+    this._confirmationService.confirm({
       target: target,
       message: message,
       accept: () => {
