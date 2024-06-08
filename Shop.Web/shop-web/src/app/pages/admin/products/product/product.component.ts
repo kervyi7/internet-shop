@@ -8,7 +8,6 @@ import { AdminProductDataService } from '../../../../services/data/admin-product
 import { AdminCategoryDataService } from '../../../../services/data/admin-category-data.service';
 import { ICategory } from '../../../../models/interfaces/category';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
-import { UtilityDataService } from '../../../../services/data/utility-data.service';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PropertyDialogComponent } from '../../../../components/dialogs/property-dialog/property-dialog.component';
 import { SelectItemDialogComponent } from '../../../../components/dialogs/select-item-dialog/select-item-dialog.component';
@@ -19,6 +18,9 @@ import { DialogOptions } from '../../../../models/enums/dialog-options';
 import { ProductItems } from '../../../../models/enums/product-items';
 import { CreateProduct } from '../../../../models/classes/create-product';
 import { IProperty } from '../../../../models/interfaces/property';
+import { BrandDataService } from '../../../../services/data/admin-brand-data.service';
+import { TypeDataService } from '../../../../services/data/admin-type-data.service';
+import { Util } from '../../../../common/util';
 
 @Component({
   selector: 'shop-product',
@@ -47,7 +49,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     private _router: Router,
     private _adminProductDataService: AdminProductDataService,
     private _adminCategoryDataService: AdminCategoryDataService,
-    private _utilityDataService: UtilityDataService,
+    private _brandDataService: BrandDataService,
+    private _typeDataService: TypeDataService,
     private _cd: ChangeDetectorRef) {
     super();
   }
@@ -77,7 +80,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.types.length) {
       return;
     }
-    this._utilityDataService.getType()
+    this._typeDataService.getType()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         this.types = data;
@@ -89,7 +92,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.brands.length) {
       return;
     }
-    this._utilityDataService.getBrand()
+    this._brandDataService.getBrand()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         this.brands = data;
@@ -109,15 +112,27 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       });
   }
 
+  public handleClearTypes(): void {
+    this.types = [];
+  }
+
+  public handleClearCategories(): void {
+    this.categories = [];
+  }
+
+  public handleClearBrands(): void {
+    this.brands = [];
+  }
+
   public isInputEmpty(input: string | number | ICodeName): boolean {
     return !Boolean(input);
   }
 
   public deleteProperty(property: IProperty): void {
     this._adminProductDataService.deleteProperty(this.product.id, property).subscribe({
-      error: err => this._notificationService.showMessage(MessageTypes.error, "Error", err),
+      error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
       complete: () => {
-        this._notificationService.showMessage(MessageTypes.success, "Success", "Property has deleted");
+        this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
         this.updateProperties();
       }
     });
@@ -198,11 +213,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.id) {
       const isValid = !this.validateData();
       if (!isValid) {
-        this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected");
+        this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
       } else {
         this._adminProductDataService.edit(this.id, this.editedProduct).subscribe({
-          error: err => this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected"),
-          complete: () => this._notificationService.showMessage(MessageTypes.success, "Success", "Changes were saved")
+          error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+          complete: () => this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
         });
         return;
       }
@@ -227,9 +242,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       currency: this.product.currency,
       isExist: this.product.isExist
     }
-    const productString = JSON.stringify(product);
-    const editProductString = JSON.stringify(this.editedProduct);
-    return productString === editProductString;
+    return Util.isDataEqual(product, this.editedProduct);
   }
 
   private openDialog<T>(component: Type<T>, config: DynamicDialogConfig): void {

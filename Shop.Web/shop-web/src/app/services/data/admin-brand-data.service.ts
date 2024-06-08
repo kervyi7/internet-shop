@@ -9,32 +9,19 @@ import { IBaseModel } from '../../models/interfaces/base/base-model';
 @Injectable({
   providedIn: 'root'
 })
-export class UtilityDataService extends BaseDataService {
-  public baseUrl = '';
-  private _urls: string[] = ['adminProductType', 'adminProductBrand'];
+export class BrandDataService extends BaseDataService {
+  public baseUrl = 'adminProductBrand';
 
   constructor(public readonly http: HttpClient,
-    appConfigService: AppConfigService) {
-    super(appConfigService);
-  }
-
-  public getType(): Observable<ICodeName[]> {
-    this.baseUrl = this._urls[0];
-    return this.http.get<ICodeName[]>(this.getUrl(), this.defaultHttpOptions);
+    private _appConfigService: AppConfigService) {
+    super(_appConfigService);
   }
 
   public getBrand(): Observable<ICodeName[]> {
-    this.baseUrl = this._urls[1];
     return this.http.get<ICodeName[]>(this.getUrl(), this.defaultHttpOptions);
   }
 
-  public createType(item: ICodeName): Observable<IBaseModel> {
-    this.baseUrl = this._urls[0];
-    return this.http.post<IBaseModel>(this.getUrl(), item, this.defaultHttpOptions);
-  }
-
   public createBrand(item: ICodeName): Observable<IBaseModel> {
-    this.baseUrl = this._urls[1];
     return this.http.post<IBaseModel>(this.getUrl(), item, this.defaultHttpOptions);
   }
 }

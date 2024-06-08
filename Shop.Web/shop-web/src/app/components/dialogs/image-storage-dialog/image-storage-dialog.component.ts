@@ -10,6 +10,7 @@ import { PaginatorState } from 'primeng/paginator';
 import { IGetModelsRequest } from '../../../models/interfaces/get-models-request';
 import { IPageData } from '../../../models/interfaces/page-data';
 import { Converter } from '../../../common/converter';
+import { DialogOptions } from '../../../models/enums/dialog-options';
 
 @Component({
   selector: 'shop-image-storage-dialog',
@@ -66,13 +67,13 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   public fileChanged(file: File): void {
-    this._dialogRef = this._dialogService.open(ImageEditorComponent, {//create service
+    this._dialogRef = this._dialogService.open(ImageEditorComponent, {
       data: {
         imageFile: file,
         imageName: file.name
       },
-      header: `Image Editor`,//to localization
-      width: '80%',//dialog options
+      header: this.lang.headers.imageEditor,
+      width: DialogOptions.largeWidth,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 5,
       maximizable: true

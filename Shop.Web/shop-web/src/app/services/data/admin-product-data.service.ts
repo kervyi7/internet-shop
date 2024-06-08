@@ -16,8 +16,8 @@ export class AdminProductDataService extends BaseDataService {
   public baseUrl = 'adminProduct';
 
   constructor(public readonly http: HttpClient,
-    appConfigService: AppConfigService) {
-    super(appConfigService);
+    private _appConfigService: AppConfigService) {
+    super(_appConfigService);
   }
 
   public getAll(): Observable<IProduct[]> {

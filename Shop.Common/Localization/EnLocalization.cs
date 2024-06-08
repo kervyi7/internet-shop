@@ -13,6 +13,8 @@
         public ITooltipsLocalization Tooltips => new EnLocalizationTooltips();
 
         public IPopupsLocalization Popups => new EnLocalizationPopups();
+
+        public INotificationsLocalization Notifications => new EnLocalizatioNotifications();
     }
 
     public class EnLocalizationButtons : IButtonsLocalization
@@ -41,6 +43,7 @@
         public string Types => "Edit list of types";
         public string ImageStorage => "Image Storage";
         public string Property => "Property settings";
+        public string ImageEditor => "Image Editor";
     }
 
     public class EnLocalizationPlaceholders : IPlaceholdersLocalization
@@ -80,5 +83,17 @@
     {
         public string ImageDelete => "Image is not linked. Are you sure that you want to proceed?";
         public string ImageBoundDelete => "Image is linked with product(s). Are you sure that you want to proceed?";
+    }
+
+    public class EnLocalizatioNotifications : INotificationsLocalization
+    {
+        public string Error => "Error";
+        public string Success => "Success";
+        public string Warn => "Warn";
+        public string NotChanged => "Changes were not detected";
+        public string InvalidData => "Invalid data";
+        public string ChangesSaved => "Changes were saved";
+        public string DeletedProperty => "Property has deleted";
+        public string FailedToLoadImage => "Failed to load image";
     }
 }

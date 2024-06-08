@@ -1,9 +1,19 @@
+export const localizationMock: ILocalization = {
+  buttons: {} as IButtonsLocalization,
+  headers: {} as IHeadersLocalization,
+  placeholders: {} as IPlaceholdersLocalization,
+  propertyTypes: {} as IPropertyTypesLocalization,
+  popups: {} as IPopupsLocalization,
+  notifications: {} as INotificationsLocalization
+};
+
 export interface ILocalization {
   buttons: IButtonsLocalization;
   headers: IHeadersLocalization;
   placeholders: IPlaceholdersLocalization;
   propertyTypes: IPropertyTypesLocalization;
   popups: IPopupsLocalization;
+  notifications: INotificationsLocalization;
 }
 
 export interface IButtonsLocalization {
@@ -30,6 +40,7 @@ export interface IHeadersLocalization {
   brands: string;
   types: string;
   property: string;
+  imageEditor: string;
 }
 
 export interface IPlaceholdersLocalization {
@@ -61,4 +72,15 @@ export interface IPropertyTypesLocalization {
 export interface IPopupsLocalization {
   imageDelete: string;
   imageBoundDelete: string;
+}
+
+export interface INotificationsLocalization {
+  error: string;
+  success: string;
+  warn: string;
+  notChanged: string;
+  invalidData: string;
+  changesSaved: string;
+  deletedProperty: string;
+  failedToLoadImage: string;
 }

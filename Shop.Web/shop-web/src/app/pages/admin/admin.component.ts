@@ -14,11 +14,11 @@ export class AdminComponent extends BaseCompleteComponent {
     super();
   }
 
-  public openCategories() {
+  public openCategories(): void  {
     this._router.navigate(['/admin/categories']);
   }
 
-  public openProducts() {
+  public openProducts(): void  {
     this._router.navigate(['/admin/products']);
   }
 }

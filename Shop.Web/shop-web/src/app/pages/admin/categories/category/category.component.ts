@@ -7,6 +7,9 @@ import { ICategory } from '../../../../models/interfaces/category';
 import { IImage } from '../../../../models/interfaces/image';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
+import { MessageTypes } from '../../../../models/enums/message-types';
+import { NotificationService } from '../../../../services/notification.service';
+import { DialogOptions } from '../../../../models/enums/dialog-options';
 
 @Component({
   selector: 'shop-category',
@@ -28,13 +31,13 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     private _router: Router,
     private _adminCategoryDataService: AdminCategoryDataService,
     private _cd: ChangeDetectorRef,
-    private _dialogService: DialogService) {
+    private _dialogService: DialogService,
+    private _notificationService: NotificationService) {
     super();
   }
 
   public ngOnInit(): void {
     this._id = +this._activatedRoute.snapshot.paramMap.get('id')!;
-    console.log(this._id);
     if (this._id) {
       this._adminCategoryDataService.getById(this._id).pipe(
         takeUntil(this.__unsubscribe$)).subscribe((data: ICategory) => {
@@ -47,7 +50,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     }
   }
 
-  public submit() {
+  public submit(): void {
     if (this._id) {
       this.edit();
     } else {
@@ -55,7 +58,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     }
   }
 
-  private edit() {
+  private edit(): void {
     const category: ICategory = {
       id: this._id,
       image: this.image,
@@ -64,16 +67,16 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       position: null
     }
     if (this.validate(category)) {
-      throw new Error("nothing changed");
+      this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
     }
     this._adminCategoryDataService.editCategory(this._id, category).subscribe();
   }
 
-  private validate(category: ICategory) {
+  private validate(category: ICategory): boolean {
     return category == this.category;
   }
 
-  private create() {
+  private create(): void {
     const category: ICategory = {
       image: this.image,
       name: this.categoryName,
@@ -84,10 +87,10 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public showImageStorage() {
+  public showImageStorage(): void {
     this._dialogRef = this._dialogService.open(ImageStorageDialogComponent, {
       header: this.lang.headers.imageStorage,
-      width: '1100px',
+      width: DialogOptions.standardWidth,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 4,
       maximizable: true
@@ -101,7 +104,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public goToPreviousPage() {
+  public goToPreviousPage(): void {
     this._router.navigate(['/admin/categories']);
   }
 }

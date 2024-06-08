@@ -8,6 +8,8 @@ import { Converter } from '../../common/converter';
 import { MimeTypes } from '../../models/enums/mime-types';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseCompleteComponent } from '../base/base-complete.component';
+import { NotificationService } from '../../services/notification.service';
+import { MessageTypes } from '../../models/enums/message-types';
 
 @Component({
   selector: 'shop-image-editor',
@@ -32,8 +34,9 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
 
   constructor(
     private _refConfig: DynamicDialogConfig,
-    private sanitizer: DomSanitizer,
-    private _ref: DynamicDialogRef) {
+    private _sanitizer: DomSanitizer,
+    private _ref: DynamicDialogRef,
+    private _notificationService: NotificationService) {
     super();
   }
 
@@ -57,20 +60,18 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
 
   public async imageCropped(event: ImageCroppedEvent): Promise<void> {
     this._croppedImage = event.blob;
-    this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(this._croppedImage));
-    console.log(event);
+    this.croppedImage = this._sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(this._croppedImage));
     const file = new File([event.blob], this.imageFile.name, { type: 'image/jpeg' });
     this._resizedImage = await this.resize(file);
-    this.resizedImage = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(this._resizedImage));
+    this.resizedImage = this._sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(this._resizedImage));
   }
 
   public imageLoaded(): void {
     this.showCropper = true;
-    console.log('Image loaded');//todo messages
   }
 
   public loadImageFailed(): void {
-    console.error('Load image failed');//todo messages
+    this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.failedToLoadImage);
   }
 
   public rotateLeft(): void {

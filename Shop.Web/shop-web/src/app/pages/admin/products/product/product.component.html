@@ -46,14 +46,14 @@
     </div>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="true" filterBy="name"
+    <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="!selectedCategory" filterBy="name"
       optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.category}}" (onClick)="getCategories()"
-      [style]="{'width':'100%'}"></p-dropdown>
+      [style]="{'width':'100%'}" (onClear)="handleClearCategories()"></p-dropdown>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="true" filterBy="name"
+    <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="!selectedType" filterBy="name"
       optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.type}}" (onClick)="getTypes()"
-      [style]="{'width':'100%'}"></p-dropdown>
+      [style]="{'width':'100%'}" (onClear)="handleClearTypes()"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editTypes()">
         <span class="material-icons-reg">{{mIcons.edit}}</span>
@@ -61,9 +61,9 @@
     </div>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="true" filterBy="name"
+    <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="!selectedBrand" filterBy="name"
       optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.brand}}" (onClick)="getBrands()"
-      [style]="{'width':'100%'}"></p-dropdown>
+      [style]="{'width':'100%'}" (onClear)="handleClearBrands()"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editBrands()">
         <span class="material-icons-reg">{{mIcons.edit}}</span>
@@ -152,7 +152,8 @@
         <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
       </div>
       <div class="property-item">
-        <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}" [disabled]="true"></p-calendar>
+        <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}"
+          [disabled]="true"></p-calendar>
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
         <span class="material-icons-reg">{{mIcons.edit}}</span>

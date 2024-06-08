@@ -7,6 +7,7 @@
         IPlaceholdersLocalization Placeholders { get; }
         IPropertyTypesLocalization PropertyTypes { get; }
         IPopupsLocalization Popups { get; }
+        INotificationsLocalization Notifications { get; }
     }
 
     public interface IButtonsLocalization
@@ -35,6 +36,7 @@
         string Types { get; }
         string ImageStorage { get; }
         string Property { get; }
+        string ImageEditor { get; }
     }
 
     public interface IPlaceholdersLocalization
@@ -74,5 +76,17 @@
     {
         string ImageDelete { get; }
         string ImageBoundDelete { get; }
+    }
+
+    public interface INotificationsLocalization
+    {
+        string Error { get; }
+        string Success { get; }
+        string Warn { get; }
+        string NotChanged { get; }
+        string InvalidData { get; }
+        string ChangesSaved { get; }
+        string DeletedProperty { get; }
+        string FailedToLoadImage { get; }
     }
 }
