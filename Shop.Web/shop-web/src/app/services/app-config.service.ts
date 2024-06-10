@@ -50,7 +50,7 @@ export class AppConfigService {
   }
 
   private getLocalizationType(): string {
-    return 'en';//todo local storage
+    return localStorage.getItem('language');
   }
 
   private init(): void {

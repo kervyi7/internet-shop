@@ -24,8 +24,8 @@ namespace Shop.Common.Localization
         public string Save => "Save";
         public string NewProduct => "New product";
         public string NewCategory => "New category";
-        public string CategoryManagement => "Category management";
-        public string ProductManagement => "Product management";
+        public string CategoryManagement => "Category management pl";
+        public string ProductManagement => "Product management pl";
         public string AddProperty => "Add property";
         public string NewImage => "New image";
         public string NewItem => "New item";

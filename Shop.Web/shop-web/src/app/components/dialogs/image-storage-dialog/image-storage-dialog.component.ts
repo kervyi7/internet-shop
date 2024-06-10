@@ -54,7 +54,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     this.loadImages();
   }
 
-  public deleteImage(e: Event, image: IBaseImage): void {
+  public deleteImage(e: Event, image: IImage): void {
     if (image.isBinding) {
       this.tryDelete(image.id, this.lang.popups.imageBoundDelete, e.target);
     } else {
@@ -62,7 +62,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     }
   }
 
-  public selectImage(image: IBaseImage): void {
+  public selectImage(image: IImage): void {
     this._dialogRef.close(image);
   }
 
@@ -95,7 +95,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
     this.loadImages();
   }
 
-  private createImage(image: IBaseImage): void {
+  private createImage(image: IImage): void {
     this._adminImageDataService.create(image)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe(() => {

@@ -27,6 +27,7 @@ namespace Shop.Server.Controllers.Admin
                 Id = x.Id,
                 SmallBody = Convert.ToBase64String(x.SmallBody),
                 Name = x.Name,
+                MimeType = x.MimeType,
                 IsBinding = x.ProductImages.Any() || x.Category != null
             });
             if (!string.IsNullOrEmpty(model.SearchValue))

@@ -10,6 +10,7 @@ import { ImageStorageDialogComponent } from '../../../../components/dialogs/imag
 import { MessageTypes } from '../../../../models/enums/message-types';
 import { NotificationService } from '../../../../services/notification.service';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
+import { Converter } from '../../../../common/converter';
 
 @Component({
   selector: 'shop-category',
@@ -21,7 +22,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   private _dialogRef: DynamicDialogRef
   private _id: number;
   public imageChangedFile: File;
-  public image: IImage;
+  public image: string;
   public category: ICategory;
   public categoryName: string;
   public categoryCode: string;
@@ -42,11 +43,17 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       this._adminCategoryDataService.getById(this._id).pipe(
         takeUntil(this.__unsubscribe$)).subscribe((data: ICategory) => {
           this.category = data;
-          this.image = this.category.image;
+          this.image = Converter.toFileSrc(this.category.image.mimeType, this.category.image.smallBody);
           this.categoryName = this.category.name;
           this.categoryCode = this.category.code;
           this._cd.detectChanges();
         });
+    } else {
+      this.category = {
+        image: null,
+        code: null,
+        name: null,
+      }
     }
   }
 
@@ -61,7 +68,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   private edit(): void {
     const category: ICategory = {
       id: this._id,
-      image: this.image,
+      image: this.category.image,
       name: this.categoryName,
       code: this.categoryCode,
       position: null
@@ -78,7 +85,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
 
   private create(): void {
     const category: ICategory = {
-      image: this.image,
+      image: this.category.image,
       name: this.categoryName,
       code: this.categoryCode
     };
@@ -99,7 +106,8 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       if (!data) {
         return;
       }
-      this.image = data;
+      this.category.image = data;
+      this.image = data.smallBody;
       this._cd.detectChanges();
     });
   }
