@@ -57,6 +57,9 @@
         string IsTitle { get; }
         string Login { get; }
         string Password { get; }
+        string ProductCount { get; }
+        string ProductSalePrice { get; }
+        string ProductDescription { get; }
     }
 
     public interface IPropertyTypesLocalization

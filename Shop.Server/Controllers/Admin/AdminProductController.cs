@@ -67,6 +67,9 @@ namespace Shop.Server.Controllers.Admin
                 Code = model.Code,
                 TypeId = model.TypeId,
                 BrandId = model.BrandId,
+                SalePrice = model.SalePrice,
+                Description = model.Description,
+                Count = model.Count,
                 Price = model.Price,
                 Currency = model.Currency,
                 CreatedByUser = user,
@@ -90,6 +93,7 @@ namespace Shop.Server.Controllers.Admin
                 throw new NotFoundException(nameof(Product), nameof(Product.Id), model.ReferenceKey);
             }
             var image = await DataContext.Images.FirstOrDefaultAsync(x => x.Id == model.Id);
+            image.IsTitle = model.IsTitle;
             DataContext.ProductImages.Add(new ProductImage
             {
                 ProductId = model.ReferenceKey,
@@ -141,14 +145,14 @@ namespace Shop.Server.Controllers.Admin
             return Ok();
         }
 
-        [HttpPut($"edit-property/{PropertyTypes.Bool}/"+"{id:int}")]
+        [HttpPut($"edit-property/{PropertyTypes.Bool}/" + "{id:int}")]
         public async Task<ActionResult> EditPropertyBool(int id, PropertyDto<bool> model)
         {
             await EditProperty(id, model);
             return Ok();
         }
 
-        [HttpPut($"edit-property/{PropertyTypes.Date}/"+"{id:int}")]
+        [HttpPut($"edit-property/{PropertyTypes.Date}/" + "{id:int}")]
         public async Task<ActionResult> EditPropertyDate(int id, PropertyDto<DateTime> model)
         {
             await EditProperty(id, model);
@@ -172,6 +176,9 @@ namespace Shop.Server.Controllers.Admin
             item.Code = model.Code;
             item.TypeId = model.TypeId;
             item.BrandId = model.BrandId;
+            item.SalePrice = model.SalePrice;
+            item.Description = model.Description;
+            item.Count = model.Count;
             item.Price = model.Price;
             item.Currency = model.Currency;
             item.UpdatedAt = DateTime.UtcNow;
@@ -228,21 +235,6 @@ namespace Shop.Server.Controllers.Admin
                 default:
                     throw new ConflictException("not reference");
             }
-        }
-
-        private Image CreateImage(ImageDto model, string user)
-        {
-            return new Image
-            {
-                FileName = model.FileName,//todo fix(in category and product same func)
-                Name = model.Name,
-                FileSize = model.FileSize,
-                MimeType = model.MimeType,
-                Body = Convert.FromBase64String(model.Body),
-                SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody),
-                CreatedByUser = user,
-                UpdatedByUser = user,
-            };
         }
 
         private async Task AddProperty<T>(PropertyDto<T> model)

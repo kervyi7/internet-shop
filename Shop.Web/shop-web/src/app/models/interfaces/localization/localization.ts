@@ -60,6 +60,9 @@ export interface IPlaceholdersLocalization {
   code: string;
   login: string;
   password: string;
+  productCount: string;
+  productSalePrice: string;
+  productDescription: string
 }
 
 export interface IPropertyTypesLocalization {

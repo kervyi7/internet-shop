@@ -18,6 +18,7 @@ import { ImageUploaderModule } from '../../../components/image-uploader/image-up
 import { ImageStorageModule } from '../../../components/dialogs/image-storage-dialog/image-storage-dialog.module';
 import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
 import { CalendarModule } from 'primeng/calendar';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CalendarModule } from 'primeng/calendar';
     ImageUploaderModule,
     ImageStorageModule,
     Base64Pipe,
-    CalendarModule
+    CalendarModule,
+    InputTextareaModule
   ],
   providers: [DialogService, NotificationService],
   exports: [

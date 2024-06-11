@@ -64,6 +64,9 @@
         public string Code => "Code";
         public string Login => "Login";
         public string Password => "Password";
+        public string ProductCount => "Count of products";
+        public string ProductSalePrice => "Sale price";
+        public string ProductDescription => "Description";
     }
 
     public class EnLocalizationPropertyTypes : IPropertyTypesLocalization

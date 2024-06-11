@@ -39,6 +39,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public selectedBrand: ICodeName;
   public selectedCategory: ICodeName;
   public images: IImage[] = [];
+  public titleImage: IImage;
   public product: IProduct;
   public editedProduct: CreateProduct = new CreateProduct();
 
@@ -64,8 +65,10 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IProduct) => {
         this.product = data;
-        this.editedProduct = this.createEditedProduct(data);
+        this.editedProduct = this.createProduct(data);
         this.images = data.images;
+        this.titleImage = data.images.find((image) => { return image.isTitle });
+        this.removeTitleImage();
         this.categories.push(data.category);
         this.types.push(data.type);
         this.brands.push(data.brand);
@@ -156,14 +159,14 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public editImages() {
+  public editImages(isTitle: boolean) {
     const config = { header: this.lang.headers.imageStorage, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(ImageStorageDialogComponent, config);
     this._dialogRef.onClose.subscribe(data => {
       if (!data) {
         return;
       }
-      this.saveImage(data);
+      this.saveImage(data, isTitle);
     });
   }
 
@@ -191,8 +194,9 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public saveImage(image: IImage): void {
+  public saveImage(image: IImage, isTitle: boolean): void {
     image.referenceKey = this.product.id;
+    image.isTitle = isTitle;
     this._adminProductDataService.addImage(image).subscribe(() => {
       this.updateImages();
     });
@@ -231,17 +235,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private validateData(): boolean {
-    const product: ICreateProduct = {
-      id: this.product.id,
-      name: this.product.name,
-      code: this.product.code,
-      categoryId: this.product.category.id,
-      typeId: this.product.type.id,
-      brandId: this.product.brand.id,
-      price: this.product.price,
-      currency: this.product.currency,
-      isExist: this.product.isExist
-    }
+    const product = this.createProduct(this.product);
     return Util.isDataEqual(product, this.editedProduct);
   }
 
@@ -255,8 +249,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  private createEditedProduct(data: IProduct): ICreateProduct {
-    const editedProduct: ICreateProduct = {
+  private createProduct(data: IProduct): ICreateProduct {
+    const product: ICreateProduct = {
       id: data.id,
       name: data.name,
       code: data.code,
@@ -266,8 +260,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       price: data.price,
       currency: data.currency,
       isExist: data.isExist,
+      salePrice: data.salePrice,
+      count: data.count,
+      description: data.description
     }
-    return editedProduct;
+    return product;
   }
 
   private updateProperties(): void {
@@ -280,11 +277,21 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       })
   }
 
+  private removeTitleImage(): void {
+    const index = this.images.indexOf(this.titleImage);
+    if (index > -1) {
+      this.images.splice(index, 1);
+    }
+  }
+
   private updateImages(): void {
     this._adminProductDataService.getById(this.id).pipe(
       takeUntil(this.__unsubscribe$)).subscribe((data: IProduct) => {
         this.product.images = data.images;
+        this.titleImage = data.images.find((image) => { return image.isTitle });
         this.images = data.images;
+        this.removeTitleImage();
+        debugger;
         this._cd.detectChanges();
       })
   }

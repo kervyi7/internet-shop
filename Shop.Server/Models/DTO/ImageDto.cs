@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Shop.Server.Models.DTO
+﻿namespace Shop.Server.Models.DTO
 {
     public class ImageDto : BaseDto
     {
@@ -19,5 +17,7 @@ namespace Shop.Server.Models.DTO
         public int ReferenceKey { get; set; }
 
         public bool IsBinding { get; set; }
+
+        public bool IsTitle { get; set; }
     }
 }

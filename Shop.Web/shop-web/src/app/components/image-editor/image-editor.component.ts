@@ -53,7 +53,8 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
       name: this.imageName,
       fileName: this.getFileName(this.imageFile.name),
       mimeType: MimeTypes.JPEG,
-      isBinding: false
+      isBinding: false,
+      isTitle: false
     };
     this._ref.close(image);
   }
