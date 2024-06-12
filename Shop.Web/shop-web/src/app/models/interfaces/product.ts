@@ -7,6 +7,9 @@ export interface IProduct extends ICodeName {
   type: ICodeName;
   brand: ICodeName;
   price: number;
+  salePrice: number;
+  count: number;
+  description: string;
   currency: string;
   isExist: boolean;
   stringProperties: IProperty[];
@@ -23,6 +26,9 @@ export interface ICreateProduct extends ICodeName {
   price: number;
   currency: string;
   isExist: boolean;
+  salePrice: number;
+  count: number;
+  description: string;
 }
 
 export interface IProductResponse extends IProduct {

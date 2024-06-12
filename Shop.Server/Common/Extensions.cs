@@ -77,6 +77,9 @@ namespace Shop.Server.Common
                 Brand = CreateCodeNameDto(source.Brand),
                 Category = CreateCodeNameDto(source.Category),
                 Price = source.Price,
+                SalePrice = source.SalePrice,
+                Count = source.Count,
+                Description = source.Description,
                 Currency = source.Currency,
                 StringProperties = CreatePropertiesDto(source.StringProperties),
                 IntProperties = CreatePropertiesDto(source.IntProperties),
@@ -103,7 +106,8 @@ namespace Shop.Server.Common
                 FileName = source.FileName,
                 FileSize = source.FileSize,
                 MimeType = source.MimeType,
-                IsBinding = source.ProductImages.Any() || source.Category != null
+                IsBinding = source.ProductImages.Any() || source.Category != null,
+                IsTitle = source.IsTitle
             };
             return imageDto;
         }

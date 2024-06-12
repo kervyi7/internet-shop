@@ -23,11 +23,11 @@ export class LoginComponent extends BaseCompleteComponent {
     this.userForm = this.getUserForm();
   }
 
-  public submit() {
+  public submit(): void {
     if (this.userForm.invalid) {
-			this.userForm.markAllAsTouched();
-			return;
-		}
+      this.userForm.markAllAsTouched();
+      return;
+    }
     const login: ILogin = { ...this.userForm.getRawValue() }
     this._authDataService.login(login)
       .pipe(

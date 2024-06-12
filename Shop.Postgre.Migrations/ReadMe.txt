@@ -12,4 +12,7 @@ PM> Add-Migration FixImageArch -Project Shop.Postgre.Migrations
 PM> Add-Migration Init -Project Shop.Postgre.Migrations
 PM> Add-Migration AddImageName -Project Shop.Postgre.Migrations
 
+PM> Add-Migration Init -Project Shop.Postgre.Migrations
+PM> Add-Migration AddImageIsTitle -Project Shop.Postgre.Migrations
+
 PM> Update-Database 

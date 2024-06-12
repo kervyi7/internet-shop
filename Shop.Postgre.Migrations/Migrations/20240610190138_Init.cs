@@ -76,13 +76,13 @@ namespace Shop.Postgre.Migrations.Migrations
                     Body = table.Column<byte[]>(type: "bytea", nullable: false),
                     SmallBody = table.Column<byte[]>(type: "bytea", nullable: true),
                     FileSize = table.Column<int>(type: "integer", nullable: false),
-                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
-                    FileName = table.Column<string>(type: "text", nullable: false),
-                    MimeType = table.Column<string>(type: "text", nullable: false),
+                    FileName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    Name = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    MimeType = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,10 +98,10 @@ namespace Shop.Postgre.Migrations.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,10 +117,10 @@ namespace Shop.Postgre.Migrations.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -280,10 +280,10 @@ namespace Shop.Postgre.Migrations.Migrations
                     Position = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -308,14 +308,16 @@ namespace Shop.Postgre.Migrations.Migrations
                     BrandId = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    Currency = table.Column<string>(type: "text", nullable: true),
-                    IsExist = table.Column<bool>(type: "boolean", nullable: false),
+                    SalePrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    Count = table.Column<decimal>(type: "numeric", nullable: false),
+                    Currency = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -379,18 +381,18 @@ namespace Shop.Postgre.Migrations.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
-                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Suffix = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
+                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Suffix = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    ProductId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -411,18 +413,18 @@ namespace Shop.Postgre.Migrations.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
-                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Suffix = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<bool>(type: "boolean", nullable: false),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
+                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Suffix = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    ProductId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -443,18 +445,18 @@ namespace Shop.Postgre.Migrations.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
-                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Suffix = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<int>(type: "integer", nullable: false),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
+                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Suffix = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    ProductId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -475,18 +477,18 @@ namespace Shop.Postgre.Migrations.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
-                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Suffix = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<string>(type: "text", nullable: true),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUser = table.Column<string>(type: "text", nullable: false),
-                    UpdatedByUser = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false)
+                    CreatedByUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UpdatedByUser = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Code = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
+                    IsTitle = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Suffix = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    ProductId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

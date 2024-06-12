@@ -13,7 +13,6 @@ import { AdminRoutingModule } from './admin-routing.module';
     RouterModule,
     AdminRoutingModule
   ],
-  providers: [],
   exports: [
     AdminComponent
   ]
