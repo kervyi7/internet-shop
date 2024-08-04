@@ -1,19 +1,43 @@
 <p-button [text]="true" (click)="goToPreviousPage()"><span
     class="material-icons-reg">{{mIcons.arrow_back}}</span></p-button>
 <p *ngIf="category" class="admin-section-title">{{category.name}} {{category.code}}</p>
-<p class="admin-section-header">{{lang.headers.photo}}</p>
-<div *ngIf="!category.image" class="pic" (click)="showImageStorage()">
-  <span class="material-icons-reg">{{mIcons.add}}</span>
-</div>
-<div *ngIf="category.image" class="uploaded-images-container">
-  <div class="image-container">
-    <img [src]="image" class="image">
-    <span class="material-icons-reg delete-image" (click)="showImageStorage()">{{mIcons.edit}}</span>
-  </div>
-</div>
+
 <p class="admin-section-header">{{lang.headers.categoryInformation}}</p>
 <div class="inputs-wrapper">
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="categoryName" />
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="categoryCode" />
   <p-button (onClick)="submit()">{{lang.buttons.save}}</p-button>
+</div>
+<div *ngIf="id">
+  <p class="admin-section-header">{{lang.headers.photo}}</p>
+  <div *ngIf="!image" class="pic" (click)="showImageStorage()">
+    <span class="material-icons-reg">{{mIcons.add}}</span>
+  </div>
+  <div *ngIf="image" class="uploaded-images-container">
+    <div class="image-container">
+      <img [src]="image" class="image">
+      <span class="material-icons-reg delete-image" (click)="showImageStorage()">{{mIcons.edit}}</span>
+    </div>
+  </div>
+  <p class="admin-section-header">{{lang.headers.additionalValues}}</p>
+  <div class="input-container">
+    <div class="button-container" *ngIf="!template">
+      <p-button [text]="true" (onClick)="addPropertyTemplate()">
+        <span class="material-icons-reg">{{mIcons.add}}</span>
+        <span>Create template</span>
+      </p-button>
+    </div>
+    <div *ngIf="template" class="inputs-wrapper">
+      <div class="property-container">
+        <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="template.name"
+          [disabled]="true" />
+        <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="template.code"
+          [disabled]="true" />
+        <p-button [text]="true" (onClick)="editTemplate()">
+          <span class="material-icons-reg">{{mIcons.edit}}</span>
+        </p-button>
+      </div>
+      <shop-properties-list [template]="template" [isProduct]="false" (reload)="loadCategory()"></shop-properties-list>
+    </div>
+  </div>
 </div>

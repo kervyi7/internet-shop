@@ -73,8 +73,8 @@
       optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.type}}" (onClick)="getTypes()"
       [style]="{'width':'100%'}" (onClear)="handleClearTypes()"></p-dropdown>
     <div class="button-container">
-      <p-button [text]="true" (onClick)="editTypes()">
-        <span class="material-icons-reg">{{mIcons.edit}}</span>
+      <p-button [text]="true" (onClick)="addType()">
+        <span class="material-icons-reg">{{mIcons.add}}</span>
       </p-button>
     </div>
   </div>
@@ -83,8 +83,8 @@
       filterBy="name" optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.brand}}"
       (onClick)="getBrands()" [style]="{'width':'100%'}" (onClear)="handleClearBrands()"></p-dropdown>
     <div class="button-container">
-      <p-button [text]="true" (onClick)="editBrands()">
-        <span class="material-icons-reg">{{mIcons.edit}}</span>
+      <p-button [text]="true" (onClick)="addBrand()">
+        <span class="material-icons-reg">{{mIcons.add}}</span>
       </p-button>
     </div>
   </div>
@@ -98,7 +98,7 @@
   <p class="admin-section-header">{{lang.headers.photo}}</p>
   <p class="admin-section-subheader">Main image</p>
   <div *ngIf="titleImage" class="image-container">
-    <img [src]="titleImage | toBase64" class="image">
+    <img [src]="titleImage.smallBody" class="image">
     <span class="material-icons-reg delete-image" (click)="deleteImage(titleImage)">close</span>
   </div>
   <div *ngIf="!titleImage" class="pic" (click)="editImages(true)">
@@ -108,7 +108,7 @@
   <div class="uploaded-images-container">
     <div *ngFor="let image of images">
       <div class="image-container">
-        <img [src]="image | toBase64" class="image">
+        <img [src]="image.smallBody" class="image">
         <span class="material-icons-reg delete-image" (click)="deleteImage(image)">close</span>
       </div>
     </div>
@@ -117,79 +117,10 @@
     </div>
   </div>
   <p class="admin-section-header">{{lang.headers.additionalValues}}</p>
-  <p-button [text]="true" (onClick)="addProperty()">
+  <!-- <p-button [text]="true" (onClick)="addProperty()">
     <span class="material-icons-reg">{{mIcons.add}}</span><span>{{lang.buttons.addProperty}}</span>
-  </p-button>
+  </p-button> -->
   <div class="property-section" *ngIf="product">
-    <div *ngFor="let property of product.stringProperties" class="property-container">
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
-      </div>
-      <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">{{mIcons.edit}}</span>
-      </p-button>
-      <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">{{mIcons.delete}}</span>
-      </p-button>
-    </div>
-    <div *ngFor="let property of product.intProperties" class="property-container">
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
-      </div>
-      <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">{{mIcons.edit}}</span>
-      </p-button>
-      <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">{{mIcons.delete}}</span>
-      </p-button>
-    </div>
-    <div *ngFor="let property of product.boolProperties" class="property-container">
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <p-checkbox [(ngModel)]="property.value" [binary]="true" inputId="propertyBoolValue"
-          [disabled]="true"></p-checkbox>
-      </div>
-      <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">{{mIcons.edit}}</span>
-      </p-button>
-      <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">{{mIcons.delete}}</span>
-      </p-button>
-    </div>
-    <div *ngFor="let property of product.dateProperties" class="property-container">
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
-      </div>
-      <div class="property-item">
-        <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}"
-          [disabled]="true"></p-calendar>
-      </div>
-      <p-button [text]="true" (onClick)="editProperty(property)">
-        <span class="material-icons-reg">{{mIcons.edit}}</span>
-      </p-button>
-      <p-button [text]="true" (onClick)="deleteProperty(property)">
-        <span class="material-icons-outline">{{mIcons.delete}}</span>
-      </p-button>
-    </div>
+    <shop-properties-list [template]="template" [isProduct]="true"></shop-properties-list>
   </div>
 </div>

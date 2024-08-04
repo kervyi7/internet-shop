@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ProductComponent } from './product.component';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
-import { TypeDataService } from '../../../../services/data/admin-type-data.service';
-import { AdminProductDataService } from '../../../../services/data/admin-product-data.service';
+import { TypeDataService } from '../../../../services/data/admin/admin-type-data.service';
+import { AdminProductDataService } from '../../../../services/data/admin/admin-product-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { NotificationService } from '../../../../services/notification.service';
-import { AdminCategoryDataService } from '../../../../services/data/admin-category-data.service';
+import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { localizationMock } from '../../../../models/interfaces/localization/localization';
 import { HttpClient } from '@angular/common/http';
-import { BrandDataService } from '../../../../services/data/admin-brand-data.service';
+import { BrandDataService } from '../../../../services/data/admin/admin-brand-data.service';
 
 describe('ProductComponent', () => {
   let component: ProductComponent;

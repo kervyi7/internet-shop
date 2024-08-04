@@ -1,0 +1,18 @@
+.flex {
+  display: flex;
+  gap: 16px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.category-wrapper {
+  img {
+    width: 100px;
+  }
+
+  p {
+    text-align: center;
+  }
+}

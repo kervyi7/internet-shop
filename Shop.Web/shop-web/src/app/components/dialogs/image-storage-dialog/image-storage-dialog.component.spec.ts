@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageStorageDialogComponent } from './image-storage-dialog.component';
-import { AdminImageDataService } from '../../../services/data/admin-image-data.service';
+import { AdminImageDataService } from '../../../services/data/admin/admin-image-data.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';

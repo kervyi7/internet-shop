@@ -1,13 +1,7 @@
-<p-button [text]="true" (onClick)="showAddItem()">
-  <span class="material-icons-reg">{{mIcons.add}}</span><span>{{lang.buttons.newItem}}</span>
-</p-button>
-<div class="input-container" *ngIf="isShowAddItem">
+<div class="input-container">
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="newItem.name"
     [ngClass]="newItem.name ? '' : 'ng-invalid ng-dirty'" />
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="newItem.code"
     [ngClass]="newItem.code ? '' : 'ng-invalid ng-dirty'" />
   <p-button label="{{lang.buttons.add}}" (onClick)="addItem()"></p-button>
-</div>
-<div *ngFor="let item of items">
-  {{item.name}}
 </div>

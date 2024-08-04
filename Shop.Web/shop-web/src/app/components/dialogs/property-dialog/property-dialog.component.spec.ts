@@ -5,7 +5,7 @@ import { IGetModelsRequest } from '../../../models/interfaces/get-models-request
 import { of } from 'rxjs';
 import { localizationMock } from '../../../models/interfaces/localization/localization';
 import { PropertyDialogComponent } from './property-dialog.component';
-import { AdminProductDataService } from '../../../services/data/admin-product-data.service';
+import { AdminProductDataService } from '../../../services/data/admin/admin-product-data.service';
 import { NotificationService } from '../../../services/notification.service';
 import { AppConfigService } from '../../../services/app-config.service';
 

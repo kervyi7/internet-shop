@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IBaseImage, IImage } from '../../../models/interfaces/image';
-import { AdminImageDataService } from '../../../services/data/admin-image-data.service';
+import { AdminImageDataService } from '../../../services/data/admin/admin-image-data.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseCompleteComponent } from '../../base/base-complete.component';
 import { takeUntil } from 'rxjs';

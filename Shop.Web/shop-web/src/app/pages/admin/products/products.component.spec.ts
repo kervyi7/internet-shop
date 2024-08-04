@@ -3,7 +3,7 @@ import { ProductsComponent } from './products.component';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConfigService } from '../../../services/app-config.service';
-import { AdminProductDataService } from '../../../services/data/admin-product-data.service';
+import { AdminProductDataService } from '../../../services/data/admin/admin-product-data.service';
 import { localizationMock } from '../../../models/interfaces/localization/localization';
 import { of } from 'rxjs';
 

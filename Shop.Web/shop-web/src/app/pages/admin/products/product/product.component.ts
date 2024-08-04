@@ -4,23 +4,25 @@ import { takeUntil } from 'rxjs';
 import { IImage } from '../../../../models/interfaces/image';
 import { BaseCompleteComponent } from '../../../../components/base/base-complete.component';
 import { ICreateProduct, IProduct } from '../../../../models/interfaces/product';
-import { AdminProductDataService } from '../../../../services/data/admin-product-data.service';
-import { AdminCategoryDataService } from '../../../../services/data/admin-category-data.service';
+import { AdminProductDataService } from '../../../../services/data/admin/admin-product-data.service';
+import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
 import { ICategory } from '../../../../models/interfaces/category';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { PropertyDialogComponent } from '../../../../components/dialogs/property-dialog/property-dialog.component';
 import { SelectItemDialogComponent } from '../../../../components/dialogs/select-item-dialog/select-item-dialog.component';
 import { MessageTypes } from '../../../../models/enums/message-types';
 import { NotificationService } from '../../../../services/notification.service';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
-import { ProductItems } from '../../../../models/enums/product-items';
 import { CreateProduct } from '../../../../models/classes/create-product';
-import { IProperty } from '../../../../models/interfaces/property';
-import { BrandDataService } from '../../../../services/data/admin-brand-data.service';
-import { TypeDataService } from '../../../../services/data/admin-type-data.service';
+import { IPropertyTemplate } from '../../../../models/interfaces/property';
+import { BrandDataService } from '../../../../services/data/admin/admin-brand-data.service';
+import { TypeDataService } from '../../../../services/data/admin/admin-type-data.service';
 import { Util } from '../../../../common/util';
+import { Converter } from '../../../../common/converter';
+import { Location } from '@angular/common';
+import { IBaseModel } from '../../../../models/interfaces/base/base-model';
+import { ICreateProductResponse } from '../../../../models/interfaces/create-product-response';
 
 @Component({
   selector: 'shop-product',
@@ -42,6 +44,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public titleImage: IImage;
   public product: IProduct;
   public editedProduct: CreateProduct = new CreateProduct();
+  public template: IPropertyTemplate;
 
   constructor(
     private _notificationService: NotificationService,
@@ -52,7 +55,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     private _adminCategoryDataService: AdminCategoryDataService,
     private _brandDataService: BrandDataService,
     private _typeDataService: TypeDataService,
-    private _cd: ChangeDetectorRef) {
+    private _cd: ChangeDetectorRef,
+    private _location: Location) {
     super();
   }
 
@@ -66,8 +70,13 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       .subscribe((data: IProduct) => {
         this.product = data;
         this.editedProduct = this.createProduct(data);
-        this.images = data.images;
-        this.titleImage = data.images.find((image) => { return image.isTitle });
+        this.images = data.images.map((image) => {
+          image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
+          return image;
+        });
+        this.titleImage = data.images.find((image) => {
+          return image.isTitle;
+        });
         this.removeTitleImage();
         this.categories.push(data.category);
         this.types.push(data.type);
@@ -75,6 +84,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.selectedCategory = data.category;
         this.selectedType = data.type;
         this.selectedBrand = data.brand;
+        this.template = data.category.propertyTemplate;
         this._cd.detectChanges();
       });
   }
@@ -131,35 +141,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     return !Boolean(input);
   }
 
-  public deleteProperty(property: IProperty): void {
-    this._adminProductDataService.deleteProperty(this.product.id, property).subscribe({
-      error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
-      complete: () => {
-        this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
-        this.updateProperties();
-      }
-    });
-  }
-
-  public addProperty(): void {
-    const data = { id: this.product.id };
-    const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
-    this.openDialog(PropertyDialogComponent, config);
-    this._dialogRef.onClose.subscribe(() => {
-      this.updateProperties();
-    });
-  }
-
-  public editProperty(property: IProperty): void {
-    const data = { items: property };
-    const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
-    this.openDialog(PropertyDialogComponent, config);
-    this._dialogRef.onClose.subscribe(() => {
-      this.updateProperties();
-    });
-  }
-
-  public editImages(isTitle: boolean) {
+  public editImages(isTitle: boolean): void {
     const config = { header: this.lang.headers.imageStorage, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(ImageStorageDialogComponent, config);
     this._dialogRef.onClose.subscribe(data => {
@@ -170,42 +152,62 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public editTypes(): void {
-    const data = { items: this.types, itemsName: ProductItems.type };
-    const config = { header: this.lang.headers.types, width: DialogOptions.standardWidth, maximizable: true, data: data };
+  public addType(): void {
+    const config = { header: this.lang.headers.types, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(SelectItemDialogComponent, config);
-    this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe(data => {
-      if (!data) {
+    this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe((type: ICodeName) => {
+      if (!type) {
         return;
       }
-      this.types.unshift(data);
+      this._typeDataService.createType(type)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe(data => {
+          type.id = data.id;
+          this.types.unshift(type);
+        });
     });
   }
 
-  public editBrands(): void {
-    const data = { items: this.brands, itemsName: ProductItems.brand };
-    const config = { header: this.lang.headers.brands, width: DialogOptions.standardWidth, maximizable: true, data: data };
+  public addBrand(): void {
+    const config = { header: this.lang.headers.brands, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(SelectItemDialogComponent, config);
-    this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe(data => {
-      if (!data) {
-        return;
-      }
-      this.brands.unshift(data);
-    });
+    this._dialogRef.onClose
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((brand: ICodeName) => {
+        if (!brand) {
+          return;
+        }
+        this._brandDataService.createBrand(brand)
+          .pipe(takeUntil(this.__unsubscribe$))
+          .subscribe((data: IBaseModel) => {
+            brand.id = data.id;
+            this.brands.unshift(brand);
+          });
+      });
   }
 
   public saveImage(image: IImage, isTitle: boolean): void {
     image.referenceKey = this.product.id;
     image.isTitle = isTitle;
     this._adminProductDataService.addImage(image).subscribe(() => {
-      this.updateImages();
+      if (image.isTitle) {
+        this.titleImage = image;
+      } else {
+        this.images.push(image);
+      }
+      this._cd.detectChanges();
     });
   }
 
   public deleteImage(image: IImage): void {
     image.referenceKey = this.product.id;
     this._adminProductDataService.deleteImage(this.product.id, image).subscribe(() => {
-      this.updateImages();
+      if (image.isTitle) {
+        this.titleImage = null;
+      } else {
+        this.images.splice(this.images.indexOf(image), 1);
+      }
+      this._cd.detectChanges();
     });
   }
 
@@ -229,8 +231,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     this.editedProduct.categoryId = this.selectedCategory.id;
     this.editedProduct.typeId = this.selectedType.id;
     this.editedProduct.brandId = this.selectedBrand.id
-    this._adminProductDataService.create(this.editedProduct).subscribe(data => {
-      this._router.navigate([`/admin/products/edit/${data.id}`])
+    this._adminProductDataService.create(this.editedProduct).subscribe((data: ICreateProductResponse) => {
+      this._location.replaceState(`admin/products/edit/${data.id}`);
+      this.id = data.id;
+      this.template = data.propertyTemplate;
+      this._cd.detectChanges();
     });
   }
 
@@ -240,14 +245,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private openDialog<T>(component: Type<T>, config: DynamicDialogConfig): void {
-    this._dialogRef = this._dialogService.open(component, {
-      data: config.data,
-      header: config.header,
-      width: config.width,
-      maximizable: config.maximizable,
-      contentStyle: { overflow: 'visible' }
-    });
-  }
+    this._dialogRef = Util.openDialog(this._dialogService, component, config)
+  }//review it
 
   private createProduct(data: IProduct): ICreateProduct {
     const product: ICreateProduct = {
@@ -267,32 +266,10 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     return product;
   }
 
-  private updateProperties(): void {
-    this._adminProductDataService.getById(this.id).pipe(
-      takeUntil(this.__unsubscribe$)).subscribe((data: IProduct) => {
-        this.product.stringProperties = data.stringProperties;
-        this.product.intProperties = data.intProperties;
-        this.product.boolProperties = data.boolProperties;
-        this.product.dateProperties = data.dateProperties;
-      })
-  }
-
   private removeTitleImage(): void {
     const index = this.images.indexOf(this.titleImage);
     if (index > -1) {
       this.images.splice(index, 1);
     }
-  }
-
-  private updateImages(): void {
-    this._adminProductDataService.getById(this.id).pipe(
-      takeUntil(this.__unsubscribe$)).subscribe((data: IProduct) => {
-        this.product.images = data.images;
-        this.titleImage = data.images.find((image) => { return image.isTitle });
-        this.images = data.images;
-        this.removeTitleImage();
-        debugger;
-        this._cd.detectChanges();
-      })
   }
 }

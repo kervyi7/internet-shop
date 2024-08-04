@@ -1,0 +1,90 @@
+<div *ngFor="let group of groups" class="inputs-wrapper">
+  <h3>Group {{group.name}}</h3>
+  <div class="property-container">
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="group.name"
+      [disabled]="true" />
+    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="group.code"
+      [disabled]="true" />
+    <p-button [text]="true" *ngIf="!isProduct" (onClick)="editPropertyGroup(group)">
+      <span class="material-icons-reg">{{mIcons.edit}}</span>
+    </p-button>
+  </div>
+  <div *ngFor="let property of group.stringProperties" class="property-container">
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
+    </div>
+    <p-button [text]="true" (onClick)="editProperty(property)">
+      <span class="material-icons-reg">{{mIcons.edit}}</span>
+    </p-button>
+    <p-button [text]="true" *ngIf="!isProduct" (onClick)="deleteProperty(property, group.stringProperties, group.code)">
+      <span class="material-icons-outline">{{mIcons.delete}}</span>
+    </p-button>
+  </div>
+  <div *ngFor="let property of group.decimalProperties" class="property-container">
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.value" [disabled]="true" />
+    </div>
+    <p-button [text]="true" (onClick)="editProperty(property)">
+      <span class="material-icons-reg">{{mIcons.edit}}</span>
+    </p-button>
+    <p-button [text]="true" *ngIf="!isProduct" (onClick)="deleteProperty(property, group.boolProperties, group.code)">
+      <span class="material-icons-outline">{{mIcons.delete}}</span>
+    </p-button>
+  </div>
+  <div *ngFor="let property of group.boolProperties" class="property-container">
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <p-checkbox [(ngModel)]="property.value" [binary]="true" inputId="propertyBoolValue"
+        [disabled]="true"></p-checkbox>
+    </div>
+    <p-button [text]="true" (onClick)="editProperty(property)">
+      <span class="material-icons-reg">{{mIcons.edit}}</span>
+    </p-button>
+    <p-button [text]="true" *ngIf="!isProduct" (onClick)="deleteProperty(property, group.boolProperties, group.code)">
+      <span class="material-icons-outline">{{mIcons.delete}}</span>
+    </p-button>
+  </div>
+  <div *ngFor="let property of group.dateProperties" class="property-container">
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
+    </div>
+    <div class="property-item">
+      <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}"
+        [disabled]="true"></p-calendar>
+    </div>
+    <p-button [text]="true" (onClick)="editProperty(property)">
+      <span class="material-icons-reg">{{mIcons.edit}}</span>
+    </p-button>
+    <p-button [text]="true" *ngIf="!isProduct" (onClick)="deleteProperty(property, group.dateProperties, group.code)">
+      <span class="material-icons-outline">{{mIcons.delete}}</span>
+    </p-button>
+  </div>
+  <p-button [text]="true" *ngIf="group && !isProduct" (onClick)="addProperty(group)">
+    <span class="material-icons-reg">{{mIcons.add}}</span>
+    <span>Add property</span>
+  </p-button>
+</div>
+<p-button [text]="true" *ngIf="!isProduct" (onClick)="addPropertyGroup()">
+  <span class="material-icons-reg">{{mIcons.add}}</span>
+  <span>Add group</span>
+</p-button>

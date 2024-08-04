@@ -11,6 +11,10 @@ import { ImageUploaderModule } from '../../../components/image-uploader/image-up
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { PropertiesListModule } from '../../../components/properties-list/properties-list.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +31,11 @@ import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
     ImageUploaderModule,
     ButtonModule,
     InputTextModule,
-    Base64Pipe
+    Base64Pipe,
+    CalendarModule,
+    CheckboxModule,
+    DropdownModule,
+    PropertiesListModule
   ],
   providers: [DialogService],
   exports: [

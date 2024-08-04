@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BaseDataService } from './base-data.service';
+import { BaseDataService } from '../base-data.service';
 import { HttpClient } from '@angular/common/http';
-import { AppConfigService } from '../app-config.service';
-import { ICodeName } from '../../models/interfaces/base/code-name';
-import { IBaseModel } from '../../models/interfaces/base/base-model';
+import { AppConfigService } from '../../app-config.service';
+import { ICodeName } from '../../../models/interfaces/base/code-name';
+import { IBaseModel } from '../../../models/interfaces/base/base-model';
 
 @Injectable({
   providedIn: 'root'

@@ -1,9 +1,10 @@
 import { ICodeName } from "./base/code-name";
+import { ICategory } from "./category";
 import { IImage } from "./image";
 import { IProperty } from "./property";
 
 export interface IProduct extends ICodeName {
-  category: ICodeName;
+  category: ICategory;
   type: ICodeName;
   brand: ICodeName;
   price: number;
@@ -13,7 +14,7 @@ export interface IProduct extends ICodeName {
   currency: string;
   isExist: boolean;
   stringProperties: IProperty[];
-  intProperties: IProperty[];
+  decimalProperties: IProperty[];
   boolProperties: IProperty[];
   dateProperties: IProperty[];
   images: IImage[];

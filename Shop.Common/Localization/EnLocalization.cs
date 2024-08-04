@@ -39,8 +39,8 @@
         public string CategoryInformation => "Category information";
         public string Product => "Product";
         public string Category => "Category";
-        public string Brands => "Edit list of brands";
-        public string Types => "Edit list of types";
+        public string Brands => "Add brand";
+        public string Types => "Add type";
         public string ImageStorage => "Image Storage";
         public string Property => "Property settings";
         public string ImageEditor => "Image Editor";

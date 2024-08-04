@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CategoriesComponent } from './categories.component';
-import { AdminCategoryDataService } from '../../../services/data/admin-category-data.service';
+import { AdminCategoryDataService } from '../../../services/data/admin/admin-category-data.service';
 import { of } from 'rxjs';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';

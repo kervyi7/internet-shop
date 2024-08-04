@@ -4,8 +4,10 @@ namespace Shop.Server.Models.DTO
 {
     public class PropertyDto<T> : CodeNameDto
     {
+        public int? ProductId { get; set; }
+
         [Required]
-        public int ProductId { get; set; }
+        public int PropertyTemplateId { get; set; }
 
         public bool IsPrimary { get; set; }
 

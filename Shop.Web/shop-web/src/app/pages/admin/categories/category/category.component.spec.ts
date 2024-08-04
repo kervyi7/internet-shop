@@ -6,7 +6,7 @@ import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AppConfigService } from '../../../../services/app-config.service';
-import { AdminCategoryDataService } from '../../../../services/data/admin-category-data.service';
+import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
 import { NotificationService } from '../../../../services/notification.service';
 
 describe('CategoryComponent', () => {

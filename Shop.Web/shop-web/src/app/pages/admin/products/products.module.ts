@@ -19,6 +19,7 @@ import { ImageStorageModule } from '../../../components/dialogs/image-storage-di
 import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PropertiesListModule } from '../../../components/properties-list/properties-list.module';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ImageStorageModule,
     Base64Pipe,
     CalendarModule,
-    InputTextareaModule
+    InputTextareaModule,
+    PropertiesListModule
   ],
   providers: [DialogService, NotificationService],
   exports: [

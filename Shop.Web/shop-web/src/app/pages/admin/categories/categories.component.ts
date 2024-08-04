@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ICategory } from '../../../models/interfaces/category';
-import { AdminCategoryDataService } from '../../../services/data/admin-category-data.service';
+import { AdminCategoryDataService } from '../../../services/data/admin/admin-category-data.service';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { IPropertyTemplate } from '../../../models/interfaces/property';
 
 @Component({
   selector: 'shop-categories',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class CategoriesComponent extends BaseCompleteComponent implements OnInit {
   public categories: ICategory[] = [];
+  public template: IPropertyTemplate;
 
   constructor(
     private _adminCategoryDataService: AdminCategoryDataService,

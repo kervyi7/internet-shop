@@ -28,7 +28,7 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.Type)
                 .Include(x => x.Category)
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
-                .Include(x => x.IntProperties.Where(x => x.IsTitle))
+                .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
                 .Include(x => x.DateProperties.Where(x => x.IsTitle))
                 .ToListAsync();
@@ -41,13 +41,14 @@ namespace Shop.Server.Controllers.Admin
             var product = await DataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
-                .Include(x => x.Category)
                 .Include(x => x.StringProperties)
-                .Include(x => x.IntProperties)
+                .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
                 .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages)
                 .ThenInclude(x => x.Image)
+                .Include(x => x.Category)
+                .ThenInclude(x => x.PropertyTemplate)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
@@ -60,6 +61,12 @@ namespace Shop.Server.Controllers.Admin
         public async Task<ActionResult> Create(CreateProductDto model)
         {
             var user = "my user";
+            var template = await DataContext.PropertyTemplate
+                .Include(x => x.StringProperties)
+                .Include(x => x.DecimalProperties)
+                .Include(x => x.BoolProperties)
+                .Include(x => x.DateProperties)
+                .FirstOrDefaultAsync(x => x.CategoryId == model.CategoryId);
             var item = new Product
             {
                 CategoryId = model.CategoryId,
@@ -77,9 +84,42 @@ namespace Shop.Server.Controllers.Admin
             };
             DataContext.Products.Add(item);
             await DataContext.SaveChangesAsync();
-            return Ok(new BaseDto
+            foreach (var property in template.StringProperties)
             {
-                Id = item.Id
+                if (property.ProductId != null)
+                {
+                    continue;
+                }
+                await AddProperty(property, item.Id);
+            }
+            foreach (var property in template.DecimalProperties)
+            {
+                if (property.ProductId != null)
+                {
+                    continue;
+                }
+                await AddProperty(property, item.Id);
+            }
+            foreach (var property in template.BoolProperties)
+            {
+                if (property.ProductId != null)
+                {
+                    continue;
+                }
+                await AddProperty(property, item.Id);
+            }
+            foreach (var property in template.DateProperties)
+            {
+                if (property.ProductId != null)
+                {
+                    continue;
+                }
+                await AddProperty(property, item.Id);
+            }
+            return Ok(new CreateProductResponse
+            {
+                Id = item.Id,
+                PropertyTemplate = Extensions.CreatePropertyTemplateDto(template)
             });
         }
 
@@ -103,34 +143,6 @@ namespace Shop.Server.Controllers.Admin
             return Ok();
         }
 
-        [HttpPost($"add-property/{PropertyTypes.String}")]
-        public async Task<ActionResult> AddPropertyString(PropertyDto<string> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.Number}")]
-        public async Task<ActionResult> AddPropertyInt(PropertyDto<int> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.Bool}")]
-        public async Task<ActionResult> AddPropertyBool(PropertyDto<bool> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.Date}")]
-        public async Task<ActionResult> AddPropertyDate(PropertyDto<DateTime> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
         [HttpPut($"edit-property/{PropertyTypes.String}/" + "{id:int}")]
         public async Task<ActionResult> EditPropertyString(int id, PropertyDto<string> model)
         {
@@ -139,7 +151,7 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPut($"edit-property/{PropertyTypes.Number}/" + "{id:int}")]
-        public async Task<ActionResult> EditPropertyInt(int id, PropertyDto<int> model)
+        public async Task<ActionResult> EditPropertyInt(int id, PropertyDto<decimal> model)
         {
             await EditProperty(id, model);
             return Ok();
@@ -208,18 +220,6 @@ namespace Shop.Server.Controllers.Admin
             return Ok();
         }
 
-        [HttpDelete("remove-property/{id:int}/property/{propertyId:int}/type/{type}")]
-        public async Task<ActionResult> DeleteProperty(int id, int propertyId, string type)
-        {
-            var result = await GetPropertyListByType(type, DataContext).AnyAsync(x => x.Id == propertyId && x.ProductId == id);
-            if (!result)
-            {
-                throw new ConflictException("not reference");
-            }
-            await GetPropertyListByType(type, DataContext).Where(x => x.Id == propertyId).ExecuteDeleteAsync();
-            return Ok();
-        }
-
         private IQueryable<BaseProperty> GetPropertyListByType(string type, DataContext dataContext)
         {
             switch (type)
@@ -227,7 +227,7 @@ namespace Shop.Server.Controllers.Admin
                 case PropertyTypes.String:
                     return dataContext.StringProperties;
                 case PropertyTypes.Number:
-                    return dataContext.IntProperties;
+                    return dataContext.DecimalProperties;
                 case PropertyTypes.Bool:
                     return dataContext.BoolProperties;
                 case PropertyTypes.Date:
@@ -237,9 +237,11 @@ namespace Shop.Server.Controllers.Admin
             }
         }
 
-        private async Task AddProperty<T>(PropertyDto<T> model)
+        private async Task AddProperty<T>(Property<T> model, int productId)
         {
             var user = "user";
+            model.Id = 0;
+            model.ProductId = productId;
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ProductId);
             if (!isProductExist)
             {
@@ -251,20 +253,7 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("property already exist");
             }
-            var newProperty = new Property<T>
-            {
-                ProductId = model.ProductId,
-                IsPrimary = model.IsPrimary,
-                Name = model.Name,
-                Code = model.Code,
-                IsTitle = model.IsTitle,
-                Description = model.Description,
-                Suffix = model.Suffix,
-                Value = model.Value,
-                CreatedByUser = user,
-                UpdatedByUser = user
-            };
-            DataContext.Set<Property<T>>().Add(newProperty);
+            DataContext.Set<Property<T>>().Add(model);
             await DataContext.SaveChangesAsync();
         }
 

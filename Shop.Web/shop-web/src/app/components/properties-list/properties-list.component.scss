@@ -1,0 +1,17 @@
+.property-container {
+  display: flex;
+  gap: 20px;
+}
+
+.property-item {
+  width: 400px;
+  display: flex;
+  justify-content: center;
+}
+
+.inputs-wrapper {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

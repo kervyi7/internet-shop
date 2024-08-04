@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from '@angular/common/http';
-import { BaseDataService } from "./base-data.service";
-import { AppConfigService } from "../app-config.service";
-import { IImage } from "../../models/interfaces/image";
-import { IGetModelsRequest } from "../../models/interfaces/get-models-request";
-import { IPageData } from "../../models/interfaces/page-data";
+import { BaseDataService } from "../base-data.service";
+import { AppConfigService } from "../../app-config.service";
+import { IImage } from "../../../models/interfaces/image";
+import { IGetModelsRequest } from "../../../models/interfaces/get-models-request";
+import { IPageData } from "../../../models/interfaces/page-data";
 
 @Injectable({
   providedIn: 'root'

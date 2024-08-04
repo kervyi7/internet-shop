@@ -4,6 +4,7 @@ export class Property implements IProperty {
   public code: string;
   public name: string;
   public productId: number;
+  public propertyTemplateId: number;
   public isPrimary: boolean;
   public isTitle: boolean;
   public description: string;

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectItemDialogComponent } from './select-item-dialog.component';
-import { BrandDataService } from '../../../services/data/admin-brand-data.service';
+import { BrandDataService } from '../../../services/data/admin/admin-brand-data.service';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { TypeDataService } from '../../../services/data/admin-type-data.service';
+import { TypeDataService } from '../../../services/data/admin/admin-type-data.service';
 import { localizationMock } from '../../../models/interfaces/localization/localization';
 import { AppConfigService } from '../../../services/app-config.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
