@@ -12,8 +12,8 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240501103853_AddImageName")]
-    partial class AddImageName
+    [Migration("20240716140744_FixCategory")]
+    partial class FixCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -313,7 +313,7 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("ImageId")
+                    b.Property<int?>("ImageId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -322,6 +322,9 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<int?>("Position")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PropertyTemplateId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -341,6 +344,9 @@ namespace Shop.Postgre.Migrations.Migrations
                         .IsUnique();
 
                     b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("PropertyTemplateId")
                         .IsUnique();
 
                     b.ToTable("Category", "public");
@@ -422,6 +428,9 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<decimal>("Count")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -431,10 +440,14 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("Currency")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<bool>("IsExist")
-                        .HasColumnType("boolean");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -442,6 +455,9 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal?>("SalePrice")
                         .HasColumnType("numeric");
 
                     b.Property<int>("TypeId")
@@ -625,6 +641,9 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("PropertyTemplateId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Suffix")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -643,6 +662,8 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("PropertyTemplateId");
 
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
@@ -692,6 +713,9 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("PropertyTemplateId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Suffix")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -711,6 +735,8 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("PropertyTemplateId");
+
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
 
@@ -720,7 +746,7 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.ToTable("Property<bool>", "public");
                 });
 
-            modelBuilder.Entity("Shop.Database.Models.Property<int>", b =>
+            modelBuilder.Entity("Shop.Database.Models.Property<decimal>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -759,6 +785,9 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("PropertyTemplateId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Suffix")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -771,12 +800,14 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(600)
                         .HasColumnType("character varying(600)");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("PropertyTemplateId");
 
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
@@ -784,7 +815,7 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.HasIndex("Name", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Property<int>", "public");
+                    b.ToTable("Property<decimal>", "public");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<string>", b =>
@@ -826,6 +857,9 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("PropertyTemplateId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Suffix")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -845,6 +879,8 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("PropertyTemplateId");
+
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
 
@@ -852,6 +888,48 @@ namespace Shop.Postgre.Migrations.Migrations
                         .IsUnique();
 
                     b.ToTable("Property<string>", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PropertyTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedByUser")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Extension")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedByUser")
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PropertyTemplate", "public");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -944,10 +1022,16 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.HasOne("Shop.Database.Models.Image", "Image")
                         .WithOne("Category")
                         .HasForeignKey("Shop.Database.Models.Category", "ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithOne("Category")
+                        .HasForeignKey("Shop.Database.Models.Category", "PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Image");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Product", b =>
@@ -1004,7 +1088,15 @@ namespace Shop.Postgre.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("DateProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<bool>", b =>
@@ -1015,18 +1107,34 @@ namespace Shop.Postgre.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("BoolProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
-            modelBuilder.Entity("Shop.Database.Models.Property<int>", b =>
+            modelBuilder.Entity("Shop.Database.Models.Property<decimal>", b =>
                 {
                     b.HasOne("Shop.Database.Models.Product", "Product")
-                        .WithMany("IntProperties")
+                        .WithMany("DecimalProperties")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("DecimalProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<string>", b =>
@@ -1037,7 +1145,15 @@ namespace Shop.Postgre.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("StringProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
             modelBuilder.Entity("Shop.Database.Identity.ApplicationUser", b =>
@@ -1063,7 +1179,7 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Navigation("DateProperties");
 
-                    b.Navigation("IntProperties");
+                    b.Navigation("DecimalProperties");
 
                     b.Navigation("ProductImages");
 
@@ -1078,6 +1194,19 @@ namespace Shop.Postgre.Migrations.Migrations
             modelBuilder.Entity("Shop.Database.Models.ProductType", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PropertyTemplate", b =>
+                {
+                    b.Navigation("BoolProperties");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("DateProperties");
+
+                    b.Navigation("DecimalProperties");
+
+                    b.Navigation("StringProperties");
                 });
 #pragma warning restore 612, 618
         }

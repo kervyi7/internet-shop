@@ -4,6 +4,8 @@
     {
         public ImageDto Image { get; set; }
 
+        public PropertyTemplateDto PropertyTemplate { get; set; }
+
         public int? Position { get; set; }
     }
 }

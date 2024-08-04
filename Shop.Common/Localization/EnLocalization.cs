@@ -13,6 +13,8 @@
         public ITooltipsLocalization Tooltips => new EnLocalizationTooltips();
 
         public IPopupsLocalization Popups => new EnLocalizationPopups();
+
+        public INotificationsLocalization Notifications => new EnLocalizatioNotifications();
     }
 
     public class EnLocalizationButtons : IButtonsLocalization
@@ -37,10 +39,11 @@
         public string CategoryInformation => "Category information";
         public string Product => "Product";
         public string Category => "Category";
-        public string Brands => "Edit list of brands";
-        public string Types => "Edit list of types";
+        public string Brands => "Add brand";
+        public string Types => "Add type";
         public string ImageStorage => "Image Storage";
         public string Property => "Property settings";
+        public string ImageEditor => "Image Editor";
     }
 
     public class EnLocalizationPlaceholders : IPlaceholdersLocalization
@@ -61,6 +64,9 @@
         public string Code => "Code";
         public string Login => "Login";
         public string Password => "Password";
+        public string ProductCount => "Count of products";
+        public string ProductSalePrice => "Sale price";
+        public string ProductDescription => "Description";
     }
 
     public class EnLocalizationPropertyTypes : IPropertyTypesLocalization
@@ -80,5 +86,17 @@
     {
         public string ImageDelete => "Image is not linked. Are you sure that you want to proceed?";
         public string ImageBoundDelete => "Image is linked with product(s). Are you sure that you want to proceed?";
+    }
+
+    public class EnLocalizatioNotifications : INotificationsLocalization
+    {
+        public string Error => "Error";
+        public string Success => "Success";
+        public string Warn => "Warn";
+        public string NotChanged => "Changes were not detected";
+        public string InvalidData => "Invalid data";
+        public string ChangesSaved => "Changes were saved";
+        public string DeletedProperty => "Property has deleted";
+        public string FailedToLoadImage => "Failed to load image";
     }
 }

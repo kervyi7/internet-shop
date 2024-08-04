@@ -7,6 +7,9 @@ export class CreateProduct implements ICreateProduct {
   public typeId: number;
   public brandId: number;
   public price: number;
+  public salePrice: number;
+  public count: number;
+  public description: string;
   public currency: string;
   public isExist: boolean;
   public id?: number;

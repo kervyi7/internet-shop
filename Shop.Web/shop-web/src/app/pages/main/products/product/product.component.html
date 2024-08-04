@@ -1,0 +1,27 @@
+<div class="card flex justify-content-center">
+  <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+</div>
+<div *ngIf="product">
+  <div>{{product.code}}</div>
+  <div>{{product.name}}</div>
+  <div>{{product.id}}</div>
+  <div>{{product.price}}</div>
+  <div>{{product.salePrice}}</div>
+  <div>{{product.brand.name}}</div>
+  <div>{{product.type.name}}</div>
+  <div>{{product.category.name}}</div>
+  <div>{{product.count}}</div>
+  <div>{{product.description}}</div>
+  <div *ngFor="let property of product.stringProperties">
+    {{property.name}} {{property.value}}
+  </div>
+  <div *ngFor="let property of product.dateProperties">
+    {{property.name}} {{property.value}}
+  </div>
+  <div *ngFor="let property of product.boolProperties">
+    {{property.name}} {{property.value}}
+  </div>
+  <div *ngFor="let property of product.decimalProperties">
+    {{property.name}} {{property.value}}
+  </div>
+</div>

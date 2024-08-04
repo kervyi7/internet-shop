@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { takeUntil } from 'rxjs';
-import { AdminProductDataService } from '../../../services/data/admin-product-data.service';
+import { AdminProductDataService } from '../../../services/data/admin/admin-product-data.service';
 import { IProduct } from '../../../models/interfaces/product';
 
 @Component({

@@ -20,10 +20,15 @@ namespace Shop.Database.Models
         [MaxLength(200)]
         public string Suffix { get; set; }
 
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
+
+        public int PropertyTemplateId { get; set; }
 
         [JsonIgnore]
         [ForeignKey(nameof(ProductId))]
         public Product Product { get; set; }
+
+        [ForeignKey(nameof(PropertyTemplateId))]
+        public PropertyTemplate PropertyTemplate { get; set; }
     }
 }

@@ -14,8 +14,8 @@ export class AuthDataService extends BaseDataService {
   public baseUrl = 'auth';
 
   constructor(private readonly _http: HttpClient,
-    appConfigService: AppConfigService) {
-    super(appConfigService);
+    private _appConfigService: AppConfigService) {
+    super(_appConfigService);
   }
 
   public login(value: ILogin): Observable<IAuthResponse> {

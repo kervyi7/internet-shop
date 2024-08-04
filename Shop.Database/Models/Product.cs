@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Shop.Database.Models
 {
@@ -15,11 +16,20 @@ namespace Shop.Database.Models
 
         public int CategoryId { get; set; }
 
+        [Required]
         public decimal Price { get; set; }
 
+        public decimal? SalePrice { get; set; }
+
+        [Required]
+        public decimal Count { get; set; }
+
+        [Required]
+        [MaxLength(20)]
         public string Currency { get; set; }
 
-        public bool IsExist { get; set; }
+        [MaxLength(2000)]
+        public string Description { get; set; }
 
         [ForeignKey(nameof(TypeId))]
         public ProductType Type { get; set; }
@@ -32,7 +42,7 @@ namespace Shop.Database.Models
 
         public ICollection<Property<string>> StringProperties { get; set; } = new List<Property<string>>();
 
-        public ICollection<Property<int>> IntProperties { get; set; } = new List<Property<int>>();
+        public ICollection<Property<decimal>> DecimalProperties { get; set; } = new List<Property<decimal>>();
 
         public ICollection<Property<bool>> BoolProperties { get; set; } = new List<Property<bool>>();
 

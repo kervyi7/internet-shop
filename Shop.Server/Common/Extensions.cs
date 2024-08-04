@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Shop.Common;
 using Shop.Database.Models;
+using Shop.Database.Models.Jsons;
+using Shop.Server.Manager;
+using Shop.Server.Models;
 using Shop.Server.Models.DTO;
 
 namespace Shop.Server.Common
@@ -75,11 +78,14 @@ namespace Shop.Server.Common
                 Code = source.Code,
                 Type = CreateCodeNameDto(source.Type),
                 Brand = CreateCodeNameDto(source.Brand),
-                Category = CreateCodeNameDto(source.Category),
+                Category = ToViewModel(source.Category),
                 Price = source.Price,
+                SalePrice = source.SalePrice,
+                Count = source.Count,
+                Description = source.Description,
                 Currency = source.Currency,
                 StringProperties = CreatePropertiesDto(source.StringProperties),
-                IntProperties = CreatePropertiesDto(source.IntProperties),
+                DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
                 DateProperties = CreatePropertiesDto(source.DateProperties),
                 Images = ToViewModels(source.ProductImages.Select(x => x.Image))
@@ -87,13 +93,30 @@ namespace Shop.Server.Common
             return productDto;
         }
 
+        public static CategoryDto ToViewModel(this Category source)
+        {
+            var categoryDto = new CategoryDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+                Image = ToViewModel(source.Image),
+                PropertyTemplate = CreatePropertyTemplateDto(source.PropertyTemplate),
+            };
+            return categoryDto;
+        }
+
         public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<Image> sources)
         {
             return sources.Select(ToViewModel);
         }
 
-        private static ImageDto ToViewModel(Image source)
+        public static ImageDto ToViewModel(Image source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             var imageDto = new ImageDto
             {
                 Id = source.Id,
@@ -103,9 +126,30 @@ namespace Shop.Server.Common
                 FileName = source.FileName,
                 FileSize = source.FileSize,
                 MimeType = source.MimeType,
-                IsBinding = source.ProductImages.Any() || source.Category != null
+                IsBinding = source.ProductImages.Any() || source.Category != null,
+                IsTitle = source.IsTitle
             };
             return imageDto;
+        }
+
+        public static PropertyTemplateDto CreatePropertyTemplateDto(PropertyTemplate source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+            var propertyTemplateDto = new PropertyTemplateDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+                Extension = JsonManager.Deserialize<TemplateExtension>(source.Extension),
+                StringProperties = CreatePropertiesDto(source.StringProperties),
+                DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
+                BoolProperties = CreatePropertiesDto(source.BoolProperties),
+                DateProperties = CreatePropertiesDto(source.DateProperties),
+            };
+            return propertyTemplateDto;
         }
 
         private static CodeNameDto CreateCodeNameDto(BaseCodeName source)
@@ -142,6 +186,7 @@ namespace Shop.Server.Common
                 Suffix = source.Suffix,
                 Value = source.Value,
                 ProductId = source.ProductId,
+                PropertyTemplateId = source.PropertyTemplateId,
             };
             return propertyDto;
         }

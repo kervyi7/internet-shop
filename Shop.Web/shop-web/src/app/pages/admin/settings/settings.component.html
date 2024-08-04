@@ -1,0 +1,5 @@
+<p-dropdown class="dropdown" [options]="languages" [(ngModel)]="selectedLanguages"
+  placeholder="{{lang.placeholders.brand}}" [style]="{'width':'100%'}"></p-dropdown>
+<p-button (onClick)="save()">
+  <span class="material-icons-reg">{{mIcons.done}}</span><span>{{lang.buttons.save}}</span>
+</p-button>

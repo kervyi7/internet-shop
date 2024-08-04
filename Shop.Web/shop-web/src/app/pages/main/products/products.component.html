@@ -1,0 +1,8 @@
+<div class="card flex justify-content-center">
+  <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+</div>
+<div *ngFor="let product of products" (click)="goToProduct(product)">
+  <img [src]="product.images[0].smallBody">
+  <div>{{product.name}}</div>
+  <div>{{product.price}}</div>
+</div>

@@ -1,1 +1,18 @@
-<p>main works!</p>
+<main>
+  <button *ngIf="isAuthorized" (click)="goToAdmin()">Go to Admin</button>
+  <h1>Categories:</h1>
+  <div class="flex">
+    <div class="category-wrapper cursor-pointer" *ngFor="let category of categories"
+      (click)="goToProductList(category.name)">
+      <img [src]="category.image.smallBody">
+      <p>{{category.name}}</p>
+    </div>
+  </div>
+  <h1>Products:</h1>
+  <div class="flex">
+    <div class="cursor-pointer" *ngFor="let product of productsWithSale" (click)="goToProduct(product)">
+      <img [src]="product.images[0].smallBody">
+      <p>{{product.name}}</p>
+    </div>
+  </div>
+</main>

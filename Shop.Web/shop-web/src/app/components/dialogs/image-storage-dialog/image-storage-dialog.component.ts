@@ -1,47 +1,68 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IBaseImage, IImage } from '../../../models/interfaces/image';
-import { AdminImageDataService } from '../../../services/data/admin-image-data.service';
+import { AdminImageDataService } from '../../../services/data/admin/admin-image-data.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseCompleteComponent } from '../../base/base-complete.component';
 import { takeUntil } from 'rxjs';
 import { ImageEditorComponent } from '../../image-editor/image-editor.component';
 import { ConfirmationService } from 'primeng/api';
+import { PaginatorState } from 'primeng/paginator';
+import { IGetModelsRequest } from '../../../models/interfaces/get-models-request';
+import { IPageData } from '../../../models/interfaces/page-data';
+import { Converter } from '../../../common/converter';
+import { DialogOptions } from '../../../models/enums/dialog-options';
 
 @Component({
   selector: 'shop-image-storage-dialog',
   templateUrl: './image-storage-dialog.component.html',
-  styleUrls: ['./image-storage-dialog.component.scss']
+  styleUrls: ['./image-storage-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageStorageDialogComponent extends BaseCompleteComponent implements OnInit {
-  public searchText: string = '';
+  private _searchBy = '';
+  public searchText = '';
   public imageChangedFile: File;
   public images: IImage[];
+  public skip = 0;
+  public countPerPage = 10;
+  public count = 0;
+  public countOptions = [
+    { label: 10, value: 10 },
+    { label: 20, value: 20 },
+    { label: 30, value: 30 }
+  ];
 
   constructor(private _adminImageDataService: AdminImageDataService,
     private _dialogRef: DynamicDialogRef,
     private _dialogService: DialogService,
-    private confirmationService: ConfirmationService) {
+    private _confirmationService: ConfirmationService,
+    private _cd: ChangeDetectorRef) {
     super();
   }
   public ngOnInit(): void {
-    this._adminImageDataService.getAll().subscribe(data => {
-      this.images = data;
-    });
+    this.loadImages();
   }
 
-  public deleteImage(image: IBaseImage): void {
+  public onPageChange(event: PaginatorState): void {
+    this.skip = event.first;
+    this.countPerPage = event.rows;
+    this.loadImages();
+  }
+
+  public onCountChange() {
+    this.skip = 0;
+    this.loadImages();
+  }
+
+  public deleteImage(e: Event, image: IImage): void {
     if (image.isBinding) {
-      this.delete(image.id, this.lang.popups.imageBoundDelete);
+      this.tryDelete(image.id, this.lang.popups.imageBoundDelete, e.target);
     } else {
-      this.delete(image.id, this.lang.popups.imageDelete);
+      this.tryDelete(image.id, this.lang.popups.imageDelete, e.target);
     }
   }
 
-  public editImage(image: IBaseImage): void {
-
-  }
-
-  public selectImage(image: IBaseImage): void {
+  public selectImage(image: IImage): void {
     this._dialogRef.close(image);
   }
 
@@ -51,50 +72,65 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
         imageFile: file,
         imageName: file.name
       },
-      header: `Image Editor`,
-      width: '80%',
+      header: this.lang.headers.imageEditor,
+      width: DialogOptions.largeWidth,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 5,
       maximizable: true
     });
-    this._dialogRef.onClose.subscribe((data) => {
+    this._dialogRef.onClose.subscribe((data: IBaseImage) => {
       if (!data) {
         return;
       }
-      this.saveImage(data);
+      this.createImage(data);
     })
   }
 
-  public saveImage(baseImage: IBaseImage): void {
-    const image: IImage = {
-      body: baseImage.body,
-      name: baseImage.name,
-      smallBody: baseImage.smallBody,
-      fileName: baseImage.fileName,
-      fileSize: baseImage.fileSize,
-      mimeType: baseImage.mimeType,
-      isBinding: baseImage.isBinding
+  public searchImage(): void {
+    this.skip = 0;
+    if (this._searchBy == this.searchText) {
+      return;
     }
-    this._adminImageDataService.create(image).subscribe(() => {
-      this.images.push(image);
-    });
+    this._searchBy = this.searchText;
+    this.loadImages();
   }
 
-  private updateImages(): void {
-    this._adminImageDataService.getAll().pipe(
-      takeUntil(this.__unsubscribe$)).subscribe((data: IImage[]) => {
-        this.images = data;
-      })
+  private createImage(image: IImage): void {
+    this._adminImageDataService.create(image)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        this.loadImages();
+      });
   }
 
-  private delete(id: number, message: string) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
+  private loadImages(): void {
+    const params: IGetModelsRequest = {
+      skip: this.skip,
+      count: this.countPerPage,
+      searchValue: this._searchBy
+    }
+    this._adminImageDataService.getAll(params)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: IPageData<IImage[]>) => {
+        this.images = data.data;
+        this.images.map(image => {
+          image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
+        });
+        this.count = data.count;
+        this._cd.detectChanges();
+      });
+  }
+
+  private tryDelete(id: number, message: string, target: EventTarget): void {
+    this._confirmationService.confirm({
+      target: target,
       message: message,
       accept: () => {
-        this._adminImageDataService.delete(id).subscribe(() => {
-          this.updateImages();
-        });
+        this._adminImageDataService.delete(id)
+          .pipe(takeUntil(this.__unsubscribe$))
+          .subscribe(() => {
+            this.loadImages();
+          });
       },
       reject: () => {
         return;
