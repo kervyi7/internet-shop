@@ -126,7 +126,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public editImage(image: IImage): void {
-    image.referenceKey = this.category.id;
+    image.referenceKey = this.id;
     this._adminCategoryDataService.editImage(this.id, image).subscribe(() => {
       this.image = image.smallBody;
     });

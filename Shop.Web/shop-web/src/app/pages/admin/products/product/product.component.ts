@@ -85,6 +85,10 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.selectedType = data.type;
         this.selectedBrand = data.brand;
         this.template = data.category.propertyTemplate;
+        this.template.stringProperties = this.product.stringProperties;
+        this.template.decimalProperties = this.product.decimalProperties;
+        this.template.boolProperties = this.product.boolProperties;
+        this.template.dateProperties = this.product.dateProperties;
         this._cd.detectChanges();
       });
   }
@@ -187,7 +191,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public saveImage(image: IImage, isTitle: boolean): void {
-    image.referenceKey = this.product.id;
+    image.referenceKey = this.id;
     image.isTitle = isTitle;
     this._adminProductDataService.addImage(image).subscribe(() => {
       if (image.isTitle) {
@@ -200,7 +204,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public deleteImage(image: IImage): void {
-    image.referenceKey = this.product.id;
+    image.referenceKey = this.id;
     this._adminProductDataService.deleteImage(this.product.id, image).subscribe(() => {
       if (image.isTitle) {
         this.titleImage = null;

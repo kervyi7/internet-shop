@@ -16,7 +16,7 @@ export interface IPropertyTemplate extends ICodeName {
   stringProperties: IProperty<string>[];
   decimalProperties: IProperty<number>[];
   boolProperties: IProperty<boolean>[];
-  dateProperties: IProperty<Date>[];
+  dateProperties: IProperty[];
 }
 
 export interface ITemplateExtension {
@@ -28,7 +28,7 @@ export interface IPropertiesGroup extends ICodeName {
   stringProperties: IProperty<string>[];
   decimalProperties: IProperty<number>[];
   boolProperties: IProperty<boolean>[];
-  dateProperties: IProperty<Date>[];
+  dateProperties: IProperty[];
 }
 
 export interface IPropertiesGroupResponse extends ICodeName {

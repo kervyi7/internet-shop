@@ -13,9 +13,9 @@ export interface IProduct extends ICodeName {
   description: string;
   currency: string;
   isExist: boolean;
-  stringProperties: IProperty[];
-  decimalProperties: IProperty[];
-  boolProperties: IProperty[];
+  stringProperties: IProperty<string>[];
+  decimalProperties: IProperty<number>[];
+  boolProperties: IProperty<boolean>[];
   dateProperties: IProperty[];
   images: IImage[];
 }
