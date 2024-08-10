@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shop.Common.Settings;
 using Shop.Database.Identity;
 using Shop.Database.Models;
@@ -50,6 +51,13 @@ namespace Shop.Database
             }
         }
 
+        private CheckConstraintBuilder GetPropertyConstraint<T>(TableBuilder<T> builder, string name) where T : class
+        {
+            return builder.HasCheckConstraint(
+               $"ckProperty{name}_ProductOrTemplate",
+               $"\"{nameof(BaseProperty.ProductId)}\" IS NOT NULL OR \"{nameof(BaseProperty.PropertyTemplateId)}\" IS NOT NULL");
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -58,7 +66,6 @@ namespace Shop.Database
             modelBuilder.HasDefaultSchema("public");
             modelBuilder.Entity<ApplicationUser>().ToTable("IdentityUser");
             modelBuilder.Entity<PropertyTemplate>().ToTable("PropertyTemplate");
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<ApplicationUser>().OwnsOne(x => x.Properties,
                 builder =>
                 {
@@ -85,6 +92,14 @@ namespace Shop.Database
                  .HasOne(x => x.Product)
                  .WithMany(x => x.DateProperties)
                  .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<bool>>()
+                .ToTable(t => GetPropertyConstraint(t, "Bool"));
+            modelBuilder.Entity<Property<decimal>>()
+                .ToTable(t => GetPropertyConstraint(t, "Decimal"));
+            modelBuilder.Entity<Property<string>>()
+                .ToTable(t => GetPropertyConstraint(t, "String"));
+            modelBuilder.Entity<Property<DateTime>>()
+                .ToTable(t => GetPropertyConstraint(t, "DateTime"));
             modelBuilder.Entity<ProductImage>()
                  .HasOne(x => x.Product)
                  .WithMany(x => x.ProductImages)

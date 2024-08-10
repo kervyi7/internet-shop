@@ -225,18 +225,18 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
           error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
           complete: () => this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
         });
-        return;
       }
+    } else {
+      this.editedProduct.categoryId = this.selectedCategory.id;
+      this.editedProduct.typeId = this.selectedType.id;
+      this.editedProduct.brandId = this.selectedBrand.id
+      this._adminProductDataService.create(this.editedProduct).subscribe((data: ICreateProductResponse) => {
+        this._location.replaceState(`admin/products/edit/${data.id}`);
+        this.id = data.id;
+        this.template = data.propertyTemplate;
+        this._cd.detectChanges();
+      });
     }
-    this.editedProduct.categoryId = this.selectedCategory.id;
-    this.editedProduct.typeId = this.selectedType.id;
-    this.editedProduct.brandId = this.selectedBrand.id
-    this._adminProductDataService.create(this.editedProduct).subscribe((data: ICreateProductResponse) => {
-      this._location.replaceState(`admin/products/edit/${data.id}`);
-      this.id = data.id;
-      this.template = data.propertyTemplate;
-      this._cd.detectChanges();
-    });
   }
 
   private validateData(): boolean {

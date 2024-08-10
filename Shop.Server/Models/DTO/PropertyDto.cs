@@ -6,8 +6,7 @@ namespace Shop.Server.Models.DTO
     {
         public int? ProductId { get; set; }
 
-        [Required]
-        public int PropertyTemplateId { get; set; }
+        public int? PropertyTemplateId { get; set; }
 
         public bool IsPrimary { get; set; }
 

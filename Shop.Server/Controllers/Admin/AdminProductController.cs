@@ -10,6 +10,8 @@ using System;
 using System.Linq;
 using Shop.Server.Common;
 using Shop.Common.Constants;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Shop.Server.Controllers.Admin
 {
@@ -83,39 +85,15 @@ namespace Shop.Server.Controllers.Admin
                 UpdatedByUser = user
             };
             DataContext.Products.Add(item);
+            var transaction = DataContext.Database.BeginTransaction();
             await DataContext.SaveChangesAsync();
-            foreach (var property in template.StringProperties)
-            {
-                if (property.ProductId != null)
-                {
-                    continue;
-                }
-                await AddProperty(property, item.Id);
-            }
-            foreach (var property in template.DecimalProperties)
-            {
-                if (property.ProductId != null)
-                {
-                    continue;
-                }
-                await AddProperty(property, item.Id);
-            }
-            foreach (var property in template.BoolProperties)
-            {
-                if (property.ProductId != null)
-                {
-                    continue;
-                }
-                await AddProperty(property, item.Id);
-            }
-            foreach (var property in template.DateProperties)
-            {
-                if (property.ProductId != null)
-                {
-                    continue;
-                }
-                await AddProperty(property, item.Id);
-            }
+            AddPropertiesByTamplate(template.StringProperties, item, user);
+            AddPropertiesByTamplate(template.DecimalProperties, item, user);
+            AddPropertiesByTamplate(template.BoolProperties, item, user);
+            AddPropertiesByTamplate(template.DateProperties, item, user);
+            await DataContext.SaveChangesAsync();
+            transaction.Commit();
+
             return Ok(new CreateProductResponse
             {
                 Id = item.Id,
@@ -255,6 +233,27 @@ namespace Shop.Server.Controllers.Admin
             }
             DataContext.Set<Property<T>>().Add(model);
             await DataContext.SaveChangesAsync();
+        }
+
+        private void AddPropertiesByTamplate<T>(IEnumerable<Property<T>> models, Product product, string user)
+        {
+            foreach (var model in models)
+            {
+                var property = new Property<T>
+                {
+                    ProductId = product.Id,
+                    IsPrimary = model.IsPrimary,
+                    Name = model.Name,
+                    Code = model.Code,
+                    IsTitle = model.IsTitle,
+                    Description = model.Description,
+                    Suffix = model.Suffix,
+                    Value = model.Value,
+                    CreatedByUser = user,
+                    UpdatedByUser = user
+                };
+                DataContext.Set<Property<T>>().Add(property);
+            }
         }
 
         private async Task EditProperty<T>(int id, PropertyDto<T> model)

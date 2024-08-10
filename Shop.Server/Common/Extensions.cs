@@ -100,7 +100,7 @@ namespace Shop.Server.Common
                 Id = source.Id,
                 Name = source.Name,
                 Code = source.Code,
-                Image = ToViewModel(source.Image),
+                Image = source.Image.ToViewModel(),
                 PropertyTemplate = CreatePropertyTemplateDto(source.PropertyTemplate),
             };
             return categoryDto;
@@ -111,7 +111,7 @@ namespace Shop.Server.Common
             return sources.Select(ToViewModel);
         }
 
-        public static ImageDto ToViewModel(Image source)
+        public static ImageDto ToViewModel(this Image source)
         {
             if (source == null)
             {
@@ -165,15 +165,10 @@ namespace Shop.Server.Common
 
         private static IEnumerable<PropertyDto<T>> CreatePropertiesDto<T>(IEnumerable<Property<T>> sources)
         {
-            var propertiesDto = new List<PropertyDto<T>>();
-            foreach (var property in sources)
-            {
-                propertiesDto.Add(CreatePropertyDto(property));
-            }
-            return propertiesDto;
+            return sources.Select(CreatePropertyDto);
         }
 
-        private static PropertyDto<T> CreatePropertyDto<T>(Property<T> source)
+        private static PropertyDto<T> CreatePropertyDto<T>(this Property<T> source)
         {
             var propertyDto = new PropertyDto<T>
             {

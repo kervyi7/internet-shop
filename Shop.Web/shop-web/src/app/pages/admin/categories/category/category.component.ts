@@ -90,7 +90,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((template: ICodeName) => {
       const newTemplate: IPropertyTemplate = {
-        categoryId: this.category.id,
+        categoryId: this.id,
         name: template.name,
         code: template.code,
         extension: {
@@ -158,7 +158,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     };
     this._adminCategoryDataService.create(category).subscribe((data: IBaseModel) => {
       this._location.replaceState(`admin/categories/edit/${data.id}`)
-      this.id = data.id
+      this.id = data.id;
       this._cd.detectChanges();
     });
   }

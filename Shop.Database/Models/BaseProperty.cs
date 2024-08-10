@@ -22,7 +22,7 @@ namespace Shop.Database.Models
 
         public int? ProductId { get; set; }
 
-        public int PropertyTemplateId { get; set; }
+        public int? PropertyTemplateId { get; set; }
 
         [JsonIgnore]
         [ForeignKey(nameof(ProductId))]
