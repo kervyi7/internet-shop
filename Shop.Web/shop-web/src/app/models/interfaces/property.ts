@@ -1,3 +1,4 @@
+import { PropertyTypes } from "../enums/property-types";
 import { ICodeName } from "./base/code-name";
 
 export interface IProperty<T = propertyValue> extends ICodeName {
@@ -7,6 +8,7 @@ export interface IProperty<T = propertyValue> extends ICodeName {
   isTitle: boolean;
   description: string;
   suffix: string;
+  type?: PropertyTypes; //to reqiud
   value: T;
 }
 
@@ -25,10 +27,10 @@ export interface ITemplateExtension {
 
 export interface IPropertiesGroup extends ICodeName {
   propertyCodes: string[];
-  stringProperties: IProperty<string>[];
-  decimalProperties: IProperty<number>[];
-  boolProperties: IProperty<boolean>[];
-  dateProperties: IProperty[];
+  // stringProperties: IProperty<string>[];
+  // decimalProperties: IProperty<number>[];
+  // boolProperties: IProperty<boolean>[];
+  properties: IProperty[];
 }
 
 export interface IPropertiesGroupResponse extends ICodeName {

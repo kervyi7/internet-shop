@@ -9,6 +9,7 @@ import { IBaseModel } from "../../../models/interfaces/base/base-model";
 import { IProperty } from "../../../models/interfaces/property";
 import { Util } from "../../../common/util";
 import { ICreateProductResponse } from "../../../models/interfaces/create-product-response";
+import { PropertyTypes } from "../../../models/enums/property-types";
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,16 @@ export class AdminProductDataService extends BaseDataService {
           next: (response: IProductResponse) => {
             for (const property of response.dateProperties) {
               (property.value as unknown) = new Date(property.value);
+              property.type = PropertyTypes.date;
+            }
+            for (const property of response.stringProperties) {
+              property.type = PropertyTypes.string;
+            }
+            for (const property of response.decimalProperties) {
+              property.type = PropertyTypes.number;
+            }
+            for (const property of response.boolProperties) {
+              property.type = PropertyTypes.bool;
             }
             subscriber.next(response);
           },

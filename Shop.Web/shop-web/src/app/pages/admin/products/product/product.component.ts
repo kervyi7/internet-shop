@@ -15,7 +15,7 @@ import { NotificationService } from '../../../../services/notification.service';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
 import { CreateProduct } from '../../../../models/classes/create-product';
-import { IPropertyTemplate } from '../../../../models/interfaces/property';
+import { IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
 import { BrandDataService } from '../../../../services/data/admin/admin-brand-data.service';
 import { TypeDataService } from '../../../../services/data/admin/admin-type-data.service';
 import { Util } from '../../../../common/util';
@@ -45,6 +45,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public product: IProduct;
   public editedProduct: CreateProduct = new CreateProduct();
   public template: IPropertyTemplate;
+  public properties: IProperty[] = [];
 
   constructor(
     private _notificationService: NotificationService,
@@ -84,11 +85,16 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.selectedCategory = data.category;
         this.selectedType = data.type;
         this.selectedBrand = data.brand;
+        this.properties.push(...this.product.stringProperties);
+        this.properties.push(...this.product.decimalProperties);
+        this.properties.push(...this.product.boolProperties);
+        this.properties.push(...this.product.dateProperties);
+debugger
         this.template = data.category.propertyTemplate;
-        this.template.stringProperties = this.product.stringProperties;
-        this.template.decimalProperties = this.product.decimalProperties;
-        this.template.boolProperties = this.product.boolProperties;
-        this.template.dateProperties = this.product.dateProperties;
+        // this.template.stringProperties = this.product.stringProperties;
+        // this.template.decimalProperties = this.product.decimalProperties;
+        // this.template.boolProperties = this.product.boolProperties;
+        // this.template.dateProperties = this.product.dateProperties;
         this._cd.detectChanges();
       });
   }

@@ -20,6 +20,7 @@ import { NotificationService } from '../../services/notification.service';
 export class PropertiesListComponent extends BaseCompleteComponent implements OnInit {
   @Input() public isProduct: boolean;
   @Input() public template: IPropertyTemplate;
+  @Input() public properties: IProperty[];
   @Output() public reload: EventEmitter<void> = new EventEmitter();
 
   private _dialogRef: DynamicDialogRef;
@@ -49,11 +50,11 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
         name: group.name,
         code: group.code,
         propertyCodes: group.propertyCodes,
-        stringProperties: this.template.stringProperties.filter((x) => group.propertyCodes.includes(x.code)),
-        decimalProperties: this.template.decimalProperties.filter((x) => group.propertyCodes.includes(x.code)),
-        boolProperties: this.template.boolProperties.filter((x) => group.propertyCodes.includes(x.code)),
-        dateProperties: this.template.dateProperties.filter((x) => group.propertyCodes.includes(x.code)),
-      }
+        properties: this.properties.filter((x) => group.propertyCodes.includes(x.code)),
+        //   decimalProperties: this.template.decimalProperties.filter((x) => group.propertyCodes.includes(x.code)),
+        //   boolProperties: this.template.boolProperties.filter((x) => group.propertyCodes.includes(x.code)),
+        //   dateProperties: this.template.dateProperties.filter((x) => group.propertyCodes.includes(x.code)),
+      };
       this.groups.push(newGroup);
     }
   }
@@ -119,10 +120,10 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
         name: group.name,
         code: group.code,
         propertyCodes: [],
-        stringProperties: [],
-        decimalProperties: [],
-        boolProperties: [],
-        dateProperties: []
+        properties: [],
+        // decimalProperties: [],
+        // boolProperties: [],
+        // dateProperties: []
       };
       this.groups.push(newGroup);
       this._cd.detectChanges();

@@ -9,7 +9,7 @@
       <span class="material-icons-reg">{{mIcons.edit}}</span>
     </p-button>
   </div>
-  <div *ngFor="let property of group.stringProperties" class="property-container">
+  <div *ngFor="let property of group.properties" class="property-container">
     <div class="property-item">
       <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
     </div>
@@ -26,7 +26,7 @@
       <span class="material-icons-outline">{{mIcons.delete}}</span>
     </p-button>
   </div>
-  <div *ngFor="let property of group.decimalProperties" class="property-container">
+  <!-- <div *ngFor="let property of group.decimalProperties" class="property-container">
     <div class="property-item">
       <input class="input" type="text" pInputText [placeholder]="property.name" [disabled]="true" />
     </div>
@@ -78,7 +78,7 @@
     <p-button [text]="true" *ngIf="!isProduct" (onClick)="deleteProperty(property, group.dateProperties, group.code)">
       <span class="material-icons-outline">{{mIcons.delete}}</span>
     </p-button>
-  </div>
+  </div> -->
   <p-button [text]="true" *ngIf="group && !isProduct" (onClick)="addProperty(group)">
     <span class="material-icons-reg">{{mIcons.add}}</span>
     <span>Add property</span>
