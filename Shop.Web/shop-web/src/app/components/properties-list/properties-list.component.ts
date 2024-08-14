@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BaseCompleteComponent } from '../base/base-complete.component';
 import { IPropertiesGroup, IProperty, IPropertyTemplate } from '../../models/interfaces/property';
 import { Util } from '../../common/util';
@@ -9,26 +9,24 @@ import { PropertyDialogComponent } from '../dialogs/property-dialog/property-dia
 import { SelectItemDialogComponent } from '../dialogs/select-item-dialog/select-item-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AdminCategoryDataService } from '../../services/data/admin/admin-category-data.service';
-import { AdminProductDataService } from '../../services/data/admin/admin-product-data.service';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'shop-properties-list',
   templateUrl: './properties-list.component.html',
-  styleUrls: ['./properties-list.component.scss']
+  styleUrls: ['./properties-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertiesListComponent extends BaseCompleteComponent implements OnInit {
   @Input() public isProduct: boolean;
   @Input() public template: IPropertyTemplate;
   @Input() public properties: IProperty[];
-  @Output() public reload: EventEmitter<void> = new EventEmitter();
 
   private _dialogRef: DynamicDialogRef;
   public groups: IPropertiesGroup[];
 
   constructor(
     private _adminCategoryDataService: AdminCategoryDataService,
-    private _adminProductDataService: AdminProductDataService,
     private _cd: ChangeDetectorRef,
     private _dialogService: DialogService,
     private _notificationService: NotificationService) {
@@ -50,13 +48,26 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
         name: group.name,
         code: group.code,
         propertyCodes: group.propertyCodes,
-        properties: this.properties.filter((x) => group.propertyCodes.includes(x.code)),
-        //   decimalProperties: this.template.decimalProperties.filter((x) => group.propertyCodes.includes(x.code)),
-        //   boolProperties: this.template.boolProperties.filter((x) => group.propertyCodes.includes(x.code)),
-        //   dateProperties: this.template.dateProperties.filter((x) => group.propertyCodes.includes(x.code)),
+        properties: this.properties.filter((x) => group.propertyCodes.includes(x.code))
       };
       this.groups.push(newGroup);
     }
+  }
+
+  public editTemplate(): void {
+    const data = { items: this.template };
+    const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
+    this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
+    this._dialogRef.onClose.subscribe((response: ICodeName) => {
+      const newTemplate = this.template;
+      newTemplate.name = response.name;
+      newTemplate.code = response.code;
+      this._adminCategoryDataService.editTemplate(newTemplate).subscribe(() => {
+        this.template.name = response.name;
+        this.template.code = response.code;
+        this._cd.detectChanges();
+      });
+    });
   }
 
   public deleteProperty(property: IProperty, group: IProperty[], groupCode: string): void {
@@ -82,6 +93,9 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
     this._dialogRef = Util.openDialog(this._dialogService, PropertyDialogComponent, config);
     this._dialogRef.onClose.subscribe((newProperty: IProperty) => {
+      if (!newProperty) {
+        return;
+      }
       if (this.isProduct) {
         property.value = newProperty.value;
       } else {
@@ -98,6 +112,9 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
     this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((newGroup: IPropertiesGroup) => {
+      if (!newGroup) {
+        return;
+      }
       this.template.extension.propertiesGroups.map((x) => {
         if (x.code == group.code) {
           x.code = newGroup.code;
@@ -116,14 +133,14 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false };
     this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((group: ICodeName) => {
+      if (!group) {
+        return;
+      }
       const newGroup: IPropertiesGroup = {
         name: group.name,
         code: group.code,
         propertyCodes: [],
-        properties: [],
-        // decimalProperties: [],
-        // boolProperties: [],
-        // dateProperties: []
+        properties: []
       };
       this.groups.push(newGroup);
       this._cd.detectChanges();
@@ -135,12 +152,15 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
     this._dialogRef = Util.openDialog(this._dialogService, PropertyDialogComponent, config);
     this._dialogRef.onClose.subscribe((property: IProperty) => {
+      if (!property) {
+        return;
+      }
       group.propertyCodes.push(property.code);
       this.template.extension.propertiesGroups = this.groups;
       this._adminCategoryDataService.editTemplate(this.template).subscribe(() => {
-        this.reload.next();
+        group.properties.push(property);
+        this._cd.detectChanges();
       });
-      this._cd.detectChanges();
     });
   }
 }

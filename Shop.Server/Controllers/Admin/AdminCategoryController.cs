@@ -264,11 +264,9 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("not reference");
             }
-            var isPropertyExist = await DataContext.Set<Property<T>>()
-                .AnyAsync(x => x.PropertyTemplateId == model.PropertyTemplateId && (x.Code == model.Code || x.Name == model.Name));
-            if (isPropertyExist)
+            if ((isNameCodeUnique<string, T>(model).Result || isNameCodeUnique<decimal, T>(model).Result) || (isNameCodeUnique<bool, T>(model).Result || isNameCodeUnique<DateTime, T>(model).Result))
             {
-                throw new ConflictException("property already exist");
+                throw new ConflictException("property already exist with this name or code.");
             }
             var newProperty = new Property<T>
             {
@@ -286,6 +284,12 @@ namespace Shop.Server.Controllers.Admin
             };
             DataContext.Set<Property<T>>().Add(newProperty);
             await DataContext.SaveChangesAsync();
+        }
+
+        private async Task<bool> isNameCodeUnique<R, T>(PropertyDto<T> model)
+        {
+            return await DataContext.Set<Property<R>>()
+                .AnyAsync(x => x.PropertyTemplateId == model.PropertyTemplateId && (x.Code == model.Code || x.Name == model.Name));
         }
 
         private async Task EditProperty<T>(int id, PropertyDto<T> model)

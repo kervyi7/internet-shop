@@ -1,7 +1,6 @@
 <p-button [text]="true" (click)="goToPreviousPage()"><span
     class="material-icons-reg">{{mIcons.arrow_back}}</span></p-button>
 <p *ngIf="category" class="admin-section-title">{{category.name}} {{category.code}}</p>
-
 <p class="admin-section-header">{{lang.headers.categoryInformation}}</p>
 <div class="inputs-wrapper">
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="categoryName" />
@@ -27,17 +26,8 @@
         <span>Create template</span>
       </p-button>
     </div>
-    <div *ngIf="template" class="inputs-wrapper">
-      <div class="property-container">
-        <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="template.name"
-          [disabled]="true" />
-        <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="template.code"
-          [disabled]="true" />
-        <p-button [text]="true" (onClick)="editTemplate()">
-          <span class="material-icons-reg">{{mIcons.edit}}</span>
-        </p-button>
-      </div>
-      <shop-properties-list [template]="template" [properties]="properties" [isProduct]="false" (reload)="loadCategory()"></shop-properties-list>
+    <div *ngIf="template">
+      <shop-properties-list [template]="template" [properties]="properties" [isProduct]="false"></shop-properties-list>
     </div>
   </div>
 </div>

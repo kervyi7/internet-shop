@@ -5,9 +5,7 @@ import { BaseDataService } from "../base-data.service";
 import { AppConfigService } from "../../app-config.service";
 import { ICreateProduct, IProduct, IProductResponse, } from "../../../models/interfaces/product";
 import { IImage } from "../../../models/interfaces/image";
-import { IBaseModel } from "../../../models/interfaces/base/base-model";
 import { IProperty } from "../../../models/interfaces/property";
-import { Util } from "../../../common/util";
 import { ICreateProductResponse } from "../../../models/interfaces/create-product-response";
 import { PropertyTypes } from "../../../models/enums/property-types";
 
@@ -61,8 +59,7 @@ export class AdminProductDataService extends BaseDataService {
   }
 
   public editProperty(id: number, property: IProperty): Observable<propertyValue> {
-    const type = Util.getPropertyType(property);
-    return this.http.put<propertyValue>(this.getUrl(`edit-property/${type}/${id}`), property, this.defaultHttpOptions);
+    return this.http.put<propertyValue>(this.getUrl(`edit-property/${property.type}/${id}`), property, this.defaultHttpOptions);
   }
 
   public addImage(image: IImage): Observable<void> {

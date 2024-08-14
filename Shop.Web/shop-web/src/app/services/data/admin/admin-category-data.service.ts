@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BaseDataService } from "../base-data.service";
 import { AppConfigService } from "../../app-config.service";
-import { ICategory } from "../../../models/interfaces/category";
+import { ICategory, ICategoryResponse } from "../../../models/interfaces/category";
 import { IImage } from "../../../models/interfaces/image";
 import { IProperty, IPropertyTemplate } from "../../../models/interfaces/property";
 import { IBaseModel } from "../../../models/interfaces/base/base-model";
-import { Util } from "../../../common/util";
+import { PropertyTypes } from "../../../models/enums/property-types";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,32 @@ export class AdminCategoryDataService extends BaseDataService {
   }
 
   public getById(id: number): Observable<ICategory> {
-    return this.http.get<ICategory>(this.getUrlById(id), this.defaultHttpOptions);
+    return new Observable<ICategory>((subscriber) => {
+      this.http.get<ICategoryResponse>(this.getUrlById(id), this.defaultHttpOptions).subscribe({
+        next: (response: ICategoryResponse) => {
+          if (!response.propertyTemplate) {
+            subscriber.next(response);
+            return;
+          }
+          for (const property of response.propertyTemplate.dateProperties) {
+            (property.value as unknown) = new Date(property.value);
+            property.type = PropertyTypes.date;
+          }
+          for (const property of response.propertyTemplate.stringProperties) {
+            property.type = PropertyTypes.string;
+          }
+          for (const property of response.propertyTemplate.decimalProperties) {
+            property.type = PropertyTypes.number;
+          }
+          for (const property of response.propertyTemplate.boolProperties) {
+            property.type = PropertyTypes.bool;
+          }
+          subscriber.next(response);
+        },
+        error: (errorResponse: HttpErrorResponse) => subscriber.error(errorResponse),
+        complete: () => subscriber.complete()
+      });
+    });
   }
 
   public create(category: ICategory): Observable<IBaseModel> {
@@ -37,13 +62,11 @@ export class AdminCategoryDataService extends BaseDataService {
   }
 
   public addProperty(property: IProperty): Observable<void> {
-    const type = Util.getPropertyType(property);
-    return this.http.post<void>(this.getUrl(`add-property/${type}`), property, this.defaultHttpOptions);
+    return this.http.post<void>(this.getUrl(`add-property/${property.type}`), property, this.defaultHttpOptions);
   }
 
   public deleteProperty(id: number, property: IProperty): Observable<void> {
-    const type = Util.getPropertyType(property);
-    return this.http.delete<void>(this.getUrlById(`remove-property/${id}/property/${property.id}/type/${type}`), this.defaultHttpOptions);
+    return this.http.delete<void>(this.getUrlById(`remove-property/${id}/property/${property.id}/type/${property.type}`), this.defaultHttpOptions);
   }
 
   public editCategory(id: number, category: ICategory): Observable<ICategory> {
@@ -55,8 +78,7 @@ export class AdminCategoryDataService extends BaseDataService {
   }
 
   public editProperty(id: number, property: IProperty): Observable<propertyValue> {
-    const type = Util.getPropertyType(property);
-    return this.http.put<propertyValue>(this.getUrl(`edit-property/${type}/${id}`), property, this.defaultHttpOptions);
+    return this.http.put<propertyValue>(this.getUrl(`edit-property/${property.type}/${id}`), property, this.defaultHttpOptions);
   }
 
   public editImage(id: number, image: IImage): Observable<IImage> {

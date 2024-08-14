@@ -8,7 +8,7 @@ export interface IProperty<T = propertyValue> extends ICodeName {
   isTitle: boolean;
   description: string;
   suffix: string;
-  type?: PropertyTypes; //to reqiud
+  type: PropertyTypes;
   value: T;
 }
 
@@ -21,15 +21,16 @@ export interface IPropertyTemplate extends ICodeName {
   dateProperties: IProperty[];
 }
 
+export interface IPropertyTemplateResponse extends IPropertyTemplate {
+  dateProperties: IProperty<string>[];
+}
+
 export interface ITemplateExtension {
   propertiesGroups: IPropertiesGroupResponse[];
 }
 
 export interface IPropertiesGroup extends ICodeName {
   propertyCodes: string[];
-  // stringProperties: IProperty<string>[];
-  // decimalProperties: IProperty<number>[];
-  // boolProperties: IProperty<boolean>[];
   properties: IProperty[];
 }
 

@@ -1,3 +1,4 @@
+import { PropertyTypes } from "../enums/property-types";
 import { IProperty } from "../interfaces/property";
 
 export class Property implements IProperty {
@@ -11,6 +12,7 @@ export class Property implements IProperty {
   public suffix: string;
   public value: propertyValue;
   public id?: number;
+  public type: PropertyTypes;
 
   constructor() {
 

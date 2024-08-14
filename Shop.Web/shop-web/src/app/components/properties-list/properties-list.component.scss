@@ -1,17 +1,18 @@
 .property-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, 400px)) repeat(2, 50px);
   gap: 20px;
-}
-
-.property-item {
-  width: 400px;
-  display: flex;
-  justify-content: center;
+  align-items: center;
 }
 
 .inputs-wrapper {
-  width: 30%;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.template-group-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }

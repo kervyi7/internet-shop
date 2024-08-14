@@ -38,12 +38,13 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       this.isDisabled = true;
       this.property = this._data.items;
       this.editedProperty = structuredClone(this.property);
-      this.selectedType = Util.getPropertyType(this.editedProperty);
+      this.selectedType = this.editedProperty.type;
     };
   }
 
   public save(): void {
     const property: IProperty = {
+      type: this.selectedType,
       productId: this.editedProperty.productId || this._refConfig.data.productId,
       propertyTemplateId: this.editedProperty.propertyTemplateId || this._refConfig.data.templateId,
       isPrimary: this.editedProperty.isPrimary,

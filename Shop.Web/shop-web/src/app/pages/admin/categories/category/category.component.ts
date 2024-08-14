@@ -14,7 +14,7 @@ import { Util } from '../../../../common/util';
 import { IImage } from '../../../../models/interfaces/image';
 import { Location } from '@angular/common';
 import { IBaseModel } from '../../../../models/interfaces/base/base-model';
-import { IPropertiesGroup, IPropertyTemplate } from '../../../../models/interfaces/property';
+import { IPropertiesGroup, IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
 import { SelectItemDialogComponent } from '../../../../components/dialogs/select-item-dialog/select-item-dialog.component';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
 
@@ -34,6 +34,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   public categoryName: string;
   public categoryCode: string;
   public template: IPropertyTemplate;
+  public properties: IProperty[] = [];
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -89,6 +90,9 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false };
     this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((template: ICodeName) => {
+      if (!template) {
+        return;
+      }
       const newTemplate: IPropertyTemplate = {
         categoryId: this.id,
         name: template.name,
@@ -104,22 +108,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       this._adminCategoryDataService.createTemplate(newTemplate).subscribe((data: IBaseModel) => {
         this.template = newTemplate;
         this.template.id = data.id;
-        this._cd.detectChanges();
-      });
-    });
-  }
-
-  public editTemplate(): void {
-    const data = { items: this.template };
-    const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
-    this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
-    this._dialogRef.onClose.subscribe((response: ICodeName) => {
-      const newTemplate = this.template;
-      newTemplate.name = response.name;
-      newTemplate.code = response.code;
-      this._adminCategoryDataService.editTemplate(newTemplate).subscribe(() => {
-        this.template.name = response.name;
-        this.template.code = response.code;
         this._cd.detectChanges();
       });
     });
@@ -174,6 +162,14 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
           this.image = Converter.toFileSrc(this.category.image.mimeType, this.category.image.smallBody);
         }
         this.template = data.propertyTemplate;
+        if (!this.template) {
+          this._cd.detectChanges();
+          return;
+        }
+        this.properties.push(...this.template.stringProperties);
+        this.properties.push(...this.template.decimalProperties);
+        this.properties.push(...this.template.boolProperties);
+        this.properties.push(...this.template.dateProperties);
         this._cd.detectChanges();
       });
   }

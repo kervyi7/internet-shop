@@ -89,12 +89,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.properties.push(...this.product.decimalProperties);
         this.properties.push(...this.product.boolProperties);
         this.properties.push(...this.product.dateProperties);
-debugger
         this.template = data.category.propertyTemplate;
-        // this.template.stringProperties = this.product.stringProperties;
-        // this.template.decimalProperties = this.product.decimalProperties;
-        // this.template.boolProperties = this.product.boolProperties;
-        // this.template.dateProperties = this.product.dateProperties;
         this._cd.detectChanges();
       });
   }

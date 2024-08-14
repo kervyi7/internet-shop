@@ -117,10 +117,7 @@
     </div>
   </div>
   <p class="admin-section-header">{{lang.headers.additionalValues}}</p>
-  <!-- <p-button [text]="true" (onClick)="addProperty()">
-    <span class="material-icons-reg">{{mIcons.add}}</span><span>{{lang.buttons.addProperty}}</span>
-  </p-button> -->
   <div class="property-section" *ngIf="product">
-    <shop-properties-list [template]="template" [isProduct]="true"></shop-properties-list>
+    <shop-properties-list [template]="template" [properties]="properties" [isProduct]="true"></shop-properties-list>
   </div>
 </div>
