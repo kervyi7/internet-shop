@@ -1,4 +1,6 @@
 import { MimeTypes } from "../models/enums/mime-types";
+import { PropertyTypes } from "../models/enums/property-types";
+import { IPropertyResponse } from "../models/interfaces/property";
 
 export class Converter {
   public static base64ToFile(base64: string, filename: string, options?: FilePropertyBag): File {
@@ -23,5 +25,21 @@ export class Converter {
 
   public static toFileSrc(type: MimeTypes | string, body: string): string {
     return `data:${type};base64, ${body}`;
+  }
+
+  public static prepareProperties(propertyResponse: IPropertyResponse): void{
+    for (const property of propertyResponse.dateProperties) {
+      (property.value as unknown) = new Date(property.value);
+      property.type = PropertyTypes.date;
+    }
+    for (const property of propertyResponse.stringProperties) {
+      property.type = PropertyTypes.string;
+    }
+    for (const property of propertyResponse.decimalProperties) {
+      property.type = PropertyTypes.number;
+    }
+    for (const property of propertyResponse.boolProperties) {
+      property.type = PropertyTypes.bool;
+    }
   }
 }

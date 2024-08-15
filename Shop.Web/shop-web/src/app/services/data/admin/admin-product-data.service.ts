@@ -7,7 +7,7 @@ import { ICreateProduct, IProduct, IProductResponse, } from "../../../models/int
 import { IImage } from "../../../models/interfaces/image";
 import { IProperty } from "../../../models/interfaces/property";
 import { ICreateProductResponse } from "../../../models/interfaces/create-product-response";
-import { PropertyTypes } from "../../../models/enums/property-types";
+import { Converter } from "../../../common/converter";
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ export class AdminProductDataService extends BaseDataService {
   public baseUrl = 'adminProduct';
 
   constructor(public readonly http: HttpClient,
-    private _appConfigService: AppConfigService) {
-    super(_appConfigService);
+    appConfigService: AppConfigService) {
+    super(appConfigService);
   }
 
   public getAll(): Observable<IProduct[]> {
@@ -29,19 +29,7 @@ export class AdminProductDataService extends BaseDataService {
       this.http.get<IProductResponse>(this.getUrlById(id), this.defaultHttpOptions)
         .subscribe({
           next: (response: IProductResponse) => {
-            for (const property of response.dateProperties) {
-              (property.value as unknown) = new Date(property.value);
-              property.type = PropertyTypes.date;
-            }
-            for (const property of response.stringProperties) {
-              property.type = PropertyTypes.string;
-            }
-            for (const property of response.decimalProperties) {
-              property.type = PropertyTypes.number;
-            }
-            for (const property of response.boolProperties) {
-              property.type = PropertyTypes.bool;
-            }
+            Converter.prepareProperties(response);
             subscriber.next(response);
           },
           error: (errorResponse: HttpErrorResponse) => subscriber.error(errorResponse),

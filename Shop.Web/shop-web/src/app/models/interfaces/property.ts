@@ -12,17 +12,24 @@ export interface IProperty<T = propertyValue> extends ICodeName {
   value: T;
 }
 
-export interface IPropertyTemplate extends ICodeName {
+export interface IPropertyTemplate extends ICodeName, IPropertyAll {
   categoryId: number;
   extension: ITemplateExtension;
+}
+
+export interface IPropertyTemplateResponse extends IPropertyResponse, IPropertyTemplate {
+  dateProperties: IProperty<string>[];
+}
+
+export interface IPropertyResponse extends IPropertyAll {
+  dateProperties: IProperty<string>[];
+}
+
+export interface IPropertyAll {
   stringProperties: IProperty<string>[];
   decimalProperties: IProperty<number>[];
   boolProperties: IProperty<boolean>[];
   dateProperties: IProperty[];
-}
-
-export interface IPropertyTemplateResponse extends IPropertyTemplate {
-  dateProperties: IProperty<string>[];
 }
 
 export interface ITemplateExtension {

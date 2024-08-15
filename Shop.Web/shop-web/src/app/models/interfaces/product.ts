@@ -1,9 +1,9 @@
 import { ICodeName } from "./base/code-name";
 import { ICategory } from "./category";
 import { IImage } from "./image";
-import { IProperty } from "./property";
+import { IProperty, IPropertyAll, IPropertyResponse } from "./property";
 
-export interface IProduct extends ICodeName {
+export interface IProduct extends ICodeName, IPropertyAll {
   category: ICategory;
   type: ICodeName;
   brand: ICodeName;
@@ -13,10 +13,6 @@ export interface IProduct extends ICodeName {
   description: string;
   currency: string;
   isExist: boolean;
-  stringProperties: IProperty<string>[];
-  decimalProperties: IProperty<number>[];
-  boolProperties: IProperty<boolean>[];
-  dateProperties: IProperty[];
   images: IImage[];
 }
 
@@ -32,6 +28,6 @@ export interface ICreateProduct extends ICodeName {
   description: string;
 }
 
-export interface IProductResponse extends IProduct {
+export interface IProductResponse extends IPropertyResponse, IProduct {
   dateProperties: IProperty<string>[];
 }

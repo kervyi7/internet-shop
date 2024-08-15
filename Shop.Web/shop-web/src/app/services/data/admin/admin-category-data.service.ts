@@ -8,6 +8,7 @@ import { IImage } from "../../../models/interfaces/image";
 import { IProperty, IPropertyTemplate } from "../../../models/interfaces/property";
 import { IBaseModel } from "../../../models/interfaces/base/base-model";
 import { PropertyTypes } from "../../../models/enums/property-types";
+import { Converter } from "../../../common/converter";
 
 @Injectable({
   providedIn: 'root'
@@ -32,19 +33,7 @@ export class AdminCategoryDataService extends BaseDataService {
             subscriber.next(response);
             return;
           }
-          for (const property of response.propertyTemplate.dateProperties) {
-            (property.value as unknown) = new Date(property.value);
-            property.type = PropertyTypes.date;
-          }
-          for (const property of response.propertyTemplate.stringProperties) {
-            property.type = PropertyTypes.string;
-          }
-          for (const property of response.propertyTemplate.decimalProperties) {
-            property.type = PropertyTypes.number;
-          }
-          for (const property of response.propertyTemplate.boolProperties) {
-            property.type = PropertyTypes.bool;
-          }
+          Converter.prepareProperties(response.propertyTemplate);
           subscriber.next(response);
         },
         error: (errorResponse: HttpErrorResponse) => subscriber.error(errorResponse),

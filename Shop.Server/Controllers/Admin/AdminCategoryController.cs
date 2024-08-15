@@ -264,7 +264,10 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("not reference");
             }
-            if ((isNameCodeUnique<string, T>(model).Result || isNameCodeUnique<decimal, T>(model).Result) || (isNameCodeUnique<bool, T>(model).Result || isNameCodeUnique<DateTime, T>(model).Result))
+            if (isNameCodeUnique<string, T>(model).Result ||
+                isNameCodeUnique<decimal, T>(model).Result ||
+                isNameCodeUnique<bool, T>(model).Result ||
+                isNameCodeUnique<DateTime, T>(model).Result)
             {
                 throw new ConflictException("property already exist with this name or code.");
             }
