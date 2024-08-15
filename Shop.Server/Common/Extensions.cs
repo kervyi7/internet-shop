@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using Shop.Common;
 using Shop.Database.Models;
 using Shop.Database.Models.Jsons;
@@ -62,6 +61,20 @@ namespace Shop.Server.Common
                     return await stream.ReadToEndAsync();
                 }
             }
+        }
+
+        public static string GetError(this Exception exception)
+        {
+            var innerException = exception.InnerException;
+            if (innerException != null)
+            {
+                return GetError(innerException);
+            }
+            var errorResponse = new ErrorResponseDto
+            {
+                ErrorDescription = exception.Message
+            };
+            return JsonManager.Serialize(errorResponse);
         }
 
         public static IEnumerable<ProductDto> ToViewModels(this IEnumerable<Product> sources)

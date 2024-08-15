@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Shop.Server.Common;
 using System.Runtime.InteropServices;
 
 namespace Shop.Server
