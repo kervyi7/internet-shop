@@ -2,24 +2,24 @@
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Database.Models;
-using Shop.Server.Controllers.Abstract;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
-    public class CategoryController : BaseEntityController<Category>
+    public class CategoryController : ControllerBase
     {
-
-        public CategoryController(DataContext dataContext) : base(dataContext)
+        private readonly DataContext _dataContext;
+        public CategoryController(DataContext dataContext)
         {
+            _dataContext = dataContext;
         }
 
         [HttpGet()]
         public async Task<ActionResult<Category[]>> GetAll()
         {
-            var categories = await DataContext.Categories
+            var categories = await _dataContext.Categories
                 .Include(x => x.Image)
                 .Select(x => new Category
                 {

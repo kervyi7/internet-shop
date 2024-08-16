@@ -2,27 +2,28 @@
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Database.Models;
-using Shop.Server.Controllers.Abstract;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System.Threading.Tasks;
 using System.Linq;
 using Shop.Server.Common;
-using System;
+
 
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
-    public class ProductController : BaseEntityController<Product>
+    public class ProductController : ControllerBase
     {
-        public ProductController(DataContext dataContext) : base(dataContext)
-        {
-        }
+        private readonly DataContext _dataContext;
+    public ProductController(DataContext dataContext)
+    {
+        _dataContext = dataContext;
+    }
 
-        [HttpGet()]
+    [HttpGet()]
         public async Task<ActionResult<ProductDto[]>> GetAll()
         {
-            var products = await DataContext.Products
+            var products = await _dataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
@@ -37,7 +38,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpGet("category/{category}")]
         public async Task<ActionResult<ProductDto[]>> GetByCategory(string category)
         {
-            var products = await DataContext.Products
+            var products = await _dataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
@@ -54,7 +55,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpGet("category/{category}/filters")]
         public async Task<ActionResult<ProductDto[]>> GetByFilters(string category)
         {
-            var products = await DataContext.Products
+            var products = await _dataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
@@ -71,7 +72,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpGet("sale")]
         public async Task<ActionResult<ProductDto>> GetWithSale()
         {
-            var products = await DataContext.Products
+            var products = await _dataContext.Products
                 .Include(x => x.Category)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image).Where(x => x.SalePrice != 0)
@@ -82,7 +83,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpGet("product/{code}")]
         public async Task<ActionResult<ProductDto>> GetByCode(string code)
         {
-            var product = await DataContext.Products
+            var product = await _dataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)

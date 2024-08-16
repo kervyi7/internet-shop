@@ -44,15 +44,15 @@ export class HttpClientInterceptor implements HttpInterceptor {
   private handleError(errorResponse: HttpErrorResponse, subscriber: Subscriber<unknown>, httpRequest: HttpRequest<unknown>) {
     if (errorResponse.status === 401) {
       const tokenExpired = errorResponse.headers.get("Token-Expired");
-      if (tokenExpired !== "true") {
+      if (tokenExpired === "true") {
         this.handleTokenExpiredError(subscriber, httpRequest);
-        return;
+      } else {
+        subscriber.complete();
+        this._router.navigate(['/not-found']);
       }
-      subscriber.complete();
-      this.redirectToLogin();
       return;
     }
-    if (errorResponse.status === 404 || errorResponse.status === 403) {
+    if (errorResponse.status === 404) {
       subscriber.complete();
       this._router.navigate(['/not-found']);
       return;
