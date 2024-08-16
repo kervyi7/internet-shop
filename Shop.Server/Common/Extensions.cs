@@ -63,12 +63,12 @@ namespace Shop.Server.Common
             }
         }
 
-        public static string GetError(this Exception exception)
+        public static string GetErrorDto(this Exception exception)
         {
             var innerException = exception.InnerException;
             if (innerException != null)
             {
-                return GetError(innerException);
+                return innerException.GetErrorDto();
             }
             var errorResponse = new ErrorResponseDto
             {

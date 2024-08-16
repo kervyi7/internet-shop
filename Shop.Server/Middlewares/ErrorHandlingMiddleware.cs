@@ -11,7 +11,6 @@ using Shop.Server.Exceptions;
 using Shop.Server.Manager;
 using Shop.Server.Models;
 using Shop.Server.Models.DTO.Auth;
-using Shop.Server.RequestModels;
 
 namespace Shop.Server.Middlewares
 {
@@ -25,20 +24,14 @@ namespace Shop.Server.Middlewares
             _next = next;
         }
 
-        public static void WriteClientError(ILog log, IPrincipal principal, ClientExceptionRequestModel clientExceptionRequestModel)
-        {
-            var logException = CreateLogError(principal, clientExceptionRequestModel);
-            log.Error(logException.ToString(), new Exception(clientExceptionRequestModel.CallStack));
-        }
-
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                //if (context.Request.ContentType == ContentTypeConstants.ContentJson)
-                //{
-                //    context.Request.EnableBuffering();
-                //}
+                if (context.Request.ContentType == ContentTypeConstants.ContentJson)
+                {
+                    context.Request.EnableBuffering();
+                }
                 await _next(context);
             }
             catch (HttpResponseException exception)
@@ -95,7 +88,7 @@ namespace Shop.Server.Middlewares
         private async Task HandleExceptionAsync(Exception exception, HttpContext context, HttpStatusCode statusCode)
         {
             await SaveLog(exception, context);
-            var error = exception.GetError();
+            var error = exception.GetErrorDto();
             await SendContentResponse(context, error, statusCode);
         }
 
@@ -133,19 +126,6 @@ namespace Shop.Server.Middlewares
             string traceIdentifier)
         {
             return new LogError(principal, request.Path, request.Method, body, message, traceIdentifier);
-        }
-
-        private static LogError CreateLogError(
-            IPrincipal principal,
-            ClientExceptionRequestModel clientExceptionRequestModel)
-        {
-            return new LogError(
-                principal,
-                clientExceptionRequestModel.Url,
-                string.Empty,
-                string.Empty,
-                clientExceptionRequestModel.Message,
-                string.Empty);
         }
     }
 }

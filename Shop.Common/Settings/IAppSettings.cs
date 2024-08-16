@@ -9,8 +9,5 @@ namespace Shop.Common.Settings
 
         IdentityConfig IdentityConfig { get; }
         AuthConfig AuthConfig { get; }
-        AppConfig AppConfig { get; }
-
-        HistoryTypes GetHistoryType();
     }
 }

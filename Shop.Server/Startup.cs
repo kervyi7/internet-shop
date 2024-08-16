@@ -15,7 +15,6 @@ using Shop.Database.Identity;
 using Shop.Server.Auth;
 using Shop.Server.Common;
 using Shop.Server.Middlewares;
-using Shop.Server.Providers;
 using System;
 using System.IO.Compression;
 using System.Net;
@@ -56,7 +55,6 @@ namespace Shop.Server
                 options.Level = CompressionLevel.Optimal;
             });
             services.AddSingleton<IAppSettings>(_appSettings);
-            services.AddSingleton<HistotyProvider>();
             services.AddScoped<AuthManager>();
             AddIdentityCore(services);
             AddAuthentication(services);
@@ -83,7 +81,6 @@ namespace Shop.Server
                     dataContext.MigrateAndSeed();
                 }
             }
-            app.UseMiddleware<MonitoringMiddlewares>();
             app.UseMiddleware<ErrorHandlingMiddleware>();
 #if DEBUG
             app.UseCors(AppConstants.ClientCorsPolicy);
