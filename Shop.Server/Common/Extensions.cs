@@ -167,6 +167,10 @@ namespace Shop.Server.Common
 
         private static CodeNameDto CreateCodeNameDto(BaseCodeName source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             var codeNameDto = new CodeNameDto
             {
                 Id = source.Id,

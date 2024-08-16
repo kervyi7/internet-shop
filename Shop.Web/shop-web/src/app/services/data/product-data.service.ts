@@ -29,7 +29,7 @@ export class ProductDataService extends BaseDataService {
   }
 
   public getWithSale(): Observable<IProduct[]> {
-    return this.http.get<IProduct[]>(this.getUrl("sale"), this.defaultHttpOptions);
+    return this.http.get<IProduct[]>(this.getUrl("discounted"), this.defaultHttpOptions);
   }
 
   public getByCode(code: string): Observable<IProduct> {

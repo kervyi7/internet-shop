@@ -8,19 +8,18 @@ using System.Threading.Tasks;
 using System.Linq;
 using Shop.Server.Common;
 
-
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
         private readonly DataContext _dataContext;
-    public ProductController(DataContext dataContext)
-    {
-        _dataContext = dataContext;
-    }
+        public ProductController(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
-    [HttpGet()]
+        [HttpGet()]
         public async Task<ActionResult<ProductDto[]>> GetAll()
         {
             var products = await _dataContext.Products
@@ -47,9 +46,10 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
                 .Include(x => x.DateProperties.Where(x => x.IsTitle))
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
-                .ThenInclude(x => x.Image).Where(x => x.Category.Name == category)
+                .ThenInclude(x => x.Image)
+                .Where(x => x.Category.Name == category)
                 .ToListAsync();
-            return Ok(products);
+            return Ok(products.ToViewModels());
         }
 
         [HttpGet("category/{category}/filters")]
@@ -66,18 +66,19 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image).Where(x => x.Category.Name == category)
                 .ToListAsync();
-            return Ok(products);
+            return Ok(products.ToViewModels());
         }
 
-        [HttpGet("sale")]
-        public async Task<ActionResult<ProductDto>> GetWithSale()
+        [HttpGet("discounted")]
+        public async Task<ActionResult<ProductDto>> GetDiscounted()
         {
             var products = await _dataContext.Products
                 .Include(x => x.Category)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
-                .ThenInclude(x => x.Image).Where(x => x.SalePrice != 0)
+                .ThenInclude(x => x.Image)
+                .Where(x => x.SalePrice != 0)
                 .ToListAsync();
-            return Ok(products);
+            return Ok(products.ToViewModels());
         }
 
         [HttpGet("product/{code}")]

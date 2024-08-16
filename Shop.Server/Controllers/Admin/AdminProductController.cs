@@ -11,7 +11,6 @@ using System.Linq;
 using Shop.Server.Common;
 using Shop.Common.Constants;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Shop.Server.Controllers.Admin
 {

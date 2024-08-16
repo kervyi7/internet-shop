@@ -1,4 +1,8 @@
+<p-button [text]="true" (onClick)="goToHome()">
+  <span class="material-icons-outline">{{mIcons.home}}</span>
+</p-button>
 <form (ngSubmit)="submit()" [formGroup]="userForm" novalidate>
+  <h2>Sign In</h2>
   <input class="input" type="text" pInputText [placeholder]="lang.placeholders.login" [formControl]="userForm.controls.userName"/>
   <input class="input" type="password" pInputText [placeholder]="lang.placeholders.password" [formControl]="userForm.controls.password"/>
   <p-button type="submit">{{lang.buttons.login}}</p-button>

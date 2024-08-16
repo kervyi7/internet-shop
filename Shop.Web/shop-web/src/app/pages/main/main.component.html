@@ -1,5 +1,8 @@
 <main>
-  <button *ngIf="isAuthorized" (click)="goToAdmin()">Go to Admin</button>
+  <button *ngIf="isAuthorized; else loginButton" (click)="goToAdmin()">Go to Admin</button>
+  <ng-template #loginButton>
+    <button (click)="goToLogin()">Go to Login</button>
+  </ng-template>
   <h1>Categories:</h1>
   <div class="flex">
     <div class="category-wrapper cursor-pointer" *ngFor="let category of categories"

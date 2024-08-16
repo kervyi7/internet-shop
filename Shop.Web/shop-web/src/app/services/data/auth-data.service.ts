@@ -28,6 +28,6 @@ export class AuthDataService extends BaseDataService {
 
   public refresh(accessToken: string, refreshToken: string): Observable<IToken> {
     const body: IToken = { accessToken, refreshToken };
-    return this._http.post<IToken>("refresh", body);
+    return this._http.post<IToken>(this.getUrl("refresh"), body);
   }
 }

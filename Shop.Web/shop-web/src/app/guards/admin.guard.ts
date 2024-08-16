@@ -15,7 +15,7 @@ export class AdminGuard {
     if (this._authService.isLoggedIn()) {
       return true;
     }
-    this._router.navigate(['/login']);
+    this._router.navigate(['/not-found']);
     return false;
   }
 }

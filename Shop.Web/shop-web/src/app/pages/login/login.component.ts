@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs';
 import { IAuthResponse } from '../../models/interfaces/auth-response';
 import { AuthService } from '../../services/auth.service';
 import { ILoginForm } from '../../models/interfaces/forms/login-form';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'shop-login',
@@ -18,9 +19,14 @@ export class LoginComponent extends BaseCompleteComponent {
 
   constructor(
     private _authDataService: AuthDataService,
-    private _authService: AuthService) {
+    private _authService: AuthService,
+    private _router: Router) {
     super();
     this.userForm = this.getUserForm();
+  }
+
+  public goToHome(): void {
+    this._router.navigate([`/`]);
   }
 
   public submit(): void {
@@ -35,6 +41,7 @@ export class LoginComponent extends BaseCompleteComponent {
       .subscribe((data: IAuthResponse) => {
         if (data) {
           this._authService.setToken(data.token);
+          this.goToHome();
         }
       });
   }

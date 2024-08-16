@@ -11,5 +11,6 @@ export enum MatIcons {
   check_circle = 'check_circle',
   category = 'category',
   shopping_cart = 'shopping_cart',
-  settings = 'settings'
+  settings = 'settings',
+  home = 'home'
 }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MainComponent } from './main.component';
 import { MainRoutingModule } from './main-routing.module';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { MainRoutingModule } from './main-routing.module';
     CommonModule,
     FormsModule,
     RouterModule,
-    MainRoutingModule
+    MainRoutingModule,
+    ButtonModule
   ],
   providers: [],
   exports: [

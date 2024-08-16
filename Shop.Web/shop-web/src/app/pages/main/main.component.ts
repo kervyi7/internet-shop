@@ -37,8 +37,11 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
     this._router.navigate(['/admin']);
   }
 
+  public goToLogin(): void {
+    this._router.navigate(['/login']);
+  }
+
   public goToProductList(categoryName: string): void {
-    //categoryName = categoryName.toLowerCase();
     this._router.navigate([`/${categoryName}`]);
   }
 
