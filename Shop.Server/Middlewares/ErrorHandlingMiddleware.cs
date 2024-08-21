@@ -88,7 +88,7 @@ namespace Shop.Server.Middlewares
         private async Task HandleExceptionAsync(Exception exception, HttpContext context, HttpStatusCode statusCode)
         {
             await SaveLog(exception, context);
-            var error = exception.GetErrorDto();
+            var error = exception.GetErrorDtoJson();
             await SendContentResponse(context, error, statusCode);
         }
 

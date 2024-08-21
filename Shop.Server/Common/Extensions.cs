@@ -63,16 +63,12 @@ namespace Shop.Server.Common
             }
         }
 
-        public static string GetErrorDto(this Exception exception)
+        public static string GetErrorDtoJson(this Exception exception)
         {
-            var innerException = exception.InnerException;
-            if (innerException != null)
-            {
-                return innerException.GetErrorDto();
-            }
+            var exceptionMessage = GetErrorMessage(exception);
             var errorResponse = new ErrorResponseDto
             {
-                ErrorDescription = exception.Message
+                ErrorDescription = exceptionMessage
             };
             return JsonManager.Serialize(errorResponse);
         }
@@ -235,6 +231,16 @@ namespace Shop.Server.Common
         {
             var claimsIdentity = (ClaimsIdentity)principal?.Identity;
             return claimsIdentity?.FindFirst(type)?.Value;
+        }
+
+        private static string GetErrorMessage(Exception exception)
+        {
+            var innerException = exception.InnerException;
+            if (innerException != null)
+            {
+                return GetErrorMessage(innerException);
+            }
+            return exception.Message;
         }
     }
 }
