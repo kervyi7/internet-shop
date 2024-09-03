@@ -4,74 +4,73 @@
   </p-button>
   <div *ngIf="product" class="admin-section-title">Product: {{product.name}}</div>
 </div>
-
 <p-toast></p-toast>
-
 <p class="admin-section-header">{{lang.headers.defaultValues}}</p>
-<div class="inputs-wrapper">
+<form (ngSubmit)="submit()" [formGroup]="productForm" novalidate class="inputs-wrapper">
   <div class="input-container">
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}"
-      [(ngModel)]="editedProduct.name" />
-    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.name)">
-      <p-button [text]="true" (onClick)="editedProduct.name = null">
+      [formControl]="productForm.controls.name" />
+    <div class="button-container" *ngIf="!isInputEmpty(productForm.controls.name.getRawValue())">
+      <p-button [text]="true" (onClick)="productForm.controls.name.patchValue(null)">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
   <div class="input-container">
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}"
-      [(ngModel)]="editedProduct.code" />
-    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.code)">
-      <p-button [text]="true" (onClick)="editedProduct.code = null">
+      [formControl]="productForm.controls.code" />
+    <div class="button-container" *ngIf="!isInputEmpty(productForm.controls.code.getRawValue())">
+      <p-button [text]="true" (onClick)="productForm.controls.code.patchValue(null)">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
   <div class="input-container">
     <input class="input" type="number" pInputText placeholder="{{lang.placeholders.productPrice}}"
-      [(ngModel)]="editedProduct.price" />
-    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.price)">
-      <p-button [text]="true" (onClick)="editedProduct.price = null">
+      [formControl]="productForm.controls.price" />
+    <div class="button-container" *ngIf="!isInputEmpty(productForm.controls.price.getRawValue())">
+      <p-button [text]="true" (onClick)="productForm.controls.price.patchValue(null)">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
   <div class="input-container">
     <input class="input" type="number" pInputText placeholder="{{lang.placeholders.productSalePrice}}"
-      [(ngModel)]="editedProduct.salePrice" />
-    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.salePrice)">
-      <p-button [text]="true" (onClick)="editedProduct.salePrice = null">
+      [formControl]="productForm.controls.salePrice" />
+    <div class="button-container" *ngIf="!isInputEmpty(productForm.controls.salePrice.getRawValue())">
+      <p-button [text]="true" (onClick)="productForm.controls.salePrice.patchValue(null)">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
   <div class="input-container">
     <input class="input" type="number" step="1" pInputText placeholder="{{lang.placeholders.productCount}}"
-      [(ngModel)]="editedProduct.count" />
-    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.count)">
-      <p-button [text]="true" (onClick)="editedProduct.count = null">
+      [formControl]="productForm.controls.count" />
+    <div class=" button-container" *ngIf="!isInputEmpty(productForm.controls.count.getRawValue())">
+      <p-button [text]="true" (onClick)="productForm.controls.count.patchValue(null)">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
   <div class="input-container">
     <input class="input" type="text" pInputText placeholder="{{lang.placeholders.currency}}"
-      [(ngModel)]="editedProduct.currency" />
-    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.currency)">
-      <p-button [text]="true" (onClick)="editedProduct.currency = null">
+      [formControl]="productForm.controls.currency" />
+    <div class="button-container" *ngIf="!isInputEmpty(productForm.controls.currency.getRawValue())">
+      <p-button [text]="true" (onClick)="productForm.controls.currency.patchValue(null)">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="!selectedCategory"
-      filterBy="name" optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.category}}"
-      (onClick)="getCategories()" [style]="{'width':'100%'}" (onClear)="handleClearCategories()"></p-dropdown>
+    <p-dropdown class="dropdown" [options]="categories" [formControl]="productForm.controls.category"
+      [filter]="!selectedCategory" filterBy="name" optionLabel="name" [showClear]="true"
+      placeholder="{{lang.placeholders.category}}" (onClick)="getCategories()" [style]="{'width':'100%'}"
+      (onClear)="handleClearCategories()"></p-dropdown>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="!selectedType" filterBy="name"
-      optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.type}}" (onClick)="getTypes()"
-      [style]="{'width':'100%'}" (onClear)="handleClearTypes()"></p-dropdown>
+    <p-dropdown class="dropdown" [options]="types" [formControl]="productForm.controls.type" [filter]="!selectedType"
+      filterBy="name" optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.type}}"
+      (onClick)="getTypes()" [style]="{'width':'100%'}" (onClear)="handleClearTypes()"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="addType()">
         <span class="material-icons-reg">{{mIcons.add}}</span>
@@ -79,7 +78,7 @@
     </div>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="!selectedBrand"
+    <p-dropdown class="dropdown" [options]="brands" [formControl]="productForm.controls.brand" [filter]="!selectedBrand"
       filterBy="name" optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.brand}}"
       (onClick)="getBrands()" [style]="{'width':'100%'}" (onClear)="handleClearBrands()"></p-dropdown>
     <div class="button-container">
@@ -88,12 +87,12 @@
       </p-button>
     </div>
   </div>
-  <textarea rows="5" cols="30" pInputTextarea [(ngModel)]="editedProduct.description"
+  <textarea rows="5" cols="30" pInputTextarea [formControl]="productForm.controls.description"
     placeholder="{{lang.placeholders.productDescription}}"></textarea>
-</div>
-<p-button (onClick)="saveProduct()">
-  <span class="material-icons-reg">{{mIcons.done}}</span><span>{{lang.buttons.save}}</span>
-</p-button>
+  <p-button type="submit">
+    <span class="material-icons-reg">{{mIcons.done}}</span><span>{{lang.buttons.save}}</span>
+  </p-button>
+</form>
 <div *ngIf="id">
   <p class="admin-section-header">{{lang.headers.photo}}</p>
   <p class="admin-section-subheader">Main image</p>

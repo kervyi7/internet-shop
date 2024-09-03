@@ -6,7 +6,7 @@ import { DialogOptions } from '../../models/enums/dialog-options';
 import { MessageTypes } from '../../models/enums/message-types';
 import { ICodeName } from '../../models/interfaces/base/code-name';
 import { PropertyDialogComponent } from '../dialogs/property-dialog/property-dialog.component';
-import { SelectItemDialogComponent } from '../dialogs/select-item-dialog/select-item-dialog.component';
+import { CreateItemDialogComponent } from '../dialogs/create-item-dialog/create-item-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AdminCategoryDataService } from '../../services/data/admin/admin-category-data.service';
 import { NotificationService } from '../../services/notification.service';
@@ -28,8 +28,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
   constructor(
     private _adminCategoryDataService: AdminCategoryDataService,
     private _cd: ChangeDetectorRef,
-    private _dialogService: DialogService,
-    private _notificationService: NotificationService) {
+    private _dialogService: DialogService) {
     super();
   }
   public ngOnInit() {
@@ -57,8 +56,11 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
   public editTemplate(): void {
     const data = { items: this.template };
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
-    this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
+    this._dialogRef = Util.openDialog(this._dialogService, CreateItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((response: ICodeName) => {
+      if (!response) {
+        return;
+      }
       const newTemplate = this.template;
       newTemplate.name = response.name;
       newTemplate.code = response.code;
@@ -72,9 +74,9 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
 
   public deleteProperty(property: IProperty, group: IProperty[], groupCode: string): void {
     this._adminCategoryDataService.deleteProperty(this.template.id, property).subscribe({
-      error: (err: string) => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
+      error: (err: string) => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
       complete: () => {
-        this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
+        this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
         group.splice(group.indexOf(property), 1);
         this.template.extension.propertiesGroups.map((x) => {
           if (x.code == groupCode) {
@@ -110,7 +112,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
   public editPropertyGroup(group: IPropertiesGroup): void {
     const data = { items: group };
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false, data: data };
-    this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
+    this._dialogRef = Util.openDialog(this._dialogService, CreateItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((newGroup: IPropertiesGroup) => {
       if (!newGroup) {
         return;
@@ -131,7 +133,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
 
   public addPropertyGroup(): void {
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false };
-    this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
+    this._dialogRef = Util.openDialog(this._dialogService, CreateItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((group: ICodeName) => {
       if (!group) {
         return;

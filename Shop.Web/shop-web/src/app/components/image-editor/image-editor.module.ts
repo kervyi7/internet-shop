@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { ImageEditorComponent } from "./image-editor.component";
 import { ImageCropperModule } from "ngx-image-cropper";
 import { InputTextModule } from "primeng/inputtext";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TooltipModule } from "primeng/tooltip";
 import { ButtonModule } from "primeng/button";
 
@@ -14,6 +14,7 @@ import { ButtonModule } from "primeng/button";
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     ImageCropperModule,
     InputTextModule,
     TooltipModule,

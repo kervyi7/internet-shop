@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SelectItemDialogComponent } from './select-item-dialog.component';
+import { CreateItemDialogComponent } from './create-item-dialog.component';
 import { BrandDataService } from '../../../services/data/admin/admin-brand-data.service';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { TypeDataService } from '../../../services/data/admin/admin-type-data.service';
@@ -8,13 +8,13 @@ import { AppConfigService } from '../../../services/app-config.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SelectItemDialogComponent', () => {
-  let component: SelectItemDialogComponent;
-  let fixture: ComponentFixture<SelectItemDialogComponent>;
+  let component: CreateItemDialogComponent;
+  let fixture: ComponentFixture<CreateItemDialogComponent>;
   const appConfigService = { localization: localizationMock };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SelectItemDialogComponent],
+      declarations: [CreateItemDialogComponent],
       providers: [
         { provide: BrandDataService, useValue: {} },
         { provide: DynamicDialogRef, useValue: {} },
@@ -24,7 +24,7 @@ describe('SelectItemDialogComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
-    fixture = TestBed.createComponent(SelectItemDialogComponent);
+    fixture = TestBed.createComponent(CreateItemDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

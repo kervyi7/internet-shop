@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ProductsRoutingModule } from './products-routing.module';
 import { ProductsComponent } from './products.component';
@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PropertyDialogModule } from '../../../components/dialogs/property-dialog/property-dialog.module';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { CheckboxModule } from 'primeng/checkbox';
-import { SelectItemDialogModule } from '../../../components/dialogs/select-item-dialog/select-item-dialog.module';
+import { SelectItemDialogModule } from '../../../components/dialogs/create-item-dialog/create-item-dialog.module';
 import { ToastModule } from 'primeng/toast';
 import { NotificationService } from '../../../services/notification.service';
 import { ImageUploaderModule } from '../../../components/image-uploader/image-uploader.module';
@@ -29,6 +29,7 @@ import { PropertiesListModule } from '../../../components/properties-list/proper
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     ProductsRoutingModule,
     SelectItemDialogModule,

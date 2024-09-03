@@ -59,7 +59,7 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPost()]
-        public async Task<ActionResult> Create(CreateProductDto model)
+        public async Task<ActionResult> Create(ProductDto model)
         {
             var user = "my user";
             var template = await DataContext.PropertyTemplate
@@ -67,14 +67,14 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
                 .Include(x => x.DateProperties)
-                .FirstOrDefaultAsync(x => x.CategoryId == model.CategoryId);
+                .FirstOrDefaultAsync(x => x.CategoryId == model.Category.Id);
             var item = new Product
             {
-                CategoryId = model.CategoryId,
+                CategoryId = model.Category.Id,
                 Name = model.Name,
                 Code = model.Code,
-                TypeId = model.TypeId,
-                BrandId = model.BrandId,
+                TypeId = model.Type.Id,
+                BrandId = model.Brand.Id,
                 SalePrice = model.SalePrice,
                 Description = model.Description,
                 Count = model.Count,
@@ -86,10 +86,10 @@ namespace Shop.Server.Controllers.Admin
             DataContext.Products.Add(item);
             var transaction = DataContext.Database.BeginTransaction();
             await DataContext.SaveChangesAsync();
-            AddPropertiesByTamplate(template.StringProperties, item, user);
-            AddPropertiesByTamplate(template.DecimalProperties, item, user);
-            AddPropertiesByTamplate(template.BoolProperties, item, user);
-            AddPropertiesByTamplate(template.DateProperties, item, user);
+            AddPropertiesByTemplate(template.StringProperties, item, user);
+            AddPropertiesByTemplate(template.DecimalProperties, item, user);
+            AddPropertiesByTemplate(template.BoolProperties, item, user);
+            AddPropertiesByTemplate(template.DateProperties, item, user);
             await DataContext.SaveChangesAsync();
             transaction.Commit();
 
@@ -149,7 +149,7 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Edit(int id, CreateProductDto model)
+        public async Task<ActionResult> Edit(int id, ProductDto model)
         {
             var user = "my user";
             if (id != model.Id)
@@ -163,8 +163,8 @@ namespace Shop.Server.Controllers.Admin
             }
             item.Name = model.Name;
             item.Code = model.Code;
-            item.TypeId = model.TypeId;
-            item.BrandId = model.BrandId;
+            item.TypeId = model.Type.Id;
+            item.BrandId = model.Brand.Id;
             item.SalePrice = model.SalePrice;
             item.Description = model.Description;
             item.Count = model.Count;
@@ -234,7 +234,7 @@ namespace Shop.Server.Controllers.Admin
             await DataContext.SaveChangesAsync();
         }
 
-        private void AddPropertiesByTamplate<T>(IEnumerable<Property<T>> models, Product product, string user)
+        private void AddPropertiesByTemplate<T>(IEnumerable<Property<T>> models, Product product, string user)
         {
             foreach (var model in models)
             {

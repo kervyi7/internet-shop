@@ -15,8 +15,10 @@ import { IImage } from '../../../../models/interfaces/image';
 import { Location } from '@angular/common';
 import { IBaseModel } from '../../../../models/interfaces/base/base-model';
 import { IPropertiesGroup, IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
-import { SelectItemDialogComponent } from '../../../../components/dialogs/select-item-dialog/select-item-dialog.component';
+import { CreateItemDialogComponent } from '../../../../components/dialogs/create-item-dialog/create-item-dialog.component';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
+import { ICodeNameForm } from '../../../../models/interfaces/forms/code-name-form';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'shop-category',
@@ -35,6 +37,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   public categoryCode: string;
   public template: IPropertyTemplate;
   public properties: IProperty[] = [];
+  public categoryForm: FormGroup<ICodeNameForm>;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -42,9 +45,9 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     private _adminCategoryDataService: AdminCategoryDataService,
     private _cd: ChangeDetectorRef,
     private _dialogService: DialogService,
-    private _notificationService: NotificationService,
     private _location: Location) {
     super();
+    this.categoryForm = this.getCategoryForm();
   }
 
   public ngOnInit(): void {
@@ -61,6 +64,11 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public submit(): void {
+    if (this.categoryForm.invalid) {
+      Util.markAllAsDirty(this.categoryForm);
+      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+      return;
+    }
     if (this.id) {
       this.edit();
     } else {
@@ -88,7 +96,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
 
   public addPropertyTemplate(): void {
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false };
-    this._dialogRef = Util.openDialog(this._dialogService, SelectItemDialogComponent, config);
+    this._dialogRef = Util.openDialog(this._dialogService, CreateItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((template: ICodeName) => {
       if (!template) {
         return;
@@ -124,12 +132,12 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     const category: ICategory = {
       id: this.id,
       image: this.category.image,
-      name: this.categoryName,
-      code: this.categoryCode,
+      name: this.categoryForm.controls.name.getRawValue(),
+      code: this.categoryForm.controls.code.getRawValue(),
       position: null
     }
     if (this.validate(category)) {
-      this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
+      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
     }
     this._adminCategoryDataService.editCategory(this.id, category).subscribe();
   }
@@ -141,8 +149,8 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   private create(): void {
     const category: ICategory = {
       image: this.category.image,
-      name: this.categoryName,
-      code: this.categoryCode
+      name: this.categoryForm.controls.name.getRawValue(),
+      code: this.categoryForm.controls.code.getRawValue(),
     };
     this._adminCategoryDataService.create(category).subscribe((data: IBaseModel) => {
       this._location.replaceState(`admin/categories/edit/${data.id}`)
@@ -151,13 +159,19 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public loadCategory(): void {
+  private getCategoryForm(): FormGroup<ICodeNameForm> {
+    return new FormGroup<ICodeNameForm>({
+      name: new FormControl("", Validators.required),
+      code: new FormControl("", Validators.required),
+    });
+  }
+
+  private loadCategory(): void {
     this._adminCategoryDataService.getById(this.id)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICategory) => {
         this.category = data;
-        this.categoryName = this.category.name;
-        this.categoryCode = this.category.code;
+        this.categoryForm.patchValue(data);
         if (this.category.image) {
           this.image = Converter.toFileSrc(this.category.image.mimeType, this.category.image.smallBody);
         }

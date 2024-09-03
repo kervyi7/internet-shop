@@ -27,8 +27,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
   constructor(private _adminProductService: AdminProductDataService,
     private _adminCategoryService: AdminCategoryDataService,
     private _ref: DynamicDialogRef,
-    private _refConfig: DynamicDialogConfig,
-    private _notificationService: NotificationService) {
+    private _refConfig: DynamicDialogConfig) {
     super();
   }
 
@@ -60,7 +59,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       if (this.isBoolProperty() && this.isValueEmpty(property.value)) {
         property.value = false;
       } else {
-        this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+        this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
         return;
       }
     }
@@ -71,26 +70,26 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       }
       if (!this.property.productId) {
         this._adminCategoryService.editProperty(property.id, property).subscribe({
-          error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+          error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
           complete: () => {
-            this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
+            this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
             this._ref.close(property);
           }
         });
       } else {
         this._adminProductService.editProperty(property.id, property).subscribe({
-          error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+          error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
           complete: () => {
-            this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
+            this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
             this._ref.close(property);
           }
         });
       }
     } else {
       this._adminCategoryService.addProperty(property).subscribe({
-        error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+        error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
         complete: () => {
-          this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
+          this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
           this._ref.close(property);
         }
       });

@@ -3,10 +3,9 @@ import { Observable } from "rxjs";
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BaseDataService } from "../base-data.service";
 import { AppConfigService } from "../../app-config.service";
-import { ICreateProduct, IProduct, IProductResponse, } from "../../../models/interfaces/product";
+import { IProduct, IProductResponse, } from "../../../models/interfaces/product";
 import { IImage } from "../../../models/interfaces/image";
 import { IProperty } from "../../../models/interfaces/property";
-import { ICreateProductResponse } from "../../../models/interfaces/create-product-response";
 import { Converter } from "../../../common/converter";
 
 @Injectable({
@@ -38,12 +37,12 @@ export class AdminProductDataService extends BaseDataService {
     });
   }
 
-  public create(product: ICreateProduct): Observable<ICreateProductResponse> {
-    return this.http.post<ICreateProductResponse>(this.getUrl(), product, this.defaultHttpOptions);
+  public create(product: IProduct): Observable<IProductResponse> {
+    return this.http.post<IProductResponse>(this.getUrl(), product, this.defaultHttpOptions);
   }
 
-  public edit(id: number, product: ICreateProduct): Observable<ICreateProduct> {
-    return this.http.put<ICreateProduct>(this.getUrlById(id), product, this.defaultHttpOptions);
+  public edit(id: number, product: IProduct): Observable<IProduct> {
+    return this.http.put<IProduct>(this.getUrlById(id), product, this.defaultHttpOptions);
   }
 
   public editProperty(id: number, property: IProperty): Observable<propertyValue> {

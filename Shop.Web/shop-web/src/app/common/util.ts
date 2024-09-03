@@ -1,5 +1,6 @@
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
 import { Type } from "@angular/core";
+import { FormGroup } from "@angular/forms";
 
 export class Util {
   public static isDataEqual<T>(data1: T, data2: T): boolean {
@@ -14,5 +15,11 @@ export class Util {
       maximizable: config.maximizable,
       contentStyle: { overflow: 'visible' }
     });
+  }
+
+  public static markAllAsDirty(formGroup: FormGroup<any>): void {
+    for (const control in formGroup.controls) {
+      formGroup.controls[control].markAsDirty();
+    }
   }
 }

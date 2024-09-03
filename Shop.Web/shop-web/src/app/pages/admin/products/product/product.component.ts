@@ -3,18 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { IImage } from '../../../../models/interfaces/image';
 import { BaseCompleteComponent } from '../../../../components/base/base-complete.component';
-import { ICreateProduct, IProduct } from '../../../../models/interfaces/product';
+import { IProduct, IProductResponse } from '../../../../models/interfaces/product';
 import { AdminProductDataService } from '../../../../services/data/admin/admin-product-data.service';
 import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
 import { ICategory } from '../../../../models/interfaces/category';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { SelectItemDialogComponent } from '../../../../components/dialogs/select-item-dialog/select-item-dialog.component';
+import { CreateItemDialogComponent } from '../../../../components/dialogs/create-item-dialog/create-item-dialog.component';
 import { MessageTypes } from '../../../../models/enums/message-types';
 import { NotificationService } from '../../../../services/notification.service';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
-import { CreateProduct } from '../../../../models/classes/create-product';
 import { IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
 import { BrandDataService } from '../../../../services/data/admin/admin-brand-data.service';
 import { TypeDataService } from '../../../../services/data/admin/admin-type-data.service';
@@ -22,7 +21,8 @@ import { Util } from '../../../../common/util';
 import { Converter } from '../../../../common/converter';
 import { Location } from '@angular/common';
 import { IBaseModel } from '../../../../models/interfaces/base/base-model';
-import { ICreateProductResponse } from '../../../../models/interfaces/create-product-response';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IProductForm } from '../../../../models/interfaces/forms/product-form';
 
 @Component({
   selector: 'shop-product',
@@ -43,12 +43,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public images: IImage[] = [];
   public titleImage: IImage;
   public product: IProduct;
-  public editedProduct: CreateProduct = new CreateProduct();
   public template: IPropertyTemplate;
   public properties: IProperty[] = [];
+  public productForm: FormGroup<IProductForm>;
 
   constructor(
-    private _notificationService: NotificationService,
     private _dialogService: DialogService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -59,18 +58,18 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     private _cd: ChangeDetectorRef,
     private _location: Location) {
     super();
+    this.productForm = this.getProductForm();
   }
 
   public ngOnInit(): void {
     this.id = +this._activatedRoute.snapshot.paramMap.get('id')!;
     if (!this.id) {
+      this.productForm = this.getProductForm();
       return;
     }
     this._adminProductDataService.getById(this.id)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IProduct) => {
-        this.product = data;
-        this.editedProduct = this.createProduct(data);
         this.images = data.images.map((image) => {
           image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
           return image;
@@ -78,10 +77,12 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.titleImage = data.images.find((image) => {
           return image.isTitle;
         });
+        this.product = data;
         this.removeTitleImage();
         this.categories.push(data.category);
         this.types.push(data.type);
         this.brands.push(data.brand);
+        this.productForm.patchValue(data);
         this.selectedCategory = data.category;
         this.selectedType = data.type;
         this.selectedBrand = data.brand;
@@ -159,7 +160,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
 
   public addType(): void {
     const config = { header: this.lang.headers.types, width: DialogOptions.standardWidth, maximizable: true };
-    this.openDialog(SelectItemDialogComponent, config);
+    this.openDialog(CreateItemDialogComponent, config);
     this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe((type: ICodeName) => {
       if (!type) {
         return;
@@ -175,7 +176,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
 
   public addBrand(): void {
     const config = { header: this.lang.headers.brands, width: DialogOptions.standardWidth, maximizable: true };
-    this.openDialog(SelectItemDialogComponent, config);
+    this.openDialog(CreateItemDialogComponent, config);
     this._dialogRef.onClose
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((brand: ICodeName) => {
@@ -220,22 +221,20 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     this._router.navigate(['/admin/products']);
   }
 
-  public saveProduct(): void {
+  public submit(): void {
+    if (this.productForm.invalid) {
+      Util.markAllAsDirty(this.productForm);
+      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+      return;
+    }
+    const product: IProduct = { ...this.productForm.getRawValue() };
     if (this.id) {
-      const isValid = !this.validateData();
-      if (!isValid) {
-        this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
-      } else {
-        this._adminProductDataService.edit(this.id, this.editedProduct).subscribe({
-          error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
-          complete: () => this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
-        });
-      }
+      this._adminProductDataService.edit(this.id, product).subscribe({
+        error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+        complete: () => this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
+      });
     } else {
-      this.editedProduct.categoryId = this.selectedCategory.id;
-      this.editedProduct.typeId = this.selectedType.id;
-      this.editedProduct.brandId = this.selectedBrand.id
-      this._adminProductDataService.create(this.editedProduct).subscribe((data: ICreateProductResponse) => {
+      this._adminProductDataService.create(product).subscribe((data: IProductResponse) => {
         this._location.replaceState(`admin/products/edit/${data.id}`);
         this.id = data.id;
         this.template = data.propertyTemplate;
@@ -244,30 +243,40 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     }
   }
 
-  private validateData(): boolean {
-    const product = this.createProduct(this.product);
-    return Util.isDataEqual(product, this.editedProduct);
-  }
-
   private openDialog<T>(component: Type<T>, config: DynamicDialogConfig): void {
     this._dialogRef = Util.openDialog(this._dialogService, component, config)
-  }//review it
+  }
 
-  private createProduct(data: IProduct): ICreateProduct {
-    const product: ICreateProduct = {
-      id: data.id,
-      name: data.name,
-      code: data.code,
-      categoryId: data.category.id,
-      typeId: data.type.id,
-      brandId: data.brand.id,
-      price: data.price,
-      currency: data.currency,
-      isExist: data.isExist,
-      salePrice: data.salePrice,
-      count: data.count,
-      description: data.description
-    }
+  private getProductForm(): FormGroup<IProductForm> {
+    return new FormGroup<IProductForm>({
+      name: new FormControl("", Validators.required),
+      code: new FormControl("", Validators.required),
+      category: new FormControl<ICategory | null>(null, Validators.required),
+      type: new FormControl<ICodeName | null>(null, Validators.required),
+      brand: new FormControl<ICodeName | null>(null, Validators.required),
+      price: new FormControl(null, Validators.required),
+      salePrice: new FormControl(null, Validators.required),
+      count: new FormControl(null, Validators.required),
+      description: new FormControl(""),
+      currency: new FormControl("", Validators.required),
+    });
+  }
+
+  private createProduct(): IProduct {
+    const product: IProduct = {
+      id: this.id,
+      name: this.productForm.controls.name.getRawValue(),
+      code: this.productForm.controls.name.getRawValue(),
+      category: this.productForm.controls.category.getRawValue(),
+      type: this.productForm.controls.type.getRawValue(),
+      brand: this.productForm.controls.brand.getRawValue(),
+      price: this.productForm.controls.price.getRawValue(),
+      currency: this.productForm.controls.currency.getRawValue(),
+      salePrice: this.productForm.controls.salePrice.getRawValue(),
+      count: this.productForm.controls.count.getRawValue(),
+      description: this.productForm.controls.description.getRawValue(),
+    };
+    
     return product;
   }
 

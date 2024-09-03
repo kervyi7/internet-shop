@@ -26,10 +26,10 @@ export interface IPropertyResponse extends IPropertyAll {
 }
 
 export interface IPropertyAll {
-  stringProperties: IProperty<string>[];
-  decimalProperties: IProperty<number>[];
-  boolProperties: IProperty<boolean>[];
-  dateProperties: IProperty[];
+  stringProperties?: IProperty<string>[];
+  decimalProperties?: IProperty<number>[];
+  boolProperties?: IProperty<boolean>[];
+  dateProperties?: IProperty[];
 }
 
 export interface ITemplateExtension {

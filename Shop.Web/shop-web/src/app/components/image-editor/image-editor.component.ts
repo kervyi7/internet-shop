@@ -10,6 +10,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseCompleteComponent } from '../base/base-complete.component';
 import { NotificationService } from '../../services/notification.service';
 import { MessageTypes } from '../../models/enums/message-types';
+import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Util } from '../../common/util';
 
 @Component({
   selector: 'shop-image-editor',
@@ -27,7 +29,7 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
   public canvasRotation = 0;
   public translateH = 0;
   public translateV = 0;
-  public imageName: string = "";
+  public imageNameForm: UntypedFormGroup;
   public transform: ImageTransform = {
     translateUnit: 'px'
   };
@@ -35,22 +37,27 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
   constructor(
     private _refConfig: DynamicDialogConfig,
     private _sanitizer: DomSanitizer,
-    private _ref: DynamicDialogRef,
-    private _notificationService: NotificationService) {
+    private _ref: DynamicDialogRef) {
     super();
+    this.imageNameForm = this.getImageNameForm();
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.imageFile = this._refConfig.data.imageFile;
-    this.imageName = this._refConfig.data.imageName;
+    this.imageNameForm.controls['name'].setValue(this._refConfig.data.imageName);
   }
 
-  public async save(): Promise<void> {
+  public async submit(): Promise<void> {
+    if (this.imageNameForm.invalid) {
+      Util.markAllAsDirty(this.imageNameForm);
+      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+      return;
+    }
     const image: IBaseImage = {
       body: await Converter.fileToBase64(this._croppedImage),
       smallBody: await Converter.fileToBase64(this._resizedImage),
       fileSize: this._croppedImage.size,
-      name: this.imageName,
+      name: this.imageNameForm.controls['name'].getRawValue(),
       fileName: this.getFileName(this.imageFile.name),
       mimeType: MimeTypes.JPEG,
       isBinding: false,
@@ -72,7 +79,7 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
   }
 
   public loadImageFailed(): void {
-    this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.failedToLoadImage);
+    this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.failedToLoadImage);
   }
 
   public rotateLeft(): void {
@@ -123,6 +130,12 @@ export class ImageEditorComponent extends BaseCompleteComponent implements OnIni
     const extension = parts.pop();
     const result = parts.join();
     return result;
+  }
+
+  private getImageNameForm(): UntypedFormGroup {
+    return new UntypedFormGroup({
+      name: new FormControl("", Validators.required)
+    });
   }
 
   private async resize(file: File): Promise<File> {

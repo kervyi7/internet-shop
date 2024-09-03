@@ -1,7 +1,0 @@
-<div class="input-container">
-  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [(ngModel)]="newItem.name"
-    [ngClass]="newItem.name ? '' : 'ng-invalid ng-dirty'" />
-  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [(ngModel)]="newItem.code"
-    [ngClass]="newItem.code ? '' : 'ng-invalid ng-dirty'" />
-  <p-button label="{{lang.buttons.add}}" (onClick)="addItem()"></p-button>
-</div>

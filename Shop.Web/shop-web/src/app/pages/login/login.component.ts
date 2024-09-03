@@ -8,6 +8,8 @@ import { IAuthResponse } from '../../models/interfaces/auth-response';
 import { AuthService } from '../../services/auth.service';
 import { ILoginForm } from '../../models/interfaces/forms/login-form';
 import { Router } from '@angular/router';
+import { Util } from '../../common/util';
+import { MessageTypes } from '../../models/enums/message-types';
 
 @Component({
   selector: 'shop-login',
@@ -31,7 +33,8 @@ export class LoginComponent extends BaseCompleteComponent {
 
   public submit(): void {
     if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched();
+      Util.markAllAsDirty(this.userForm);
+      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
       return;
     }
     const login: ILogin = { ...this.userForm.getRawValue() }

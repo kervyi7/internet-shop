@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CategoriesComponent } from './categories.component';
 import { CategoriesRoutingModule } from './categories-routing.module';
@@ -15,6 +15,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { PropertiesListModule } from '../../../components/properties-list/properties-list.module';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { PropertiesListModule } from '../../../components/properties-list/proper
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     CategoriesRoutingModule,
     ImageStorageModule,
@@ -35,7 +37,8 @@ import { PropertiesListModule } from '../../../components/properties-list/proper
     CalendarModule,
     CheckboxModule,
     DropdownModule,
-    PropertiesListModule
+    PropertiesListModule,
+    ToastModule
   ],
   providers: [DialogService],
   exports: [
