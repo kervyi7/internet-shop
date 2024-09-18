@@ -7,6 +7,7 @@ import { ProductDataService } from '../../services/data/product-data.service';
 import { CategoryDataService } from '../../services/data/category-data.service';
 import { Converter } from '../../common/converter';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'shop-main',
@@ -50,18 +51,26 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private loadCategories(): void {
-    this._categoryDataService.getAll().subscribe((data: ICategory[]) => {
-      data.map((item: ICategory) => item.image.smallBody = Converter.toFileSrc(item.image.mimeType, item.image.smallBody));
-      this.categories = data;
-      this._cd.detectChanges();
-    });
+    this._categoryDataService.getAll()
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: ICategory[]) => {
+        data.map((item: ICategory) => item.image.smallBody = Converter.toFileSrc(item.image.mimeType, item.image.smallBody));
+        this.categories = data;
+        this._cd.detectChanges();
+      });
   }
 
   private loadProductsWithSale(): void {
-    this._productDataService.getWithSale().subscribe((data: IProduct[]) => {
-      data.map((item: IProduct) => item.images[0].smallBody = Converter.toFileSrc(item.images[0].mimeType, item.images[0].smallBody));
-      this.productsWithSale = data;
-      this._cd.detectChanges();
-    });
+    this._productDataService.getWithSale()
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: IProduct[]) => {
+        data.map((item: IProduct) => {
+          if (item.images.length) {
+            item.images[0].smallBody = Converter.toFileSrc(item.images[0].mimeType, item.images[0].smallBody);
+          }
+        });
+        this.productsWithSale = data;
+        this._cd.detectChanges();
+      });
   }
 }

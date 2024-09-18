@@ -20,6 +20,6 @@
 </div>
 <form (ngSubmit)="submit()" [formGroup]="imageNameForm" novalidate>
   <input class="input" type="text" pInputText placeholder="{{lang.placeholders.imageName}}"
-    pTooltip="This name will be used when searching for an image in the Image Storage." formControlName="name" />
+    pTooltip="{{lang.tooltips.imageName}}" formControlName="name" />
   <p-button type="submit">{{lang.buttons.save}}</p-button>
 </form>

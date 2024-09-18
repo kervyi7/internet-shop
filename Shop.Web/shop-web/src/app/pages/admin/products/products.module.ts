@@ -13,13 +13,15 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SelectItemDialogModule } from '../../../components/dialogs/create-item-dialog/create-item-dialog.module';
 import { ToastModule } from 'primeng/toast';
-import { NotificationService } from '../../../services/notification.service';
 import { ImageUploaderModule } from '../../../components/image-uploader/image-uploader.module';
 import { ImageStorageModule } from '../../../components/dialogs/image-storage-dialog/image-storage-dialog.module';
-import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PropertiesListModule } from '../../../components/properties-list/properties-list.module';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -42,12 +44,14 @@ import { PropertiesListModule } from '../../../components/properties-list/proper
     ToastModule,
     ImageUploaderModule,
     ImageStorageModule,
-    Base64Pipe,
     CalendarModule,
     InputTextareaModule,
-    PropertiesListModule
+    PropertiesListModule,
+    TableModule,
+    TooltipModule,
+    ConfirmDialogModule
   ],
-  providers: [DialogService, NotificationService],
+  providers: [DialogService, ConfirmationService],
   exports: [
     ProductsComponent
   ]

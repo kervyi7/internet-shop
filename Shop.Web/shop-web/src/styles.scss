@@ -62,14 +62,26 @@ button {
   cursor: pointer;
 }
 
-.admin-section-title {
-  font-size: 32px;
+.danger {
+  color: #d25a5a;
 }
 
-.admin-section-header {
-  font-size: 28px;
+.danger-background {
+  background-color: #fddfdf;
 }
 
-.admin-section-subheader {
+.asterisk {
+  position: absolute;
+  top: -3px;
   font-size: 20px;
+}
+
+.empty-label {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  font-size: 3em;
+  color: #bababa;
 }

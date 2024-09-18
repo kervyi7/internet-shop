@@ -5,6 +5,7 @@ import { BaseCompleteComponent } from '../../../components/base/base-complete.co
 import { takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPropertyTemplate } from '../../../models/interfaces/property';
+import { Converter } from '../../../common/converter';
 
 @Component({
   selector: 'shop-categories',
@@ -24,13 +25,16 @@ export class CategoriesComponent extends BaseCompleteComponent implements OnInit
   }
 
   public ngOnInit(): void {
-    this.get();
+    this.loadCategories();
   }
 
-  public get(): void {
+  public loadCategories(): void {
+    this.displayService.changeStateLoadBar(true);
     this._adminCategoryDataService.getAll().pipe(
       takeUntil(this.__unsubscribe$)).subscribe((data: ICategory[]) => {
         this.categories = data;
+        this.categories.map((item: ICategory) => item.image.smallBody = Converter.toFileSrc(item.image.mimeType, item.image.smallBody));
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
@@ -45,8 +49,10 @@ export class CategoriesComponent extends BaseCompleteComponent implements OnInit
 
   public delete(e: Event, category: ICategory): void {
     e.stopPropagation();
-    this._adminCategoryDataService.delete(category.id).subscribe(() => {
-      this.get();
-    });
+    this._adminCategoryDataService.delete(category.id)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        this.loadCategories();
+      });
   }
 }

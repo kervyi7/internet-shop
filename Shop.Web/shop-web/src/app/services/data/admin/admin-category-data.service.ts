@@ -7,7 +7,6 @@ import { ICategory, ICategoryResponse } from "../../../models/interfaces/categor
 import { IImage } from "../../../models/interfaces/image";
 import { IProperty, IPropertyTemplate } from "../../../models/interfaces/property";
 import { IBaseModel } from "../../../models/interfaces/base/base-model";
-import { PropertyTypes } from "../../../models/enums/property-types";
 import { Converter } from "../../../common/converter";
 
 @Injectable({
@@ -23,6 +22,10 @@ export class AdminCategoryDataService extends BaseDataService {
 
   public getAll(): Observable<ICategory[]> {
     return this.http.get<ICategory[]>(this.getUrl(), this.defaultHttpOptions);
+  }
+
+  public getAllMini(): Observable<ICategory[]> {
+    return this.http.get<ICategory[]>(this.getUrl("mini"), this.defaultHttpOptions);
   }
 
   public getById(id: number): Observable<ICategory> {
@@ -50,8 +53,8 @@ export class AdminCategoryDataService extends BaseDataService {
     return this.http.post<IBaseModel>(this.getUrl("add-template"), template, this.defaultHttpOptions);
   }
 
-  public addProperty(property: IProperty): Observable<void> {
-    return this.http.post<void>(this.getUrl(`add-property/${property.type}`), property, this.defaultHttpOptions);
+  public addProperty(property: IProperty): Observable<IBaseModel> {
+    return this.http.post<IBaseModel>(this.getUrl(`add-property/${property.type}`), property, this.defaultHttpOptions);
   }
 
   public deleteProperty(id: number, property: IProperty): Observable<void> {

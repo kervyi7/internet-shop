@@ -21,6 +21,9 @@ namespace Shop.Server.Controllers.Admin
         {
             var categories = await _dataContext.Categories
                 .Include(x => x.Image)
+                .Include(x => x.Products)
+                .Include(x => x.PropertyTemplate)
+                .Where(x => x.Image != null && x.PropertyTemplate != null && x.Products.Any())
                 .Select(x => new Category
                 {
                     Id = x.Id,
@@ -29,9 +32,8 @@ namespace Shop.Server.Controllers.Admin
                     Position = x.Position,
                     Image = new Image
                     {
-                        FileName = x.Image.FileName,
                         MimeType = x.Image.MimeType,
-                        SmallBody = x.Image.SmallBody
+                        SmallBody = x.Image.SmallBody,
                     }
                 }).ToListAsync();
             return Ok(categories);

@@ -5,6 +5,7 @@ import { IProduct } from '../../../models/interfaces/product';
 import { Converter } from '../../../common/converter';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { MenuItem } from 'primeng/api';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'shop-products',
@@ -37,10 +38,12 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public loadProductList(category: string): void {
-    this._productDataService.getByCategory(category).subscribe((data: IProduct[]) => {
-      data.map((item: IProduct) => item.images[0].smallBody = Converter.toFileSrc(item.images[0].mimeType, item.images[0].smallBody));
-      this.products = data;
-      this._cd.detectChanges();
-    });
+    this._productDataService.getByCategory(category)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: IProduct[]) => {
+        data.map((item: IProduct) => item.images[0].smallBody = Converter.toFileSrc(item.images[0].mimeType, item.images[0].smallBody));
+        this.products = data;
+        this._cd.detectChanges();
+      });
   }
 }

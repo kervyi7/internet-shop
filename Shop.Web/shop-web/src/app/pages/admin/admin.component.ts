@@ -1,17 +1,44 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
+import { trigger, state, style, transition, animate, AnimationEvent } from '@angular/animations';
 
 @Component({
   selector: 'shop-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  styleUrls: ['./admin.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state(
+        'open',
+        style({
+          width: '300px'
+        }),
+      ),
+      state(
+        'closed',
+        style({
+          width: '88px'
+        }),
+      ),
+      transition('open <=> closed', [animate('0.25s')]),
+    ]),
+  ],
 })
 export class AdminComponent extends BaseCompleteComponent {
-
+  public isMenuOpen = false;
+  showButtonNames = false;
   constructor(
     private _router: Router) {
     super();
+  }
+
+  onAnimationEvent(event: AnimationEvent) {
+    event.fromState == 'closed' ? this.showButtonNames = true : this.showButtonNames = false;
+  }
+
+  public changeMenuState(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   public openCategories(): void {

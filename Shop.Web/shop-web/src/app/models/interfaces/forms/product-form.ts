@@ -8,7 +8,7 @@ export interface IProductForm extends ICodeNameForm {
   type: FormControl<ICodeName>;
   brand: FormControl<ICodeName>;
   price: FormControl<number>;
-  salePrice: FormControl<number>;
+  discountPrice: FormControl<number>;
   count: FormControl<number>;
   description: FormControl<string>;
   currency: FormControl<string>;

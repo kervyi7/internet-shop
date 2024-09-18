@@ -9,7 +9,7 @@ import { PropertyDialogComponent } from '../dialogs/property-dialog/property-dia
 import { CreateItemDialogComponent } from '../dialogs/create-item-dialog/create-item-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AdminCategoryDataService } from '../../services/data/admin/admin-category-data.service';
-import { NotificationService } from '../../services/notification.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'shop-properties-list',
@@ -23,7 +23,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
   @Input() public properties: IProperty[];
 
   private _dialogRef: DynamicDialogRef;
-  public groups: IPropertiesGroup[];
+  public groups: IPropertiesGroup[] = [];
 
   constructor(
     private _adminCategoryDataService: AdminCategoryDataService,
@@ -31,7 +31,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
     private _dialogService: DialogService) {
     super();
   }
-  public ngOnInit() {
+  public ngOnInit(): void {
     if (!this.template) {
       return;
     }
@@ -41,7 +41,6 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
       }
       return;
     }
-    this.groups = [];
     for (let group of this.template.extension.propertiesGroups) {
       const newGroup: IPropertiesGroup = {
         name: group.name,
@@ -51,6 +50,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
       };
       this.groups.push(newGroup);
     }
+    this._cd.detectChanges();
   }
 
   public editTemplate(): void {
@@ -64,30 +64,31 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
       const newTemplate = this.template;
       newTemplate.name = response.name;
       newTemplate.code = response.code;
-      this._adminCategoryDataService.editTemplate(newTemplate).subscribe(() => {
-        this.template.name = response.name;
-        this.template.code = response.code;
-        this._cd.detectChanges();
-      });
+      this._adminCategoryDataService.editTemplate(newTemplate)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe(() => {
+          this.template.name = response.name;
+          this.template.code = response.code;
+          this._cd.detectChanges();
+        });
     });
   }
 
   public deleteProperty(property: IProperty, group: IProperty[], groupCode: string): void {
-    this._adminCategoryDataService.deleteProperty(this.template.id, property).subscribe({
-      error: (err: string) => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
-      complete: () => {
-        this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
-        group.splice(group.indexOf(property), 1);
-        this.template.extension.propertiesGroups.map((x) => {
-          if (x.code == groupCode) {
-            this.template.extension.propertiesGroups.map((x) => {
-              x.propertyCodes.splice(x.propertyCodes.indexOf(property.code), 1);
-            });
-          }
-        });
-        this._adminCategoryDataService.editTemplate(this.template).subscribe();
-      }
-    });
+    this._adminCategoryDataService.deleteProperty(this.template.id, property)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe({
+        error: (err: string) => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
+        complete: () => {
+          this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
+          group.splice(group.indexOf(property), 1);
+          const index = this.template.extension.propertiesGroups.findIndex((x) => x.code == groupCode);
+          this.template.extension.propertiesGroups[index].propertyCodes
+            .splice(this.template.extension.propertiesGroups[index].propertyCodes.indexOf(property.code), 1);
+          this._adminCategoryDataService.editTemplate(this.template).pipe(takeUntil(this.__unsubscribe$)).subscribe();
+          this._cd.detectChanges();
+        }
+      });
   }
 
   public editProperty(property: IProperty): void {
@@ -123,11 +124,13 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
           x.name = newGroup.name;
         }
       });
-      this._adminCategoryDataService.editTemplate(this.template).subscribe(() => {
-        group.code = newGroup.code;
-        group.name = newGroup.name;
-        this._cd.detectChanges();
-      });
+      this._adminCategoryDataService.editTemplate(this.template)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe(() => {
+          group.code = newGroup.code;
+          group.name = newGroup.name;
+          this._cd.detectChanges();
+        });
     });
   }
 
@@ -159,10 +162,12 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
       }
       group.propertyCodes.push(property.code);
       this.template.extension.propertiesGroups = this.groups;
-      this._adminCategoryDataService.editTemplate(this.template).subscribe(() => {
-        group.properties.push(property);
-        this._cd.detectChanges();
-      });
+      this._adminCategoryDataService.editTemplate(this.template)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe(() => {
+          group.properties.push(property);
+          this._cd.detectChanges();
+        });
     });
   }
 }

@@ -1,9 +1,28 @@
 <p-button (click)="create()">{{lang.buttons.newCategory}}</p-button>
-<div *ngFor="let category of categories" class="categories-container" (click)="select(category)">
-  <div class="category-name">{{category.name}}</div>
-  <div class="category-control">
-    <span class="material-icons-reg delete" (click)="delete($event, category)">
-      {{mIcons.delete}}
-    </span>
-  </div>
-</div>
+<p-table [value]="categories" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>{{lang.headers.image}}</th>
+      <th>{{lang.placeholders.name}}</th>
+      <th>{{lang.placeholders.code}}</th>
+      <th>{{lang.placeholders.properties}}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-category>
+    <tr (click)="select(category)" [class.danger-background]="!category.image.smallBody || !category.propertyTemplate">
+      <td *ngIf="category.image.smallBody; else warnImage">
+        <img [src]="category.image.smallBody" class="image">
+      </td>
+      <ng-template #warnImage>
+        <td class="danger">{{lang.warnings.imageIsMissing}}</td>
+      </ng-template>
+      <td>{{ category.name }}</td>
+      <td>{{ category.code }}</td>
+      <td *ngIf="category.propertyTemplate; else warnTemplate">{{ category.propertyTemplate.name }}</td>
+      <ng-template #warnTemplate>
+        <td class="danger">{{lang.warnings.templateIsMissing}}</td>
+      </ng-template>
+    </tr>
+  </ng-template>
+</p-table>
+<div *ngIf="!categories.length" class="empty-label">{{lang.warnings.emptyCategoriesList}}</div>

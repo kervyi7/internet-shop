@@ -28,6 +28,8 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
+                .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
+                .ThenInclude(x => x.Image)
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
                 .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
@@ -75,7 +77,7 @@ namespace Shop.Server.Controllers.Admin
                 Code = model.Code,
                 TypeId = model.Type.Id,
                 BrandId = model.Brand.Id,
-                SalePrice = model.SalePrice,
+                SalePrice = model.DiscountPrice,
                 Description = model.Description,
                 Count = model.Count,
                 Price = model.Price,
@@ -165,7 +167,7 @@ namespace Shop.Server.Controllers.Admin
             item.Code = model.Code;
             item.TypeId = model.Type.Id;
             item.BrandId = model.Brand.Id;
-            item.SalePrice = model.SalePrice;
+            item.SalePrice = model.DiscountPrice;
             item.Description = model.Description;
             item.Count = model.Count;
             item.Price = model.Price;

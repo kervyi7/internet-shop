@@ -37,7 +37,9 @@
       </div>
       <div *ngSwitchCase="propertyTypes.bool">
         <p-checkbox [(ngModel)]="editedProperty.value" [binary]="true" inputId="propertyBoolValue"></p-checkbox>
-        <label for="propertyBoolValue" class="label">{{editedProperty.value === true ? 'Have' : 'Have not'}}</label>
+        <label for="propertyBoolValue" class="label">
+          {{editedProperty.value === true ? lang.boolProperties.yes : lang.boolProperties.no}}
+        </label>
       </div>
       <div *ngSwitchCase="propertyTypes.date">
         <p-calendar [(ngModel)]="editedProperty.value" placeholder="{{lang.placeholders.propertyValue}}"></p-calendar>

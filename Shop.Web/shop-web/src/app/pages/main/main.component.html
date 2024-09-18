@@ -14,7 +14,10 @@
   <h1>Products:</h1>
   <div class="flex">
     <div class="cursor-pointer" *ngFor="let product of productsWithSale" (click)="goToProduct(product)">
-      <img [src]="product.images[0].smallBody">
+      <img *ngIf="product.images.length; else plug" [src]="product.images[0].smallBody" class="productImage">
+      <ng-template #plug>
+        <img *ngIf="product.images; else plug" src="assets/img/nopicture.svg" class="productImage">
+      </ng-template>
       <p>{{product.name}}</p>
     </div>
   </div>

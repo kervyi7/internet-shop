@@ -5,7 +5,6 @@ import { TypeDataService } from '../../../../services/data/admin/admin-type-data
 import { AdminProductDataService } from '../../../../services/data/admin/admin-product-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
-import { NotificationService } from '../../../../services/notification.service';
 import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../../../services/app-config.service';
@@ -25,7 +24,6 @@ describe('ProductComponent', () => {
       providers: [
         { provide: AdminCategoryDataService, useValue: adminCategoryDataService },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: (key: string): any => null } } } },
-        { provide: NotificationService, useValue: {} },
         { provide: HttpClient, useValue: {} },
         { provide: DialogService, useValue: {} },
         { provide: Router, useValue: {} },

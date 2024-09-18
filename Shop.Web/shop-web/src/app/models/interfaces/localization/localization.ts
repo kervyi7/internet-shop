@@ -4,7 +4,10 @@ export const localizationMock: ILocalization = {
   placeholders: {} as IPlaceholdersLocalization,
   propertyTypes: {} as IPropertyTypesLocalization,
   popups: {} as IPopupsLocalization,
-  notifications: {} as INotificationsLocalization
+  notifications: {} as INotificationsLocalization,
+  warnings: {} as IWarningsLocalization,
+  boolProperties: {} as IBoolPropertiesLocalization,
+  tooltips: {} as ITooltipsLocalization,
 };
 
 export interface ILocalization {
@@ -14,6 +17,9 @@ export interface ILocalization {
   propertyTypes: IPropertyTypesLocalization;
   popups: IPopupsLocalization;
   notifications: INotificationsLocalization;
+  warnings: IWarningsLocalization;
+  boolProperties: IBoolPropertiesLocalization;
+  tooltips: ITooltipsLocalization;
 }
 
 export interface IButtonsLocalization {
@@ -27,20 +33,34 @@ export interface IButtonsLocalization {
   newItem: string;
   add: string;
   login: string;
+  createTemplate: string;
+  settings: string;
 }
 
 export interface IHeadersLocalization {
   defaultValues: string;
   additionalValues: string;
-  photo: string;
+  image: string;
+  mainImage: string;
+  secondaryImages: string;
   categoryInformation: string;
   product: string;
   category: string;
-  imageStorage: string;
   brands: string;
   types: string;
+  imageStorage: string;
   property: string;
   imageEditor: string;
+  signIn: string;
+}
+
+export interface IWarningsLocalization {
+  emptyCategoriesList: string;
+  emptyProductsList: string;
+  templateIsMissing: string;
+  titleImageIsMissing: string;
+  imageIsMissing: string;
+  categoryIsIncomplete: string;
 }
 
 export interface IPlaceholdersLocalization {
@@ -61,8 +81,9 @@ export interface IPlaceholdersLocalization {
   login: string;
   password: string;
   productCount: string;
-  productSalePrice: string;
-  productDescription: string
+  productDiscountPrice: string;
+  productDescription: string;
+  properties: string;
 }
 
 export interface IPropertyTypesLocalization {
@@ -70,6 +91,16 @@ export interface IPropertyTypesLocalization {
   number: string;
   boolean: string;
   dateTime: string;
+}
+
+export interface IBoolPropertiesLocalization {
+  yes: string;
+  no: string;
+}
+
+export interface ITooltipsLocalization {
+  imageName: string;
+  categoryWarn: string;
 }
 
 export interface IPopupsLocalization {

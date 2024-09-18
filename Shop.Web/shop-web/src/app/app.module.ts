@@ -7,6 +7,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './services/app-config.service';
 import { HttpClientInterceptor } from './services/http-client.interceptor';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 export function init(appConfigService: AppConfigService): Function {
   return (): Promise<void> => appConfigService.load();
@@ -14,13 +15,14 @@ export function init(appConfigService: AppConfigService): Function {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ProgressBarModule
   ],
   providers: [MessageService,
     {

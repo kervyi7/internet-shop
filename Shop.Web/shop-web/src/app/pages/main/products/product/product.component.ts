@@ -6,6 +6,7 @@ import { IProduct } from '../../../../models/interfaces/product';
 import { IImage } from '../../../../models/interfaces/image';
 import { BaseCompleteComponent } from '../../../../components/base/base-complete.component';
 import { MenuItem } from 'primeng/api';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'shop-product',
@@ -37,11 +38,13 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private loadProduct(code: string): void {
-    this._productDataService.getByCode(code).subscribe((data: IProduct) => {
-      data.images.map((image: IImage) => image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody));
-      this.product = data;
-      this.items = [{ label: this.product.category.name, routerLink: `/${this.product.category.name}` }, { label: this.product.brand.name, routerLink: `/${this.product.category.name}`, queryParams: { ['brand']: this.product.brand.name } }, { label: this.product.name }];
-      this._cd.detectChanges();
-    });
+    this._productDataService.getByCode(code)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: IProduct) => {
+        data.images.map((image: IImage) => image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody));
+        this.product = data;
+        this.items = [{ label: this.product.category.name, routerLink: `/${this.product.category.name}` }, { label: this.product.brand.name, routerLink: `/${this.product.category.name}`, queryParams: { ['brand']: this.product.brand.name } }, { label: this.product.name }];
+        this._cd.detectChanges();
+      });
   }
 }

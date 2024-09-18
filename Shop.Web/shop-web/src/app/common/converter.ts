@@ -24,10 +24,13 @@ export class Converter {
   }
 
   public static toFileSrc(type: MimeTypes | string, body: string): string {
+    if (!body || !type) {
+      return null;
+    }
     return `data:${type};base64, ${body}`;
   }
 
-  public static prepareProperties(propertyResponse: IPropertyResponse): void{
+  public static prepareProperties(propertyResponse: IPropertyResponse): void {
     for (const property of propertyResponse.dateProperties) {
       (property.value as unknown) = new Date(property.value);
       property.type = PropertyTypes.date;

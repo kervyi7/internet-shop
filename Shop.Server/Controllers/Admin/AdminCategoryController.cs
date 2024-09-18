@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shop.Common.Constants;
 using Shop.Database;
 using Shop.Database.Models;
@@ -38,12 +39,29 @@ namespace Shop.Server.Controllers.Admin
                     UpdatedAt = x.UpdatedAt,
                     CreatedByUser = x.CreatedByUser,
                     UpdatedByUser = x.UpdatedByUser,
+                    PropertyTemplate = x.PropertyTemplate,
                     Image = new Image
                     {
                         FileName = x.Image.FileName,
                         MimeType = x.Image.MimeType,
                         SmallBody = x.Image.SmallBody
                     }
+                }).ToListAsync();
+            return Ok(categories);
+        }
+
+        [HttpGet("mini")]
+        public async Task<ActionResult<Category[]>> GetAllMini()
+        {
+            var categories = await DataContext.Categories
+                .Include(x => x.Image)
+                .Include(x => x.PropertyTemplate)
+                .Where(x => x.Image != null && x.PropertyTemplate != null)
+                .Select(x => new Category
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Code = x.Code
                 }).ToListAsync();
             return Ok(categories);
         }
@@ -169,29 +187,29 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost($"add-property/{PropertyTypes.String}")]
         public async Task<ActionResult> AddPropertyString(PropertyDto<string> model)
         {
-            await AddProperty(model);
-            return Ok();
+            var baseModel = await AddProperty(model);
+            return Ok(baseModel);
         }
 
         [HttpPost($"add-property/{PropertyTypes.Number}")]
-        public async Task<ActionResult> AddPropertyInt(PropertyDto<decimal> model)
+        public async Task<ActionResult> AddPropertyDecimal(PropertyDto<decimal> model)
         {
-            await AddProperty(model);
-            return Ok();
+            var baseModel = await AddProperty(model);
+            return Ok(baseModel);
         }
 
         [HttpPost($"add-property/{PropertyTypes.Bool}")]
         public async Task<ActionResult> AddPropertyBool(PropertyDto<bool> model)
         {
-            await AddProperty(model);
-            return Ok();
+            var baseModel = await AddProperty(model);
+            return Ok(baseModel);
         }
 
         [HttpPost($"add-property/{PropertyTypes.Date}")]
         public async Task<ActionResult> AddPropertyDate(PropertyDto<DateTime> model)
         {
-            await AddProperty(model);
-            return Ok();
+            var baseModel = await AddProperty(model);
+            return Ok(baseModel);
         }
 
         [HttpPut($"edit-property/{PropertyTypes.String}/" + "{id:int}")]
@@ -230,8 +248,9 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("not reference");
             }
-            var isProductExist = await GetPropertyListByType(type, DataContext).AnyAsync(x => x.ProductId != null);
-            if (isProductExist)
+            var template = DataContext.PropertyTemplate.FirstOrDefault(x => x.Id == id);
+            var category = DataContext.Categories.FirstOrDefault(x => x.Id == template.CategoryId);
+            if (category.Products.IsNullOrEmpty())
             {
                 throw new ConflictException("cannot delete when product exist");
             }
@@ -256,7 +275,7 @@ namespace Shop.Server.Controllers.Admin
             }
         }
 
-        private async Task AddProperty<T>(PropertyDto<T> model)
+        private async Task<BaseDto> AddProperty<T>(PropertyDto<T> model)
         {
             var user = "user";
             var isTemplateExist = await DataContext.PropertyTemplate.AnyAsync(x => x.Id == model.PropertyTemplateId);
@@ -287,6 +306,10 @@ namespace Shop.Server.Controllers.Admin
             };
             DataContext.Set<Property<T>>().Add(newProperty);
             await DataContext.SaveChangesAsync();
+            return new BaseDto
+            {
+                Id = newProperty.Id
+            };
         }
 
         private async Task<bool> isNameCodeUnique<R, T>(PropertyDto<T> model)

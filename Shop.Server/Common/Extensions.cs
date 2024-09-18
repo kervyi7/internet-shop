@@ -93,7 +93,7 @@ namespace Shop.Server.Common
                 Brand = CreateCodeNameDto(source.Brand),
                 Category = ToViewModel(source.Category),
                 Price = source.Price,
-                SalePrice = source.SalePrice,
+                DiscountPrice = source.SalePrice,
                 Count = source.Count,
                 Description = source.Description,
                 Currency = source.Currency,

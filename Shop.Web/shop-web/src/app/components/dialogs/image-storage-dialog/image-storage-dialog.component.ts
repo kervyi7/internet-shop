@@ -20,6 +20,7 @@ import { DialogOptions } from '../../../models/enums/dialog-options';
 })
 export class ImageStorageDialogComponent extends BaseCompleteComponent implements OnInit {
   private _searchBy = '';
+  private _innerDialogRef: DynamicDialogRef;
   public searchText = '';
   public imageChangedFile: File;
   public images: IImage[];
@@ -67,7 +68,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   public fileChanged(file: File): void {
-    this._dialogRef = this._dialogService.open(ImageEditorComponent, {
+    this._innerDialogRef = this._dialogService.open(ImageEditorComponent, {
       data: {
         imageFile: file,
         imageName: file.name
@@ -78,7 +79,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
       baseZIndex: 5,
       maximizable: true
     });
-    this._dialogRef.onClose.subscribe((data: IBaseImage) => {
+    this._innerDialogRef.onClose.subscribe((data: IBaseImage) => {
       if (!data) {
         return;
       }
@@ -104,6 +105,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   private loadImages(): void {
+    this.displayService.changeStateLoadBar(true);
     const params: IGetModelsRequest = {
       skip: this.skip,
       count: this.countPerPage,
@@ -117,6 +119,7 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
           image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
         });
         this.count = data.count;
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }

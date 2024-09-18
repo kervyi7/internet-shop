@@ -1,21 +1,22 @@
 <div class="admin-panel">
-  <div class="admin-menu">
-    <div class="menu-header">Products</div>
+  <div class="admin-menu" [@openClose]="isMenuOpen ? 'open' : 'closed'" (@openClose.done)="onAnimationEvent($event)">
     <div class="menu-list">
+      <div class="arrow-button">
+        <span class="material-icons-reg" [class.menu-closed]="!isMenuOpen" (click)="changeMenuState()">{{mIcons.arrow_back}}</span>
+      </div>
       <div class="menu-list-item" (click)="openCategories()">
-        <span class="material-icons-outline menu-list-item-icon">{{mIcons.category}}</span>
-        <span class="menu-list-item-name">{{lang.buttons.categoryManagement}}</span>
+        <span class="material-icons-outline">{{mIcons.category}}</span>
+        <span class="menu-list-item-name" *ngIf="isMenuOpen">{{lang.buttons.categoryManagement}}</span>
       </div>
       <div class="menu-list-item" (click)="openProducts()">
-        <span class="material-icons-outline menu-list-item-icon">{{mIcons.shopping_cart}}</span>
-        <span class="menu-list-item-name">{{lang.buttons.productManagement}}</span>
+        <span class="material-icons-outline">{{mIcons.shopping_cart}}</span>
+        <span class="menu-list-item-name" *ngIf="isMenuOpen">{{lang.buttons.productManagement}}</span>
       </div>
     </div>
-    <div class="menu-header">Settings</div>
-    <div class="menu-list">
+    <div>
       <div class="menu-list-item" (click)="openSettings()">
-        <span class="material-icons-outline menu-list-item-icon">{{mIcons.settings}}</span>
-        <span class="menu-list-item-name">Settings</span>
+        <span class="material-icons-outline">{{mIcons.settings}}</span>
+        <span class="menu-list-item-name" *ngIf="isMenuOpen">{{lang.buttons.settings}}</span>
       </div>
     </div>
   </div>

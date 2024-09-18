@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
-import { NotificationService } from '../../../../services/notification.service';
 
 describe('CategoryComponent', () => {
   let component: CategoryComponent;
@@ -24,7 +23,6 @@ describe('CategoryComponent', () => {
         { provide: DialogService, useValue: {} },
         { provide: Router, useValue: {} },
         { provide: AppConfigService, useValue: appConfigService },
-        { provide: NotificationService, useValue: {} },
         { provide: ChangeDetectorRef, useValue: {} }
       ],
       schemas: [NO_ERRORS_SCHEMA]

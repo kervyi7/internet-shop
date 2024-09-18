@@ -7,7 +7,6 @@ import { FormsModule } from "@angular/forms";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
-import { Base64Pipe } from "../../pipes/image-to-base64.pipe";
 
 @NgModule({
   declarations: [
@@ -19,7 +18,6 @@ import { Base64Pipe } from "../../pipes/image-to-base64.pipe";
     DynamicDialogModule,
     InputTextModule,
     FormsModule,
-    Base64Pipe,
     CalendarModule,
     CheckboxModule,
   ],

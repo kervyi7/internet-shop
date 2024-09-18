@@ -1,30 +1,57 @@
 <p-toast></p-toast>
-<p-button [text]="true" (click)="goToPreviousPage()"><span
-    class="material-icons-reg">{{mIcons.arrow_back}}</span></p-button>
-<p *ngIf="category" class="admin-section-title">{{category.name}} {{category.code}}</p>
-<p class="admin-section-header">{{lang.headers.categoryInformation}}</p>
-<form (ngSubmit)="submit()" [formGroup]="categoryForm" novalidate class="inputs-wrapper">
-  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}" [formControl]="categoryForm.controls.name" />
-  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}" [formControl]="categoryForm.controls.code" />
-  <p-button type="submit">{{lang.buttons.save}}</p-button>
-</form>
-<div *ngIf="id">
-  <p class="admin-section-header">{{lang.headers.photo}}</p>
-  <div *ngIf="!image" class="pic" (click)="showImageStorage()">
-    <span class="material-icons-reg">{{mIcons.add}}</span>
+<p-button [text]="true" (click)="goToPreviousPage()">
+  <span class="material-icons-reg">{{mIcons.arrow_back}}</span>
+</p-button>
+<div *ngIf="id && (!category.propertyTemplate || !category.image)" class="flex">
+  <h2 class="danger">{{lang.warnings.categoryIsIncomplete}}</h2>
+  <shop-tooltip-icon
+    text="{{lang.tooltips.categoryWarn}}"></shop-tooltip-icon>
+</div>
+<div class="info-photo-container">
+  <div>
+    <h2>{{lang.headers.categoryInformation}}</h2>
+    <form (ngSubmit)="submit()" [formGroup]="categoryForm" novalidate class="inputs-wrapper">
+      <span class="p-float-label">
+        <input id="name" class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}"
+          [formControl]="categoryForm.controls.name" />
+        <label htmlFor="name">
+          <ng-container [ngTemplateOutlet]="requiredFieldLabel"
+            [ngTemplateOutletContext]="{placeholder:lang.placeholders.name}">
+          </ng-container>
+        </label>
+      </span>
+      <span class="p-float-label">
+        <input id="code" class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}"
+          [formControl]="categoryForm.controls.code" />
+        <label htmlFor="code">
+          <ng-container [ngTemplateOutlet]="requiredFieldLabel"
+            [ngTemplateOutletContext]="{placeholder:lang.placeholders.code}">
+          </ng-container>
+        </label>
+      </span>
+      <p-button type="submit">{{lang.buttons.save}}</p-button>
+    </form>
   </div>
-  <div *ngIf="image" class="uploaded-images-container">
-    <div class="image-container">
-      <img [src]="image" class="image">
-      <span class="material-icons-reg delete-image" (click)="showImageStorage()">{{mIcons.edit}}</span>
+  <div *ngIf="id">
+    <h2 [class.danger]="!category.image">{{lang.headers.image}}</h2>
+    <div *ngIf="!image" class="pic" (click)="showImageStorage()">
+      <span class="material-icons-reg">{{mIcons.add}}</span>
+    </div>
+    <div *ngIf="image" class="uploaded-images-container">
+      <div class="image-container">
+        <img [src]="image" class="image">
+        <span class="material-icons-reg delete-image" (click)="showImageStorage()">{{mIcons.edit}}</span>
+      </div>
     </div>
   </div>
-  <p class="admin-section-header">{{lang.headers.additionalValues}}</p>
+</div>
+<div *ngIf="id">
+  <h2 [class.danger]="!category.propertyTemplate">{{lang.headers.additionalValues}}</h2>
   <div class="input-container">
     <div class="button-container" *ngIf="!template">
       <p-button [text]="true" (onClick)="addPropertyTemplate()">
         <span class="material-icons-reg">{{mIcons.add}}</span>
-        <span>Create template</span>
+        <span>{{lang.buttons.createTemplate}}</span>
       </p-button>
     </div>
     <div *ngIf="template">
@@ -32,3 +59,8 @@
     </div>
   </div>
 </div>
+
+<ng-template #requiredFieldLabel let-placeholder='placeholder'>
+  <span>{{placeholder}}</span>
+  <span class="asterisk">*</span>
+</ng-template>

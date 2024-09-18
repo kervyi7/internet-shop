@@ -7,7 +7,6 @@ import { ICategory } from '../../../../models/interfaces/category';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 import { MessageTypes } from '../../../../models/enums/message-types';
-import { NotificationService } from '../../../../services/notification.service';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
 import { Converter } from '../../../../common/converter';
 import { Util } from '../../../../common/util';
@@ -23,7 +22,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'shop-category',
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss'],
+  styleUrls: ['./category.component.scss', '../../../../../assets/styles/category-product.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryComponent extends BaseCompleteComponent implements OnInit {
@@ -32,12 +31,17 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   public imageChangedFile: File;
   public image: string = "";
   public groups: IPropertiesGroup[] = [];
-  public category: ICategory;
   public categoryName: string;
   public categoryCode: string;
   public template: IPropertyTemplate;
   public properties: IProperty[] = [];
   public categoryForm: FormGroup<ICodeNameForm>;
+  public category: ICategory = {
+    image: null,
+    code: null,
+    name: null,
+    propertyTemplate: null,
+  };
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -54,12 +58,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     this.id = +this._activatedRoute.snapshot.paramMap.get('id')!;
     if (this.id) {
       this.loadCategory();
-    } else {
-      this.category = {
-        image: null,
-        code: null,
-        name: null,
-      }
     }
   }
 
@@ -97,10 +95,11 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   public addPropertyTemplate(): void {
     const config = { header: this.lang.headers.property, width: DialogOptions.standardWidth, maximizable: false };
     this._dialogRef = Util.openDialog(this._dialogService, CreateItemDialogComponent, config);
-    this._dialogRef.onClose.subscribe((template: ICodeName) => {
+    this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe((template: ICodeName) => {
       if (!template) {
         return;
       }
+      this.displayService.changeStateLoadBar(true);
       const newTemplate: IPropertyTemplate = {
         categoryId: this.id,
         name: template.name,
@@ -113,22 +112,28 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
         boolProperties: [],
         dateProperties: []
       };
-      this._adminCategoryDataService.createTemplate(newTemplate).subscribe((data: IBaseModel) => {
-        this.template = newTemplate;
-        this.template.id = data.id;
-        this._cd.detectChanges();
-      });
+      this._adminCategoryDataService.createTemplate(newTemplate)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe((data: IBaseModel) => {
+          this.template = newTemplate;
+          this.template.id = data.id;
+          this.displayService.changeStateLoadBar(false);
+          this._cd.detectChanges();
+        });
     });
   }
 
   public editImage(image: IImage): void {
     image.referenceKey = this.id;
-    this._adminCategoryDataService.editImage(this.id, image).subscribe(() => {
-      this.image = image.smallBody;
-    });
+    this._adminCategoryDataService.editImage(this.id, image)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        this.image = image.smallBody;
+      });
   }
 
   private edit(): void {
+    this.displayService.changeStateLoadBar(true);
     const category: ICategory = {
       id: this.id,
       image: this.category.image,
@@ -139,7 +144,11 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     if (this.validate(category)) {
       this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
     }
-    this._adminCategoryDataService.editCategory(this.id, category).subscribe();
+    this._adminCategoryDataService.editCategory(this.id, category)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        this.displayService.changeStateLoadBar(false);
+      });
   }
 
   private validate(category: ICategory): boolean {
@@ -147,16 +156,20 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private create(): void {
+    this.displayService.changeStateLoadBar(true);
     const category: ICategory = {
       image: this.category.image,
       name: this.categoryForm.controls.name.getRawValue(),
       code: this.categoryForm.controls.code.getRawValue(),
     };
-    this._adminCategoryDataService.create(category).subscribe((data: IBaseModel) => {
-      this._location.replaceState(`admin/categories/edit/${data.id}`)
-      this.id = data.id;
-      this._cd.detectChanges();
-    });
+    this._adminCategoryDataService.create(category)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((data: IBaseModel) => {
+        this._location.replaceState(`admin/categories/edit/${data.id}`)
+        this.id = data.id;
+        this.displayService.changeStateLoadBar(false);
+        this._cd.detectChanges();
+      });
   }
 
   private getCategoryForm(): FormGroup<ICodeNameForm> {
@@ -167,6 +180,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private loadCategory(): void {
+    this.displayService.changeStateLoadBar(true);
     this._adminCategoryDataService.getById(this.id)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICategory) => {
@@ -177,6 +191,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
         }
         this.template = data.propertyTemplate;
         if (!this.template) {
+          this.displayService.changeStateLoadBar(false);
           this._cd.detectChanges();
           return;
         }
@@ -184,6 +199,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
         this.properties.push(...this.template.decimalProperties);
         this.properties.push(...this.template.boolProperties);
         this.properties.push(...this.template.dateProperties);
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }

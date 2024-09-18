@@ -7,7 +7,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from "primeng/inputtext";
 import { ButtonModule } from "primeng/button";
-import { NotificationService } from "../../../services/notification.service";
 
 @NgModule({
   declarations: [
@@ -24,7 +23,6 @@ import { NotificationService } from "../../../services/notification.service";
   ],
   exports: [
     PropertyDialogComponent
-  ],
-  providers: [NotificationService]
+  ]
 })
 export class PropertyDialogModule { }

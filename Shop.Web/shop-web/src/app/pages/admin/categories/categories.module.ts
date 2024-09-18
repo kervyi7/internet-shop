@@ -10,12 +10,14 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ImageUploaderModule } from '../../../components/image-uploader/image-uploader.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Base64Pipe } from '../../../pipes/image-to-base64.pipe';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { PropertiesListModule } from '../../../components/properties-list/properties-list.module';
 import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { TooltipIconModule } from '../../../components/tooltip-icon/tooltip-icon.module';
 
 @NgModule({
   declarations: [
@@ -33,12 +35,14 @@ import { ToastModule } from 'primeng/toast';
     ImageUploaderModule,
     ButtonModule,
     InputTextModule,
-    Base64Pipe,
     CalendarModule,
     CheckboxModule,
     DropdownModule,
     PropertiesListModule,
-    ToastModule
+    ToastModule,
+    TableModule,
+    TooltipModule,
+    TooltipIconModule
   ],
   providers: [DialogService],
   exports: [

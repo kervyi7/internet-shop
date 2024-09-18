@@ -1,6 +1,6 @@
 <div class="template-group-container" *ngIf="!isProduct">
   <div class="property-item">
-    <h2>Template: {{template.name}}</h2>
+    <h3>Template: {{template.name}}</h3>
   </div>
   <p-button [text]="true" (onClick)="editTemplate()">
     <span class="material-icons-reg">{{mIcons.edit}}</span>
@@ -8,17 +8,22 @@
 </div>
 <div *ngFor="let group of groups" class="inputs-wrapper">
   <div class="template-group-container">
-    <h3>{{group.name}}</h3>
+    <h4>{{group.name}}</h4>
     <p-button [text]="true" *ngIf="!isProduct" (onClick)="editPropertyGroup(group)">
       <span class="material-icons-reg">{{mIcons.edit}}</span>
     </p-button>
   </div>
   <div *ngFor="let property of group.properties" class="property-container">
     <div class="property-item">
-      <h4>{{property.name}}:</h4>
+      <p>{{property.name}}:</p>
     </div>
     <div class="property-item">
-      <span>{{property.value}}</span>
+      <span *ngIf="property.value === true || property.value === false; else defaultValue">
+        {{property.value === true ? lang.boolProperties.yes : lang.boolProperties.no}}
+      </span>
+      <ng-template #defaultValue>
+        <span>{{property.value}}</span>
+      </ng-template>
     </div>
     <p-button [text]="true" (onClick)="editProperty(property)">
       <span class="material-icons-reg">{{mIcons.edit}}</span>

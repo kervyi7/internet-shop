@@ -11,7 +11,6 @@ import { ICodeName } from '../../../../models/interfaces/base/code-name';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateItemDialogComponent } from '../../../../components/dialogs/create-item-dialog/create-item-dialog.component';
 import { MessageTypes } from '../../../../models/enums/message-types';
-import { NotificationService } from '../../../../services/notification.service';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
 import { IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
@@ -27,7 +26,7 @@ import { IProductForm } from '../../../../models/interfaces/forms/product-form';
 @Component({
   selector: 'shop-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss'],
+  styleUrls: ['./product.component.scss', '../../../../../assets/styles/category-product.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductComponent extends BaseCompleteComponent implements OnInit {
@@ -62,9 +61,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.displayService.changeStateLoadBar(true);
     this.id = +this._activatedRoute.snapshot.paramMap.get('id')!;
     if (!this.id) {
       this.productForm = this.getProductForm();
+      this.displayService.changeStateLoadBar(false);
       return;
     }
     this._adminProductDataService.getById(this.id)
@@ -91,60 +92,63 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.properties.push(...this.product.boolProperties);
         this.properties.push(...this.product.dateProperties);
         this.template = data.category.propertyTemplate;
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
 
   public getTypes(): void {
-    if (this.types.length) {
+    if (this.types.length > 1) {
       return;
     }
+    this.displayService.changeStateLoadBar(true);
     this._typeDataService.getType()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
-        this.types = data;
+        if (this.types.length) {
+          const index = data.findIndex(item => item.code == this.types[0].code);
+          data.splice(index, 1);
+        }
+        this.types.push(...data);
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
 
   public getBrands(): void {
-    if (this.brands.length) {
+    if (this.brands.length > 1) {
       return;
     }
+    this.displayService.changeStateLoadBar(true);
     this._brandDataService.getBrand()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
-        this.brands = data;
+        if (this.brands.length) {
+          const index = data.findIndex(item => item.code == this.brands[0].code);
+          data.splice(index, 1);
+        }
+        this.brands.push(...data);
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
 
   public getCategories(): void {
-    if (this.categories.length) {
+    if (this.categories.length > 1) {
       return;
     }
-    this._adminCategoryDataService.getAll()
+    this.displayService.changeStateLoadBar(true);
+    this._adminCategoryDataService.getAllMini()
       .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: ICategory[]) => {
-        this.categories = data;
+      .subscribe((data: ICodeName[]) => {
+        if (this.categories.length) {
+          const index = data.findIndex(item => item.code == this.categories[0].code);
+          data.splice(index, 1);
+        }
+        this.categories.push(...data);
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
-  }
-
-  public handleClearTypes(): void {
-    this.types = [];
-  }
-
-  public handleClearCategories(): void {
-    this.categories = [];
-  }
-
-  public handleClearBrands(): void {
-    this.brands = [];
-  }
-
-  public isInputEmpty(input: string | number | ICodeName): boolean {
-    return !Boolean(input);
   }
 
   public editImages(isTitle: boolean): void {
@@ -161,7 +165,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public addType(): void {
     const config = { header: this.lang.headers.types, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(CreateItemDialogComponent, config);
-    this._dialogRef.onClose.pipe(takeUntil(this.__unsubscribe$)).subscribe((type: ICodeName) => {
+    this._dialogRef.onClose.subscribe((type: ICodeName) => {
       if (!type) {
         return;
       }
@@ -177,44 +181,34 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public addBrand(): void {
     const config = { header: this.lang.headers.brands, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(CreateItemDialogComponent, config);
-    this._dialogRef.onClose
-      .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((brand: ICodeName) => {
-        if (!brand) {
-          return;
-        }
-        this._brandDataService.createBrand(brand)
-          .pipe(takeUntil(this.__unsubscribe$))
-          .subscribe((data: IBaseModel) => {
-            brand.id = data.id;
-            this.brands.unshift(brand);
-          });
-      });
-  }
-
-  public saveImage(image: IImage, isTitle: boolean): void {
-    image.referenceKey = this.id;
-    image.isTitle = isTitle;
-    this._adminProductDataService.addImage(image).subscribe(() => {
-      if (image.isTitle) {
-        this.titleImage = image;
-      } else {
-        this.images.push(image);
+    this._dialogRef.onClose.subscribe((brand: ICodeName) => {
+      if (!brand) {
+        return;
       }
-      this._cd.detectChanges();
+      this._brandDataService.createBrand(brand)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe((data: IBaseModel) => {
+          brand.id = data.id;
+          this.brands.unshift(brand);
+        });
     });
   }
 
   public deleteImage(image: IImage): void {
+    this.displayService.changeStateLoadBar(true);
     image.referenceKey = this.id;
-    this._adminProductDataService.deleteImage(this.product.id, image).subscribe(() => {
-      if (image.isTitle) {
-        this.titleImage = null;
-      } else {
-        this.images.splice(this.images.indexOf(image), 1);
-      }
-      this._cd.detectChanges();
-    });
+    this._adminProductDataService.deleteImage(this.product.id, image)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        if (image.isTitle) {
+          this.titleImage = null;
+        } else {
+          this.images.splice(this.images.indexOf(image), 1);
+        }
+        this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.success);
+        this.displayService.changeStateLoadBar(false);
+        this._cd.detectChanges();
+      });
   }
 
   public goToPreviousPage(): void {
@@ -227,20 +221,55 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
       return;
     }
+    this.displayService.changeStateLoadBar(true);
     const product: IProduct = { ...this.productForm.getRawValue() };
     if (this.id) {
-      this._adminProductDataService.edit(this.id, product).subscribe({
-        error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
-        complete: () => this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
-      });
+      product.id = this.id;
+      this._adminProductDataService.edit(this.id, product)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe({
+          error: err => {
+            this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
+            this.displayService.changeStateLoadBar(false);
+          },
+          complete: () => {
+            this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
+            this.displayService.changeStateLoadBar(false);
+          }
+        });
     } else {
-      this._adminProductDataService.create(product).subscribe((data: IProductResponse) => {
-        this._location.replaceState(`admin/products/edit/${data.id}`);
-        this.id = data.id;
-        this.template = data.propertyTemplate;
+      this._adminProductDataService.create(product)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe((data: IProductResponse) => {
+          this._location.replaceState(`admin/products/edit/${data.id}`);
+          this.id = data.id;
+          this.template = data.propertyTemplate;
+          this.properties.push(...this.template.stringProperties);
+          this.properties.push(...this.template.decimalProperties);
+          this.properties.push(...this.template.boolProperties);
+          this.properties.push(...this.template.dateProperties);
+          this.displayService.changeStateLoadBar(false);
+          this._cd.detectChanges();
+        });
+    }
+  }
+
+  private saveImage(image: IImage, isTitle: boolean): void {
+    this.displayService.changeStateLoadBar(true);
+    image.referenceKey = this.id;
+    image.isTitle = isTitle;
+    this._adminProductDataService.addImage(image)
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe(() => {
+        if (image.isTitle) {
+          this.titleImage = image;
+        } else {
+          this.images.push(image);
+        }
+        this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.success);
+        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
-    }
   }
 
   private openDialog<T>(component: Type<T>, config: DynamicDialogConfig): void {
@@ -255,29 +284,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       type: new FormControl<ICodeName | null>(null, Validators.required),
       brand: new FormControl<ICodeName | null>(null, Validators.required),
       price: new FormControl(null, Validators.required),
-      salePrice: new FormControl(null, Validators.required),
+      discountPrice: new FormControl(null),
       count: new FormControl(null, Validators.required),
       description: new FormControl(""),
       currency: new FormControl("", Validators.required),
     });
-  }
-
-  private createProduct(): IProduct {
-    const product: IProduct = {
-      id: this.id,
-      name: this.productForm.controls.name.getRawValue(),
-      code: this.productForm.controls.name.getRawValue(),
-      category: this.productForm.controls.category.getRawValue(),
-      type: this.productForm.controls.type.getRawValue(),
-      brand: this.productForm.controls.brand.getRawValue(),
-      price: this.productForm.controls.price.getRawValue(),
-      currency: this.productForm.controls.currency.getRawValue(),
-      salePrice: this.productForm.controls.salePrice.getRawValue(),
-      count: this.productForm.controls.count.getRawValue(),
-      description: this.productForm.controls.description.getRawValue(),
-    };
-    
-    return product;
   }
 
   private removeTitleImage(): void {

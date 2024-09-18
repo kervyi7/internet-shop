@@ -8,7 +8,6 @@ import { Converter } from '../../common/converter';
 import { MimeTypes } from '../../models/enums/mime-types';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseCompleteComponent } from '../base/base-complete.component';
-import { NotificationService } from '../../services/notification.service';
 import { MessageTypes } from '../../models/enums/message-types';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Util } from '../../common/util';
