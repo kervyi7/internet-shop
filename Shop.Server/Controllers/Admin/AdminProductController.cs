@@ -70,6 +70,10 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.BoolProperties)
                 .Include(x => x.DateProperties)
                 .FirstOrDefaultAsync(x => x.CategoryId == model.Category.Id);
+            if (model.DiscountPrice > model.Price)
+            {
+                throw new ConflictException("The discount price cannot be higher than the regular price.");
+            }
             var item = new Product
             {
                 CategoryId = model.Category.Id,

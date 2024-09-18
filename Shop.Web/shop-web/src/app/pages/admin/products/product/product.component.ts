@@ -219,10 +219,18 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.productForm.invalid) {
       Util.markAllAsDirty(this.productForm);
       this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+      this._cd.detectChanges();
+      return;
+    }
+    const product: IProduct = { ...this.productForm.getRawValue() };
+    if (product.discountPrice >= product.price) {
+      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+      this.productForm.controls.discountPrice.setErrors({'incorrect': true});
+      this.productForm.controls.price.setErrors({'incorrect': true});
+      this._cd.detectChanges();
       return;
     }
     this.displayService.changeStateLoadBar(true);
-    const product: IProduct = { ...this.productForm.getRawValue() };
     if (this.id) {
       product.id = this.id;
       this._adminProductDataService.edit(this.id, product)
