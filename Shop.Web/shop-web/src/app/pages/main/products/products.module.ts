@@ -8,6 +8,11 @@ import { ProductsComponent } from './products.component';
 import { ProductsRoutingModule } from './products-routing.module';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ProductComponent } from './product/product.component';
+import { PropertiesListModule } from '../../../components/properties-list/properties-list.module';
+import { ButtonModule } from 'primeng/button';
+import { PropertyFiltersModule } from '../../../components/property-filters/property-filters.module';
+import { PaginatorModule } from 'primeng/paginator';
+import { GalleriaModule } from 'primeng/galleria';
 
 @NgModule({
   declarations: [
@@ -19,7 +24,12 @@ import { ProductComponent } from './product/product.component';
     FormsModule,
     RouterModule,
     ProductsRoutingModule,
-    BreadcrumbModule 
+    BreadcrumbModule,
+    PropertiesListModule,
+    ButtonModule,
+    PropertyFiltersModule,
+    PaginatorModule,
+    GalleriaModule
   ],
   providers: [DialogService],
   exports: [

@@ -19,6 +19,8 @@ import { takeUntil } from 'rxjs';
 })
 export class PropertiesListComponent extends BaseCompleteComponent implements OnInit {
   @Input() public isProduct: boolean;
+  @Input() public isEditable: boolean;
+  @Input() public isList: boolean;
   @Input() public template: IPropertyTemplate;
   @Input() public properties: IProperty[];
 
@@ -31,6 +33,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
     private _dialogService: DialogService) {
     super();
   }
+  
   public ngOnInit(): void {
     if (!this.template) {
       return;
@@ -50,7 +53,6 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
       };
       this.groups.push(newGroup);
     }
-    this._cd.detectChanges();
   }
 
   public editTemplate(): void {

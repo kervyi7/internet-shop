@@ -7,6 +7,8 @@ using Shop.Server.Models.DTO;
 using System.Threading.Tasks;
 using System.Linq;
 using Shop.Server.Common;
+using System.Collections.Generic;
+using System;
 
 namespace Shop.Server.Controllers.Admin
 {
@@ -34,22 +36,32 @@ namespace Shop.Server.Controllers.Admin
             return Ok(products.ToViewModels());
         }
 
-        [HttpGet("category/{category}")]
-        public async Task<ActionResult<ProductDto[]>> GetByCategory(string category)
+        [HttpPost("category/{category}")]
+        public async Task<ActionResult<ProductDto[]>> GetByCategory(string category, PaginationDto model)
         {
-            var products = await _dataContext.Products
+            var products = _dataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
-                .Include(x => x.StringProperties.Where(x => x.IsTitle))
-                .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
-                .Include(x => x.BoolProperties.Where(x => x.IsTitle))
-                .Include(x => x.DateProperties.Where(x => x.IsTitle))
+                .ThenInclude(x => x.PropertyTemplate)
+                .Include(x => x.StringProperties)
+                .Include(x => x.DecimalProperties)
+                .Include(x => x.BoolProperties)
+                .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image)
-                .Where(x => x.Category.Name == category)
-                .ToListAsync();
-            return Ok(products.ToViewModels());
+                .Where(x => x.Category.Name == category);
+            var images = await products.OrderByDescending(x => x.Id)
+            .Skip(model.Skip)
+            .Take(model.Count)
+            .ToListAsync();
+            var count = products.Count();
+            var response = new PageDataDto<IEnumerable<ProductDto>>
+            {
+                Data = products.ToViewModels(),
+                Count = count
+            };
+            return Ok(response);
         }
 
         [HttpGet("category/{category}/filters")]
@@ -88,6 +100,7 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
+                .ThenInclude(x => x.PropertyTemplate)
                 .Include(x => x.StringProperties)
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)

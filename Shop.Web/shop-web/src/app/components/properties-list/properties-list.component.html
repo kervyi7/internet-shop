@@ -6,38 +6,53 @@
     <span class="material-icons-reg">{{mIcons.edit}}</span>
   </p-button>
 </div>
-<div *ngFor="let group of groups" class="inputs-wrapper">
-  <div class="template-group-container">
-    <h4>{{group.name}}</h4>
-    <p-button [text]="true" *ngIf="!isProduct" (onClick)="editPropertyGroup(group)">
-      <span class="material-icons-reg">{{mIcons.edit}}</span>
-    </p-button>
-  </div>
-  <div *ngFor="let property of group.properties" class="property-container">
-    <div class="property-item">
-      <p>{{property.name}}:</p>
+<div [class.groups-container]="!isList">
+  <ng-container *ngFor="let group of groups">
+    <div *ngIf="group.properties.length" class="inputs-wrapper" [class.list-wrapper]="isList">
+      <div class="template-group-container">
+        <h4>{{group.name}}</h4>
+        <ng-container *ngIf="!isProduct">
+          <p-button [text]="true" (onClick)="editPropertyGroup(group)">
+            <span class="material-icons-reg">{{mIcons.edit}}</span>
+          </p-button>
+        </ng-container>
+      </div>
+      <div *ngFor="let property of group.properties"
+        [ngClass]="[isList ? 'property-list-container':'property-description-container', isEditable ? 'editable-list-grid':'view-list-grid']">
+        <div class="property-item">
+          <span>{{property.name}}:</span>
+        </div>
+        <div class="property-item">
+          <span *ngIf="property.value === true || property.value === false; else defaultValue">
+            {{property.value === true ? lang.boolProperties.yes : lang.boolProperties.no}}
+          </span>
+          <ng-template #defaultValue>
+            <span>{{property.value}}</span>
+          </ng-template>
+        </div>
+        <ng-container *ngIf="isEditable">
+          <p-button [text]="true" (onClick)="editProperty(property)">
+            <span class="material-icons-reg">{{mIcons.edit}}</span>
+          </p-button>
+        </ng-container>
+        <ng-container *ngIf="!isProduct">
+          <p-button [text]="true" (onClick)="deleteProperty(property, group.properties, group.code)">
+            <span class="material-icons-outline">{{mIcons.delete}}</span>
+          </p-button>
+        </ng-container>
+      </div>
+      <ng-container *ngIf="group && !isProduct">
+        <p-button [text]="true" (onClick)="addProperty(group)">
+          <span class="material-icons-reg">{{mIcons.add}}</span>
+          <span>Add property</span>
+        </p-button>
+      </ng-container>
     </div>
-    <div class="property-item">
-      <span *ngIf="property.value === true || property.value === false; else defaultValue">
-        {{property.value === true ? lang.boolProperties.yes : lang.boolProperties.no}}
-      </span>
-      <ng-template #defaultValue>
-        <span>{{property.value}}</span>
-      </ng-template>
-    </div>
-    <p-button [text]="true" (onClick)="editProperty(property)">
-      <span class="material-icons-reg">{{mIcons.edit}}</span>
-    </p-button>
-    <p-button [text]="true" *ngIf="!isProduct" (onClick)="deleteProperty(property, group.properties, group.code)">
-      <span class="material-icons-outline">{{mIcons.delete}}</span>
-    </p-button>
-  </div>
-  <p-button [text]="true" *ngIf="group && !isProduct" (onClick)="addProperty(group)">
-    <span class="material-icons-reg">{{mIcons.add}}</span>
-    <span>Add property</span>
-  </p-button>
+  </ng-container>
 </div>
-<p-button [text]="true" *ngIf="!isProduct" (onClick)="addPropertyGroup()">
-  <span class="material-icons-reg">{{mIcons.add}}</span>
-  <span>Add group</span>
-</p-button>
+<ng-container *ngIf="!isProduct">
+  <p-button [text]="true" (onClick)="addPropertyGroup()">
+    <span class="material-icons-reg">{{mIcons.add}}</span>
+    <span>Add group</span>
+  </p-button>
+</ng-container>

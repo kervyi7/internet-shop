@@ -5,20 +5,24 @@ import { RouterModule } from '@angular/router';
 import { MainComponent } from './main.component';
 import { MainRoutingModule } from './main-routing.module';
 import { ButtonModule } from 'primeng/button';
-
+import { HomeComponent } from './home/home.component';
+import { CarouselModule } from 'primeng/carousel';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [
-    MainComponent
+    MainComponent,
+    HomeComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
     MainRoutingModule,
-    ButtonModule
+    ButtonModule,
+    CarouselModule,
   ],
-  providers: [],
+  providers: [DialogService],
   exports: [
     MainComponent
   ]

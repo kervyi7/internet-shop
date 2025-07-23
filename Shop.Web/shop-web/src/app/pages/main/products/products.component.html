@@ -1,8 +1,47 @@
-<div class="card flex justify-content-center">
-  <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+<div class="breadcrumb-params-container">
+  <div class="breadcrumb-container">
+    <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+  </div>
+  <div class="paginator-filters">
+    <p-button (onClick)="changeFiltersMenuState()">Filters</p-button>
+    <p-dropdown [options]="sortBy" optionLabel="label" optionValue="label"
+      (ngModelChange)="onCountChange()"></p-dropdown>
+    <p-paginator [first]="skip" [rows]="countPerPage" [totalRecords]="count" (onPageChange)="onPageChange($event)"
+      [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+      [showPageLinks]="false"></p-paginator>
+    <p-dropdown [options]="countOptions" optionLabel="label" optionValue="value" [(ngModel)]="countPerPage"
+      (ngModelChange)="onCountChange()"></p-dropdown>
+  </div>
 </div>
-<div *ngFor="let product of products" (click)="goToProduct(product)">
-  <img [src]="product.images[0].smallBody">
-  <div>{{product.name}}</div>
-  <div>{{product.price}}</div>
+<div class="filters-products-container">
+  <div [class.filters-layout]="isFiltersOpen">
+    <div class="filters-container" [@openClose]="isFiltersOpen ? 'open' : 'closed'">
+      <div *ngIf="isFiltersOpen">
+        <p-button (onClick)="changeFiltersMenuState()">Close</p-button>
+        <!-- <shop-property-filters [template]="template" [properties]="templateProperties"></shop-property-filters> -->
+      </div>
+    </div>
+  </div>
+  <div class="products-container">
+    <div *ngFor="let product of products" (click)="goToProduct(product)" class="product">
+      <img [src]="product.images[0].smallBody">
+      <div class="data">
+        <h2>{{product.name}}</h2>
+        <shop-properties-list [template]="template" [properties]="getProperties(product)" [isProduct]="true"
+          [isEditable]="false" [isList]="false"></shop-properties-list>
+      </div>
+      <div class="price-container">
+        <ng-container *ngIf="product.discountPrice; else price">
+          <span class="discount">{{product.discountPrice}}{{product.currency}}</span>
+          <span class="through-lined-price">{{product.price}}{{product.currency}}</span>
+        </ng-container>
+        <ng-template #price>
+          <span class="regular-price">
+            {{product.price}}{{product.currency}}
+          </span>
+        </ng-template>
+        <p-button>Add to Cart</p-button>
+      </div>
+    </div>
+  </div>
 </div>

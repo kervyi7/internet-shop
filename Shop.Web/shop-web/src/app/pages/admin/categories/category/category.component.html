@@ -4,8 +4,7 @@
 </p-button>
 <div *ngIf="id && (!category.propertyTemplate || !category.image)" class="flex">
   <h2 class="danger">{{lang.warnings.categoryIsIncomplete}}</h2>
-  <shop-tooltip-icon
-    text="{{lang.tooltips.categoryWarn}}"></shop-tooltip-icon>
+  <shop-tooltip-icon text="{{lang.tooltips.categoryWarn}}"></shop-tooltip-icon>
 </div>
 <div class="info-photo-container">
   <div>
@@ -55,7 +54,8 @@
       </p-button>
     </div>
     <div *ngIf="template">
-      <shop-properties-list [template]="template" [properties]="properties" [isProduct]="false"></shop-properties-list>
+      <shop-properties-list [template]="template" [properties]="properties" [isProduct]="false" [isEditable]="true"
+        [isList]="true"></shop-properties-list>
     </div>
   </div>
 </div>

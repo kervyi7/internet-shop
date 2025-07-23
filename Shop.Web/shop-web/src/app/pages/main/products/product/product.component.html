@@ -1,27 +1,63 @@
-<div class="card flex justify-content-center">
-  <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+<div class="breadcrumb-container">
+  <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
 </div>
-<div *ngIf="product">
-  <div>{{product.code}}</div>
-  <div>{{product.name}}</div>
-  <div>{{product.id}}</div>
-  <div>{{product.price}}</div>
-  <div>{{product.discountPrice}}</div>
-  <div>{{product.brand.name}}</div>
-  <div>{{product.type.name}}</div>
-  <div>{{product.category.name}}</div>
-  <div>{{product.count}}</div>
-  <div>{{product.description}}</div>
-  <div *ngFor="let property of product.stringProperties">
-    {{property.name}} {{property.value}}
+<div *ngIf="product" class="product-wrapper">
+  <div class="gallery-main-info-container">
+    <p-galleria [value]="imagesBody" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '500px' }"
+      [numVisible]="5">
+      <ng-template pTemplate="item" let-item>
+        <img [src]="item.itemImageSrc" style="width: 100%;" />
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+          <img [src]="item.thumbnailImageSrc" style="height: 50px;" />
+        </div>
+      </ng-template>
+    </p-galleria>
+    <div class="info-container">
+      <h1>{{product.name}}</h1>
+      <div>
+        <ng-container *ngIf="product.count; else outOfStock">
+          <span class="count">In stock ({{product.count}} left)</span>
+        </ng-container>
+        <ng-template #outOfStock>
+          <span class="count">Out of stock</span>
+        </ng-template>
+      </div>
+      <div class="price-container">
+        <ng-container *ngIf="product.discountPrice; else price">
+          <span class="discount">{{product.discountPrice}}{{product.currency}}</span>
+          <span class="through-lined-price">{{product.price}}{{product.currency}}</span>
+        </ng-container>
+        <ng-template #price>
+          <span class="regular-price">
+            {{product.price}} {{product.currency}}
+          </span>
+        </ng-template>
+      </div>
+      <p-button [style]="{ 'width': '-webkit-fill-available', 'display':'block','border-radius': '8px' }">
+        Add to cart
+      </p-button>
+    </div>
   </div>
-  <div *ngFor="let property of product.dateProperties">
-    {{property.name}} {{property.value}}
-  </div>
-  <div *ngFor="let property of product.boolProperties">
-    {{property.name}} {{property.value}}
-  </div>
-  <div *ngFor="let property of product.decimalProperties">
-    {{property.name}} {{property.value}}
+  <div class="property-description-container">
+    <div *ngIf="product.description" class="description-container">
+      <h2>Description of {{product.name}}</h2>
+      <p>{{product.description}}</p>
+    </div>
+    <div class="properties-container">
+      <h2>Properties</h2>
+      <div class="default-values-container">
+        <span>Brand:</span>
+        <span>{{product.brand.name}}</span>
+        <span>Type:</span>
+        <span>{{product.type.name}}</span>
+        <span>Category:</span>
+        <span>{{product.category.name}}</span>
+      </div>
+      <shop-properties-list [template]="template" [properties]="getProperties(product)" [isProduct]="true"
+        [isEditable]="false" [isList]="true">
+      </shop-properties-list>
+    </div>
   </div>
 </div>

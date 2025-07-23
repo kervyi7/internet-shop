@@ -33,7 +33,7 @@ export class AdminComponent extends BaseCompleteComponent {
     super();
   }
 
-  onAnimationEvent(event: AnimationEvent) {
+  public onAnimationEvent(event: AnimationEvent): void {
     event.fromState == 'closed' ? this.showButtonNames = true : this.showButtonNames = false;
   }
 

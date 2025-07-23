@@ -1,24 +1,31 @@
-<main>
-  <button *ngIf="isAuthorized; else loginButton" (click)="goToAdmin()">Go to Admin</button>
+<header>
+  <img class="logo" src="assets/img/logo.svg" (click)="goToHome()">
+  <p-button [text]="true" class="button">
+    <span class="material-icons-outline">shopping_cart</span>
+  </p-button>
+  <p-button [text]="true" class="button" *ngIf="isAuthorized; else loginButton" (click)="goToAdmin()">
+    <span class="material-icons-outline">account_circle</span>
+  </p-button>
   <ng-template #loginButton>
-    <button (click)="goToLogin()">Go to Login</button>
+    <p-button [text]="true" (click)="goToLogin()">Go to Login</p-button>
   </ng-template>
-  <h1>Categories:</h1>
-  <div class="flex">
-    <div class="category-wrapper cursor-pointer" *ngFor="let category of categories"
-      (click)="goToProductList(category.name)">
-      <img [src]="category.image.smallBody">
-      <p>{{category.name}}</p>
-    </div>
-  </div>
-  <h1>Products:</h1>
-  <div class="flex">
-    <div class="cursor-pointer" *ngFor="let product of productsWithSale" (click)="goToProduct(product)">
-      <img *ngIf="product.images.length; else plug" [src]="product.images[0].smallBody" class="productImage">
-      <ng-template #plug>
-        <img *ngIf="product.images; else plug" src="assets/img/nopicture.svg" class="productImage">
-      </ng-template>
-      <p>{{product.name}}</p>
-    </div>
-  </div>
+</header>
+<main>
+  <router-outlet></router-outlet>
 </main>
+<footer>
+  <div class="logo">
+    <img src="assets/img/logo.svg" (click)="goToHome()">
+  </div>
+  <div class="contacts">
+    <h1>Contacts</h1>
+    <span>+380888888888</span>
+    <span>mail&commat;gmail.com</span>
+  </div>
+  <div class="social-networks">
+    <img src="assets/img/social-networks/instagram.svg">
+    <img src="assets/img/social-networks/facebook.svg">
+    <img src="assets/img/social-networks/x.svg">
+    <img src="assets/img/social-networks/youtube.svg">
+  </div>
+</footer>

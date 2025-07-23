@@ -1,0 +1,111 @@
+.first-section {
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .products-container {
+    display: flex;
+    gap: 60px;
+    justify-content: center;
+    flex-direction: column;
+    flex-grow: 1;
+    background-size: 70px 70px;
+    background-position: -19px -19px;
+    background-image: radial-gradient(#b0b0b0 1px, #ffffff 0);
+
+    .product-wrapper {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition-duration: 0.5s;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 10px;
+
+      &:hover {
+        box-shadow: 0px 0px 15px 0px #bfbfbf;
+        transform: scale(1.025);
+      }
+
+      .discount-label {
+        background-color: #9E1717;
+        position: absolute;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        top: 12px;
+        right: 12px;
+      }
+
+      .name-price {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .price {
+          font-size: 20px;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .flex {
+    display: flex;
+    gap: 16px;
+  }
+
+  .category-wrapper {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 60px;
+    }
+
+    p {
+      text-align: center;
+    }
+  }
+
+  .product-image {
+    width: 250px;
+  }
+
+  .categories-container {
+    color: #fff;
+    background-color: #000;
+    padding: 20px 20px;
+    display: flex;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+
+    .button {
+      span {
+        color: #fff;
+        width: 50px;
+      }
+    }
+
+    .category-wrapper {
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .first-section {
+    height: inherit;
+  }
+}
