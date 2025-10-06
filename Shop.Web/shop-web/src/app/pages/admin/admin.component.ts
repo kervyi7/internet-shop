@@ -52,4 +52,8 @@ export class AdminComponent extends BaseCompleteComponent {
   public openSettings(): void {
     this._router.navigate(['/admin/settings']);
   }
+
+  public openHomePage(): void {
+    this._router.navigate(['/']);
+  }
 }

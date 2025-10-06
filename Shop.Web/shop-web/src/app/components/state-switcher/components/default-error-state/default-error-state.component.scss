@@ -1,0 +1,30 @@
+$logo-size: 114px;
+
+:host {
+  height: 100%;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+.not-found {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    .logo {
+      width: $logo-size;
+      height: $logo-size;
+    }
+
+    .title {
+      text-align: center;
+      color: black;
+    }
+  }
+}

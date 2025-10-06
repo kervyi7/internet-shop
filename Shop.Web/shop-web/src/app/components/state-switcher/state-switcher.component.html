@@ -1,0 +1,24 @@
+<div class="state-switcher h-full w-full position-relative">
+  <ng-container *ngIf="currentState === STATE_TYPES.LOADING || currentState === STATE_TYPES.LOADING_OVERLAY">
+    <ng-container [ngTemplateOutlet]="loadingStateContent ? loadingStateContent.templateRef : defaultLoadingSpinnerContent"> </ng-container>
+  </ng-container>
+  <ng-container *ngIf="currentState === STATE_TYPES.EMPTY">
+    <ng-container [ngTemplateOutlet]="emptyStateContent ? emptyStateContent.templateRef : defaultEmptyState"> </ng-container>
+  </ng-container>
+  <ng-container *ngIf="currentState === STATE_TYPES.ERROR">
+    <ng-container [ngTemplateOutlet]="errorStateContent ? errorStateContent.templateRef : defaultErrorState"> </ng-container>
+  </ng-container>
+  <ng-container *ngIf="currentState === STATE_TYPES.DEFAULT || currentState === STATE_TYPES.LOADING_OVERLAY">
+    <ng-container [ngTemplateOutlet]="contentState ? contentState.templateRef : defaultEmptyState"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #defaultEmptyState>
+  <app-default-empty-state></app-default-empty-state>
+</ng-template>
+<ng-template #defaultErrorState>
+  <app-default-error-state (reloadWidget)="reloadWidget.emit('')"></app-default-error-state>
+</ng-template>
+<ng-template #defaultLoadingSpinnerContent>
+  <app-default-loading-state [verticalPadding]="loadingVerticalPadding" [isOverlay]="isShowLoadingOverlay"></app-default-loading-state>
+</ng-template>

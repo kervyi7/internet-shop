@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductDataService } from '../../../services/data/product-data.service';
 import { Router } from '@angular/router';
-import { takeUntil } from 'rxjs';
+import { Observable, takeUntil } from 'rxjs';
 import { Converter } from '../../../common/converter';
 import { ICategory } from '../../../models/interfaces/category';
 import { IProduct } from '../../../models/interfaces/product';
 import { CategoryDataService } from '../../../services/data/category-data.service';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { CarouselResponsiveOptions } from 'primeng/carousel';
+import { WidgetState, WidgetStateWithData } from 'src/app/components/state-switcher/state-switcher.model';
+import { withState } from 'src/app/components/state-switcher/utils/widget-state';
 
 @Component({
   selector: 'shop-home',
@@ -18,7 +20,7 @@ import { CarouselResponsiveOptions } from 'primeng/carousel';
 export class HomeComponent extends BaseCompleteComponent implements OnInit {
   public categories: ICategory[];
   public productsWithDiscount: IProduct[];
-  responsiveOptions: CarouselResponsiveOptions[] = [{
+  public responsiveOptions: CarouselResponsiveOptions[] = [{
     breakpoint: '1699px',
     numVisible: 4,
     numScroll: 1
@@ -39,6 +41,35 @@ export class HomeComponent extends BaseCompleteComponent implements OnInit {
     numScroll: 1
   }
   ];
+
+  public categoriesState$ = this._categoryDataService.getAll().pipe(
+    withState((data: ICategory[]) =>
+      data.map(item => ({
+        ...item,
+        image: {
+          ...item.image,
+          smallBody: Converter.toFileSrc(item.image.mimeType, item.image.smallBody)
+        }
+      }))
+    )
+  );
+
+  public productsWithDiscountState$ = this._productDataService.getWithDiscount().pipe(
+    withState((data: IProduct[]) =>
+      data.map(item => ({
+        ...item,
+        images: item.images?.length
+          ? [{
+              ...item.images[0],
+              body: Converter.toFileSrc(item.images[0].mimeType, item.images[0].body)
+            }]
+          : [{
+              ...item.images[0],
+              body: 'assets/img/nopicture.svg'//add to EMPTY_STATE_IMAGE
+            }]
+      }))
+    )
+  );
 
   constructor(
     private _productDataService: ProductDataService,
@@ -65,13 +96,17 @@ export class HomeComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private loadCategories(): void {
-    this._categoryDataService.getAll()
-      .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: ICategory[]) => {
-        data.map((item: ICategory) => item.image.smallBody = Converter.toFileSrc(item.image.mimeType, item.image.smallBody));
-        this.categories = data;
-        this._cd.detectChanges();
-      });
+    this.categoriesState$ = this._categoryDataService.getAll().pipe(
+      withState((data: ICategory[]) =>
+        data.map(item => ({
+          ...item,
+          image: {
+            ...item.image,
+            smallBody: Converter.toFileSrc(item.image.mimeType, item.image.smallBody)
+          }
+        }))
+      )
+    );
   }
 
   private loadProductsWithDiscount(): void {

@@ -12,7 +12,7 @@ export interface IProduct extends ICodeName, IPropertyAll {
   count: number;
   description: string;
   currency: string;
-  images?: IImage[];
+  images: IImage[];
 }
 
 export interface IProductResponse extends IPropertyResponse, IProduct {

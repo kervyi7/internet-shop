@@ -8,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { HomeComponent } from './home/home.component';
 import { CarouselModule } from 'primeng/carousel';
 import { DialogService } from 'primeng/dynamicdialog';
+import { StateSwitcherModule } from 'src/app/components/state-switcher/state-switcher.module';
+import { CartDialogModule } from 'src/app/components/dialogs/cart-dialog/cart-dialog.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { DialogService } from 'primeng/dynamicdialog';
     MainRoutingModule,
     ButtonModule,
     CarouselModule,
+    StateSwitcherModule,
+    CartDialogModule
   ],
   providers: [DialogService],
   exports: [

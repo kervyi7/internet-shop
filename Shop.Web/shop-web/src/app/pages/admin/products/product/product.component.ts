@@ -222,7 +222,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       this._cd.detectChanges();
       return;
     }
-    const product: IProduct = { ...this.productForm.getRawValue() };
+    const product: IProduct = { ...this.productForm.getRawValue(), images: [] };
     if (product.discountPrice >= product.price) {
       this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
       this.productForm.controls.discountPrice.setErrors({'incorrect': true});
