@@ -13,6 +13,8 @@ export interface IProduct extends ICodeName, IPropertyAll {
   description: string;
   currency: string;
   images: IImage[];
+  selected?: boolean;
+  selectedCount?: number;
 }
 
 export interface IProductResponse extends IPropertyResponse, IProduct {

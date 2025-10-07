@@ -70,6 +70,23 @@ footer {
   }
 }
 
+.cart-quantity {
+  position: absolute;
+  font-size: 12px !important;
+  background: #9E1717;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  right: 15%;
+  top: 5%;
+}
+
 @media only screen and (max-width: 1023px) {
   header {
     padding: 0 20px;

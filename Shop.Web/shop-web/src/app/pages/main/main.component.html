@@ -2,12 +2,15 @@
   <img class="logo" src="assets/img/logo.svg" (click)="goToHome()">
   <p-button [text]="true" class="button">
     <span class="material-icons-outline" (click)="openCart()">shopping_cart</span>
+    <span *ngIf="totalQuantity$ | async as quantity" class="cart-quantity">
+      {{ quantity }}
+    </span>
   </p-button>
   <p-button [text]="true" class="button" *ngIf="isAuthorized; else loginButton" (click)="goToAdmin()">
     <span class="material-icons-outline">account_circle</span>
   </p-button>
   <ng-template #loginButton>
-    <p-button [text]="true" (click)="goToLogin()">Go to Login</p-button>
+    <p-button [text]="true" (click)="goToLogin()">Sign In</p-button>
   </ng-template>
 </header>
 <main>

@@ -4,6 +4,8 @@ import { MainComponent } from './main.component';
 import { ProductsModule } from './products/products.module';
 import { ProductComponent } from './products/product/product.component';
 import { HomeComponent } from './home/home.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { CheckoutModule } from 'src/app/pages/main/checkout/checkout.module';
 
 const routes: Routes = [
   {
@@ -13,6 +15,11 @@ const routes: Routes = [
       {
         path: '',
         component: HomeComponent,
+      },
+      {
+        path: 'checkout',
+        loadChildren: (): Promise<Type<CheckoutModule>> =>
+          import('src/app/pages/main/checkout/checkout.module').then(m => m.CheckoutModule)
       },
       {
         path: ':category',

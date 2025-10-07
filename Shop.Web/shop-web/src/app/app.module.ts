@@ -15,7 +15,7 @@ export function init(appConfigService: AppConfigService): Function {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,37 @@
+<div class="main-block p-4 m-2 mx-auto">
+  <h3>Order Summary</h3>
+  <div class="flex flex-column gap-2 justify-content-between summary">
+    <div class="flex flex-column gap-2">
+      <div class="flex justify-content-between">
+        <span>Items:</span>
+        <span>{{ itemsAmount }} {{ currency }}</span>
+      </div>
+      <div class="flex justify-content-between">
+        <span>Shipping:</span>
+        <span>{{ shippingAmount }} {{ currency }}</span>
+      </div>
+    </div>
+    <div class="flex flex-column gap-2">
+      <div class="flex justify-content-between text-lg font-semibold">
+        <span>Total:</span>
+        <span>{{ itemsAmount + shippingAmount }} {{ currency }}</span>
+      </div>
+      <p-button
+        *ngIf="isCart; else payButton"
+        label="Checkout"
+        styleClass="w-full"
+        (click)="redirectToCheckout()"
+      />
+      <ng-template #payButton>
+        <p-button label="Pay" styleClass="w-full" (click)="pay()"
+      /></ng-template>
+      <p-button
+        *ngIf="isCart"
+        label="Continue shopping"
+        styleClass="w-full"
+        (click)="redirectToPrevious()"
+        [text]="true"
+      />
+    </div>
+  </div>
+</div>

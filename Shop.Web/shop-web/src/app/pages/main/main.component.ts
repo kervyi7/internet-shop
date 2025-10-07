@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
-import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Util } from 'src/app/common/util';
-import { CartDialogComponent } from 'src/app/components/dialogs/cart-dialog/cart-dialog.component';
-import { DialogOptions } from 'src/app/models/enums/dialog-options';
+import { CartService } from 'src/app/services/data/cart.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'shop-main',
@@ -14,13 +12,15 @@ import { DialogOptions } from 'src/app/models/enums/dialog-options';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainComponent extends BaseCompleteComponent implements OnInit {
-  private _dialogRef: DynamicDialogRef;
   public isAuthorized: boolean;
+
+  public totalQuantity$ = this.cartService.cart$.pipe(
+    map(items => items.reduce((sum, item) => sum + (item.selectedCount || 1), 0))
+  );
 
   constructor(private _authService: AuthService,
     private _router: Router,
-    private _dialogService: DialogService,
-    private _cd: ChangeDetectorRef) {
+    private cartService: CartService) {
     super();
   }
 
@@ -37,8 +37,7 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public openCart(): void {
-    const config = { header: "Cart", width: DialogOptions.standardWidth, maximizable: false };
-    this._dialogRef = Util.openDialog(this._dialogService, CartDialogComponent, config)
+    this._router.navigate(['/checkout']);
   }
 
   public goToHome(): void {

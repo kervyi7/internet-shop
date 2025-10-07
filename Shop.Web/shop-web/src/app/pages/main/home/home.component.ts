@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductDataService } from '../../../services/data/product-data.service';
 import { Router } from '@angular/router';
-import { Observable, takeUntil } from 'rxjs';
 import { Converter } from '../../../common/converter';
 import { ICategory } from '../../../models/interfaces/category';
 import { IProduct } from '../../../models/interfaces/product';
 import { CategoryDataService } from '../../../services/data/category-data.service';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { CarouselResponsiveOptions } from 'primeng/carousel';
-import { WidgetState, WidgetStateWithData } from 'src/app/components/state-switcher/state-switcher.model';
 import { withState } from 'src/app/components/state-switcher/utils/widget-state';
 
 @Component({
@@ -18,8 +16,6 @@ import { withState } from 'src/app/components/state-switcher/utils/widget-state'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent extends BaseCompleteComponent implements OnInit {
-  public categories: ICategory[];
-  public productsWithDiscount: IProduct[];
   public responsiveOptions: CarouselResponsiveOptions[] = [{
     breakpoint: '1699px',
     numVisible: 4,
@@ -79,8 +75,7 @@ export class HomeComponent extends BaseCompleteComponent implements OnInit {
     super();
   }
   public ngOnInit(): void {
-    this.loadCategories();
-    this.loadProductsWithDiscount();
+    this._cd.detectChanges();
   }
 
   public goToProductList(categoryName: string): void {
@@ -93,33 +88,5 @@ export class HomeComponent extends BaseCompleteComponent implements OnInit {
 
   public getDiscountPercentage(product: IProduct): number {
     return Math.round(100 - (product.discountPrice / product.price * 100));
-  }
-
-  private loadCategories(): void {
-    this.categoriesState$ = this._categoryDataService.getAll().pipe(
-      withState((data: ICategory[]) =>
-        data.map(item => ({
-          ...item,
-          image: {
-            ...item.image,
-            smallBody: Converter.toFileSrc(item.image.mimeType, item.image.smallBody)
-          }
-        }))
-      )
-    );
-  }
-
-  private loadProductsWithDiscount(): void {
-    this._productDataService.getWithDiscount()
-      .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: IProduct[]) => {
-        data.map((item: IProduct) => {
-          if (item.images.length) {
-            item.images[0].body = Converter.toFileSrc(item.images[0].mimeType, item.images[0].body);
-          }
-        });
-        this.productsWithDiscount = data;
-        this._cd.detectChanges();
-      });
   }
 }

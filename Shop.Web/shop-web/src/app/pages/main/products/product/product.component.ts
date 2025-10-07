@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductDataService } from '../../../../services/data/product-data.service';
 import { Converter } from '../../../../common/converter';
@@ -8,13 +13,17 @@ import { BaseCompleteComponent } from '../../../../components/base/base-complete
 import { MenuItem } from 'primeng/api';
 import { takeUntil } from 'rxjs';
 import { GalleriaResponsiveOptions } from 'primeng/galleria';
-import { IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
+import {
+  IProperty,
+  IPropertyTemplate,
+} from '../../../../models/interfaces/property';
+import { CartService } from 'src/app/services/data/cart.service';
 
 @Component({
   selector: 'shop-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductComponent extends BaseCompleteComponent implements OnInit {
   private _code: string;
@@ -26,10 +35,13 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public imagesBody: any[] = [];
   public template: IPropertyTemplate;
 
-  constructor(private _productDataService: ProductDataService,
+  constructor(
+    private _productDataService: ProductDataService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _cd: ChangeDetectorRef) {
+    private _cd: ChangeDetectorRef,
+    private _cartService: CartService
+  ) {
     super();
   }
 
@@ -43,16 +55,16 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
-        numVisible: 5
+        numVisible: 5,
       },
       {
         breakpoint: '768px',
-        numVisible: 3
+        numVisible: 3,
       },
       {
         breakpoint: '560px',
-        numVisible: 1
-      }
+        numVisible: 1,
+      },
     ];
   }
 
@@ -65,25 +77,47 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     return properties;
   }
 
+  public addToCart(): void {
+    this._cartService.addToCart(this.product);
+  }
+
   private loadProduct(code: string): void {
-    this._productDataService.getByCode(code)
+    this._productDataService
+      .getByCode(code)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IProduct) => {
-        data.images.map((image: IImage) => image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody));
+        data.images.map(
+          (image: IImage) =>
+            (image.smallBody = Converter.toFileSrc(
+              image.mimeType,
+              image.smallBody
+            ))
+        );
         data.images.map((image: IImage) => {
           image.body = Converter.toFileSrc(image.mimeType, image.body);
           const imageForGallery = {
             itemImageSrc: image.body,
             thumbnailImageSrc: image.smallBody,
             alt: 'Description',
-            title: 'Title'
-          }
+            title: 'Title',
+          };
           this.imagesBody.push(imageForGallery);
         });
         this.template = data.category.propertyTemplate;
         this.product = data;
         //this.template.push(...this.getProperties(product));
-        this.items = [{ label: this.product.category.name, routerLink: `/${this.product.category.name}` }, { label: this.product.brand.name, routerLink: `/${this.product.category.name}`, queryParams: { ['brand']: this.product.brand.name } }, { label: this.product.name }];
+        this.items = [
+          {
+            label: this.product.category.name,
+            routerLink: `/${this.product.category.name}`,
+          },
+          {
+            label: this.product.brand.name,
+            routerLink: `/${this.product.category.name}`,
+            queryParams: { ['brand']: this.product.brand.name },
+          },
+          { label: this.product.name },
+        ];
         this._cd.detectChanges();
       });
   }

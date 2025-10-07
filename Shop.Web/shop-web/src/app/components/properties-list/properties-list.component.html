@@ -8,7 +8,7 @@
 </div>
 <div [class.groups-container]="!isList">
   <ng-container *ngFor="let group of groups">
-    <div *ngIf="group.properties.length" class="inputs-wrapper" [class.list-wrapper]="isList">
+    <div class="inputs-wrapper" [class.list-wrapper]="isList">
       <div class="template-group-container">
         <h4>{{group.name}}</h4>
         <ng-container *ngIf="!isProduct">

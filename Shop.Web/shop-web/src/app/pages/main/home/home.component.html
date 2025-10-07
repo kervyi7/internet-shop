@@ -1,43 +1,68 @@
-<div class="first-section">
-
-  <app-state-switcher [state]="productsWithDiscountState$ | async">
-    <ng-container *appContentState="let state">
-      <p-carousel
-        [value]="state.data"
-        [numVisible]="5"
-        [numScroll]="5"
-        [circular]="true"
-        [responsiveOptions]="responsiveOptions"
-        [autoplayInterval]="3000"
-      >
-        <ng-template let-product pTemplate="productsWithDiscount">
-          <div class="product-wrapper" (click)="goToProduct(product)">
-            <img
-              [src]="product.images[0].body"
-              class="product-image"
-              [alt]="product.name"
-            />
-            <div class="discount-label">-{{ getDiscountPercentage(product) }}%</div>
-            <div class="name-price">
-              <p>{{ product.name }}</p>
-              <p class="price">{{ product.discountPrice }} {{ product.currency }}</p>
+<ng-container *ngIf="productsWithDiscountState$ | async as state">
+  <div class="first-section">
+    <app-state-switcher [state]="state">
+      <ng-container *appContentState>
+        <p-carousel
+          *ngIf="state?.data.length > 1; else oneItem"
+          [value]="state?.data"
+          [numVisible]="5"
+          [numScroll]="5"
+          [circular]="true"
+          [responsiveOptions]="responsiveOptions"
+          [autoplayInterval]="3000"
+        >
+          <ng-template let-product pTemplate="item">
+            <div class="product-wrapper" (click)="goToProduct(product)">
+              <img
+                [src]="product.images[0].body"
+                class="product-image border-round-sm"
+                [alt]="product.name"
+              />
+              <div class="discount-label">
+                -{{ getDiscountPercentage(product) }}%
+              </div>
+              <div class="name-price">
+                <p>{{ product.name }}</p>
+                <p class="price">
+                  {{ product.discountPrice }} {{ product.currency }}
+                </p>
+              </div>
+            </div>
+          </ng-template>
+        </p-carousel>
+        <ng-template #oneItem>
+          <div class="flex justify-content-center">
+            <div class="product-wrapper" (click)="goToProduct(state.data[0])">
+              <img
+                [src]="state.data[0].images[0].body"
+                class="product-image border-round-sm"
+                [alt]="state.data[0].name"
+              />
+              <div class="discount-label">
+                -{{ getDiscountPercentage(state.data[0]) }}%
+              </div>
+              <div class="name-price">
+                <p>{{ state.data[0].name }}</p>
+                <p class="price">
+                  {{ state.data[0].discountPrice }} {{ state.data[0].currency }}
+                </p>
+              </div>
             </div>
           </div>
         </ng-template>
-      </p-carousel>
-    </ng-container>
-  </app-state-switcher>
-
-  <ng-container *ngIf="(categoriesState$ | async)?.data as data">
-    <div class="flex categories-container" *ngIf="data.length > 0">
-      <div
-        class="category-wrapper"
-        *ngFor="let category of data"
-        (click)="goToProductList(category.name)"
-        >
-        <img [src]="category.image.smallBody" />
-        <p>{{ category.name }}</p>
-      </div>
+      </ng-container>
+    </app-state-switcher>
+  </div>
+</ng-container>
+<ng-container *ngIf="(categoriesState$ | async)?.data as data">
+  <div class="flex categories-container" *ngIf="data.length > 0">
+    <div
+      class="category-wrapper"
+      *ngFor="let category of data"
+      (click)="goToProductList(category.name)"
+    >
+      <img [src]="category.image.smallBody" />
+      <p>{{ category.name }}</p>
     </div>
-  </ng-container>
-</div>
+  </div>
+</ng-container>

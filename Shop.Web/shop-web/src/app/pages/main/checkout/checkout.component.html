@@ -1,0 +1,21 @@
+<div class="flex flex-column gap-3 lg:gap-7">
+  <div class="steps flex gap-6 lg:w-6" *ngIf="!isMobile">
+    <span
+      *ngFor="let step of steps; let i = index"
+      (click)="goToStep(step, i)"
+      [class.active]="isActive(step.route)"
+      [class.disabled]="i > currentStepIndex"
+    >
+      {{ step.label }}
+    </span>
+  </div>
+
+  <div class="steps flex justify-content-center" *ngIf="isMobile">
+    <span class="active">
+      {{ steps[currentStepIndex]?.label }}
+    </span>
+  </div>
+  <div class="m-auto w-11 lg:w-9">
+    <router-outlet></router-outlet>
+  </div>
+</div>
