@@ -17,6 +17,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CartItemComponent } from 'src/app/components/cart-item/cart-item.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { OrderSummaryComponent } from 'src/app/components/order-summary/order-summary.component';
+import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/discounted-widget.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { OrderSummaryComponent } from 'src/app/components/order-summary/order-su
     InputTextareaModule,
     CartItemComponent,
     OrderSummaryComponent,
-    CheckboxModule
+    CheckboxModule,
+    DiscountedWidgetComponent
   ],
   providers: [DialogService],
   exports: [

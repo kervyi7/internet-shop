@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { PropertyFiltersModule } from '../../../components/property-filters/property-filters.module';
 import { PaginatorModule } from 'primeng/paginator';
 import { GalleriaModule } from 'primeng/galleria';
+import { FiltersListComponent } from 'src/app/components/filters-list/filters-list.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { GalleriaModule } from 'primeng/galleria';
     ButtonModule,
     PropertyFiltersModule,
     PaginatorModule,
-    GalleriaModule
+    GalleriaModule,
+    FiltersListComponent
   ],
   providers: [DialogService],
   exports: [

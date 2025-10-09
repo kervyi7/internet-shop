@@ -22,6 +22,7 @@
   background-size: 70px 70px;
   background-position: -19px -19px;
   background-image: radial-gradient(#b0b0b0 1px, #ffffff 0);
+  min-height: 300px;
 
   .filters-layout {
     position: absolute;
@@ -35,12 +36,14 @@
 
   .filters-container {
     position: absolute;
+    padding: 20px;
     width: 320px;
     height: 100vh;
     top: 0;
     z-index: 11;
     left: -320px;
     background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
 
     .close-button {
       position: absolute;
@@ -57,11 +60,12 @@
     .product {
       display: flex;
       justify-content: space-around;
-      height: 150px;
+      height: 200px;
       overflow: hidden;
       cursor: pointer;
       transition-duration: 0.25s;
       border-radius: 8px;
+      gap: 12px;
 
       &:hover {
         transform: scale(1.025);
@@ -69,7 +73,7 @@
       }
 
       img {
-        width: 150px;
+        width: 200px;
       }
 
       .data {

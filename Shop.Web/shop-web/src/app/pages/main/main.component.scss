@@ -18,6 +18,9 @@ header {
     transform: translateX(-50%);
     cursor: pointer;
   }
+  ::ng-deep .p-button {
+    color: #000;
+  }
 
   .button {
     span {
@@ -73,7 +76,7 @@ footer {
 .cart-quantity {
   position: absolute;
   font-size: 12px !important;
-  background: #9E1717;
+  background: #9e1717;
   min-width: 20px;
   min-height: 20px;
   padding: 4px;

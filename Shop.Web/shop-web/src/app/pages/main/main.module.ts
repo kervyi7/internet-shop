@@ -9,6 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { CarouselModule } from 'primeng/carousel';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StateSwitcherModule } from 'src/app/components/state-switcher/state-switcher.module';
+import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/discounted-widget.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { StateSwitcherModule } from 'src/app/components/state-switcher/state-swi
     MainRoutingModule,
     ButtonModule,
     CarouselModule,
-    StateSwitcherModule
+    StateSwitcherModule,
+    DiscountedWidgetComponent
   ],
   providers: [DialogService],
   exports: [

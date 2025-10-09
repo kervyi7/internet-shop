@@ -9,6 +9,7 @@ using System.Linq;
 using Shop.Server.Common;
 using System.Collections.Generic;
 using System;
+using Shop.Common.Constants;
 
 namespace Shop.Server.Controllers.Admin
 {
@@ -37,9 +38,9 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPost("category/{category}")]
-        public async Task<ActionResult<ProductDto[]>> GetByCategory(string category, PaginationDto model)
+        public async Task<ActionResult<PageDataDto<IEnumerable<ProductDto>>>> GetByCategory(string category, [FromBody] ProductFilterRequest model)
         {
-            var products = _dataContext.Products
+            var query = _dataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
@@ -50,35 +51,26 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image)
-                .Where(x => x.Category.Name == category);
-            var images = await products.OrderByDescending(x => x.Id)
-            .Skip(model.Skip)
-            .Take(model.Count)
-            .ToListAsync();
-            var count = products.Count();
+                .Where(x => x.Category.Name == category)
+                .AsQueryable();
+
+            query = ApplyFilters(query, model);
+
+            var totalCount = await query.CountAsync();
+
+            var products = await query
+                .OrderByDescending(x => x.Id)
+                .Skip(model.Skip)
+                .Take(model.Count)
+                .ToListAsync();
+
             var response = new PageDataDto<IEnumerable<ProductDto>>
             {
                 Data = products.ToViewModels(),
-                Count = count
+                Count = totalCount
             };
-            return Ok(response);
-        }
 
-        [HttpGet("category/{category}/filters")]
-        public async Task<ActionResult<ProductDto[]>> GetByFilters(string category)
-        {
-            var products = await _dataContext.Products
-                .Include(x => x.Brand)
-                .Include(x => x.Type)
-                .Include(x => x.Category)
-                .Include(x => x.StringProperties.Where(x => x.IsTitle))
-                .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
-                .Include(x => x.BoolProperties.Where(x => x.IsTitle))
-                .Include(x => x.DateProperties.Where(x => x.IsTitle))
-                .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
-                .ThenInclude(x => x.Image).Where(x => x.Category.Name == category)
-                .ToListAsync();
-            return Ok(products.ToViewModels());
+            return Ok(response);
         }
 
         [HttpGet("discounted")]
@@ -113,6 +105,69 @@ namespace Shop.Server.Controllers.Admin
                 throw new NotFoundException(nameof(Product), nameof(Product.Code), code);
             }
             return Ok(product.ToViewModel());
+        }
+
+        private IQueryable<Product> ApplyFilters(IQueryable<Product> query, ProductFilterRequest model)
+        {
+            if (model.BrandIds?.Any() == true)
+                query = query.Where(p => model.BrandIds.Contains(p.Brand.Id));
+
+            if (model.TypeIds?.Any() == true)
+                query = query.Where(p => model.TypeIds.Contains(p.Type.Id));
+
+            if (model.PriceFrom.HasValue)
+                query = query.Where(p => p.Price >= model.PriceFrom.Value);
+
+            if (model.PriceTo.HasValue)
+                query = query.Where(p => p.Price <= model.PriceTo.Value);
+
+            foreach (var filter in model.Properties)
+                query = ApplyPropertyFilter(query, filter);
+
+            return query;
+        }
+
+        private IQueryable<Product> ApplyPropertyFilter(IQueryable<Product> query, PropertyFilterDto filter)
+        {
+            switch (filter.Type)
+            {
+                case PropertyTypes.String:
+                    return query.Where(p =>
+                        p.StringProperties.Any(sp => sp.Name == filter.Name && filter.Values.Contains(sp.Value)));
+                case PropertyTypes.Number:
+                    if (filter.Values.Count == 2)
+                    {
+                        var min = decimal.Parse(filter.Values[0]);
+                        var max = decimal.Parse(filter.Values[1]);
+                        return query.Where(p =>
+                            p.DecimalProperties.Any(dp => dp.Name == filter.Name && dp.Value >= min && dp.Value <= max));
+                    }
+                    else
+                    {
+                        var decimalValues = filter.Values.Select(decimal.Parse).ToList();
+                        return query.Where(p =>
+                            p.DecimalProperties.Any(dp => dp.Name == filter.Name && decimalValues.Contains(dp.Value)));
+                    }
+                case PropertyTypes.Bool:
+                    var boolValues = filter.Values.Select(bool.Parse).ToList();
+                    return query.Where(p =>
+                        p.BoolProperties.Any(bp => bp.Name == filter.Name && boolValues.Contains(bp.Value)));
+                case PropertyTypes.Date:
+                    if (filter.Values.Count == 2)
+                    {
+                        var from = DateTime.Parse(filter.Values[0]);
+                        var to = DateTime.Parse(filter.Values[1]);
+                        return query.Where(p =>
+                            p.DateProperties.Any(dp => dp.Name == filter.Name && dp.Value >= from && dp.Value <= to));
+                    }
+                    else
+                    {
+                        var dateValues = filter.Values.Select(DateTime.Parse).ToList();
+                        return query.Where(p =>
+                            p.DateProperties.Any(dp => dp.Name == filter.Name && dateValues.Contains(dp.Value)));
+                    }
+            }
+            return query;
         }
     }
 }

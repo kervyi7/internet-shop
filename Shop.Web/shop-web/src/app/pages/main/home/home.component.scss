@@ -1,52 +1,3 @@
-.first-section {
-  height: calc(100vh - 100px - 145px);
-}
-
-.product-wrapper {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition-duration: 0.5s;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 20px 20px;
-  max-width: 300px;
-
-  &:hover {
-    box-shadow: 0px 0px 15px 0px #bfbfbf;
-    transform: scale(1.025);
-  }
-
-  .discount-label {
-    background-color: #9e1717;
-    position: absolute;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    top: 12px;
-    right: 12px;
-  }
-
-  .name-price {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .price {
-      font-size: 20px;
-      margin-top: 0;
-    }
-  }
-}
-
-.flex {
-  display: flex;
-  gap: 16px;
-}
-
 .category-wrapper {
   cursor: pointer;
   display: flex;
@@ -60,10 +11,6 @@
   p {
     text-align: center;
   }
-}
-
-.product-image {
-  width: 280px;
 }
 
 .categories-container {
@@ -88,15 +35,5 @@
     p {
       margin-bottom: 0;
     }
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  .first-section {
-    height: inherit;
-  }
-
-  .product-image {
-    width: 140px;
   }
 }

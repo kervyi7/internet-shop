@@ -111,11 +111,6 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
             label: this.product.category.name,
             routerLink: `/${this.product.category.name}`,
           },
-          {
-            label: this.product.brand.name,
-            routerLink: `/${this.product.category.name}`,
-            queryParams: { ['brand']: this.product.brand.name },
-          },
           { label: this.product.name },
         ];
         this._cd.detectChanges();
