@@ -225,6 +225,7 @@ namespace Shop.Server.Auth
             var identity = await CreateIdentity(applicationUser);
             var securityTokenCode = Guid.NewGuid().ToString();
             identity.AddClaim(new Claim(SecurityTokenType, securityTokenCode));
+            identity.AddClaim(new Claim("Role", applicationUser.RegisterType));
             var now = DateTime.UtcNow;
             var accessExpireTimeSpan = TimeSpan.FromMinutes(_appSettings.AuthConfig.AccessTokenExpireTimeInMinutes);
             var refreshExpireTimeSpan = accessExpireTimeSpan + TimeSpan.FromMinutes(_appSettings.AuthConfig.RefreshTokenExpireTimeInMinutes);
