@@ -1,0 +1,96 @@
+<p-button [text]="true" (onClick)="goToHome()">
+  <span class="material-icons-outline">{{ mIcons.home }}</span>
+</p-button>
+
+<div class="form-container p-3">
+  <div class="flex align-items-center">
+    <p-button [text]="true" [disabled]="!isSignUp" (onClick)="toggleAuth()">
+      <span>{{ lang.headers.signIn }}</span>
+    </p-button>
+    <span>/</span>
+    <p-button [text]="true" [disabled]="isSignUp" (onClick)="toggleAuth()">
+      <span>Sign Up</span>
+    </p-button>
+  </div>
+  <div class="error text-center w-full" *ngIf="formError">{{ formError }}</div>
+  <form
+    (ngSubmit)="submit()"
+    [formGroup]="userForm"
+    novalidate
+    class="flex flex-column gap-3 align-items-center"
+  >
+    <input
+      class="input"
+      type="text"
+      pInputText
+      [placeholder]="lang.placeholders.login"
+      formControlName="userName"
+      [maxlength]="20"
+    />
+    <div class="error" *ngIf="getErrorMessage('userName') as error">
+      {{ error }}
+    </div>
+
+    <ng-container *ngIf="isSignUp">
+      <input
+        class="input"
+        type="text"
+        pInputText
+        placeholder="First name"
+        formControlName="firstName"
+        [maxlength]="50"
+      />
+      <div class="error" *ngIf="getErrorMessage('firstName') as error">
+        {{ error }}
+      </div>
+      <input
+        class="input"
+        type="text"
+        pInputText
+        placeholder="Last name"
+        formControlName="lastName"
+        [maxlength]="50"
+      />
+      <div class="error" *ngIf="getErrorMessage('lastName') as error">
+        {{ error }}
+      </div>
+      <input
+        class="input"
+        type="text"
+        pInputText
+        placeholder="Email"
+        formControlName="email"
+      />
+      <div class="error" *ngIf="getErrorMessage('email') as error">
+        {{ error }}
+      </div>
+    </ng-container>
+
+    <input
+      class="input"
+      type="password"
+      pInputText
+      [placeholder]="lang.placeholders.password"
+      [maxlength]="20"
+      formControlName="password"
+    />
+    <div class="error" *ngIf="getErrorMessage('password') as error">
+      {{ error }}
+    </div>
+    <input
+      *ngIf="isSignUp"
+      class="input"
+      type="password"
+      pInputText
+      [placeholder]="'Confirm ' + lang.placeholders.password"
+      formControlName="confirmPassword"
+      [maxlength]="20"
+    />
+    <div class="error" *ngIf="getErrorMessage('confirmPassword') as error">
+      {{ error }}
+    </div>
+    <p-button type="submit">{{
+      isSignUp ? "Sign Up" : lang.buttons.login
+    }}</p-button>
+  </form>
+</div>

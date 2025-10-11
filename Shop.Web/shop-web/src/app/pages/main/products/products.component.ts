@@ -61,8 +61,8 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public isShowLayout = false;
   public items: MenuItem[];
   public home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-  //public templateProperties: IProperty[] = [];
-  public template: IPropertyTemplate; //maybe deprecated
+  //public templateProperties: IProperty[] = []; 
+  public template: IPropertyTemplate; //TODO: maybe deprecated
   public skip = 0;
   public countPerPage = 10;
   public count = 0;

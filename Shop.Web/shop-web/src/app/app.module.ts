@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { AppConfigService } from './services/app-config.service';
 import { HttpClientInterceptor } from './services/http-client.interceptor';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { AuthModule } from './pages/auth/auth.module';
 
 export function init(appConfigService: AppConfigService): Function {
   return (): Promise<void> => appConfigService.load();
@@ -22,7 +23,8 @@ export function init(appConfigService: AppConfigService): Function {
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    ProgressBarModule
+    ProgressBarModule,
+    AuthModule  
   ],
   providers: [MessageService,
     {

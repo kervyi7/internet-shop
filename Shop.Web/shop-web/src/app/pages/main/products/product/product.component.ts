@@ -105,7 +105,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         });
         this.template = data.category.propertyTemplate;
         this.product = data;
-        //this.template.push(...this.getProperties(product));
+        //this.template.push(...this.getProperties(product)); TODO:check if needed
         this.items = [
           {
             label: this.product.category.name,

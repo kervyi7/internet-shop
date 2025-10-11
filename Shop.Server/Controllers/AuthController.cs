@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Database.Identity;
 using Shop.Server.Auth;
 using Shop.Server.DTO.Auth;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO.Auth;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Shop.Server.Controllers
 {
@@ -26,6 +28,18 @@ namespace Shop.Server.Controllers
             {
                 throw new AuthException(nameof(AuthErrorCodes.InvalidGrant), "LanguageResources.OAuthInvalidGrant_Error");
             }
+            var token = await _authManager.LogIn(request.UserName, request.Password);
+            return Ok(token);
+        }
+
+        [HttpPost("registration")]
+        public async Task<ActionResult<TokenDto>> RegistrationStudent(RegistrationRequest request)
+        {
+            if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
+            {
+                throw new AuthException(nameof(AuthErrorCodes.InvalidGrant), "LanguageResources.OAuthInvalidGrant_Error");
+            }
+            await _authManager.Registration(request);
             var token = await _authManager.LogIn(request.UserName, request.Password);
             return Ok(token);
         }

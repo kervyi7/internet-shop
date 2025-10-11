@@ -48,6 +48,39 @@ namespace Shop.Server.Auth
             };
         }
 
+        public async Task Registration(RegistrationRequest userRequest)
+        {
+            var isUserExist = await GetApplicationUser(userRequest.UserName, userRequest.Password);
+            if (isUserExist != null)
+            {
+                throw new AuthException(nameof(AuthErrorCodes.InvalidGrant), "LanguageResources.Registration_Error");
+            }
+            var email = _userManager.FindByEmailAsync(userRequest.Email);
+            if (email.Result != null)
+            {
+                throw new AuthException(nameof(AuthErrorCodes.InvalidGrant), "LanguageResources.Registration_Error");
+            }
+            var user = new ApplicationUser()
+            {
+                UserName = userRequest.UserName,
+                NormalizedUserName = userRequest.UserName.ToUpper(),
+                FirstName = userRequest.FirstName,
+                LastName = userRequest.LastName,
+                Email = userRequest.Email,
+                Active = true,
+                RegisterType = nameof(ApplicationUserRole.User),
+                EmailConfirmed = true,
+                Confirmed = true,
+            };
+            var createResult = await _userManager.CreateAsync(user, userRequest.Password);
+            if (!createResult.Succeeded)
+            {
+                throw new AuthException(nameof(AuthErrorCodes.InvalidGrant), "LanguageResources.Registration_Error");
+            }
+            await _userManager.AddToRoleAsync(user, nameof(ApplicationUserRole.User));
+            _dataContext.SaveChanges();
+        }
+
         public async Task RemoveRefreshToken(IPrincipal principal)
         {
             var userId = principal.GetUserId();

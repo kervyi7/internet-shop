@@ -23,6 +23,13 @@ namespace Shop.Database
                 ConcurrencyStamp = "5bcded54-b952-4485-bd4b-c6c465e4b74f",
                 NormalizedName = "ADMINISTRATOR"
             };
+            var userRole = new IdentityRole
+            {
+                Id = "0f13cad7-a225-428b-898d-539ff3453445",
+                Name = nameof(ApplicationUserRole.User),
+                ConcurrencyStamp = "23332464-b952-4485-bd4b-c6c465e4b74f",
+                NormalizedName = "USER"
+            };
             if (context.Roles.Any(x => x.Id == adminRole.Id))
             {
                 return;
@@ -30,6 +37,15 @@ namespace Shop.Database
             else
             {
                 context.Roles.Add(adminRole);
+            }
+
+            if (context.Roles.Any(x => x.Id == userRole.Id))
+            {
+                return;
+            }
+            else
+            {
+                context.Roles.Add(userRole);
             }
             var administrator = new ApplicationUser
             {

@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Database.Identity;
 using Shop.Database.Models;
 using Shop.Server.Controllers.Abstract;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = nameof(ApplicationUserRole.Administrator))]
     public class AdminImageController : BaseEntityController<Image>
     {
         public AdminImageController(DataContext dataContext) : base(dataContext)

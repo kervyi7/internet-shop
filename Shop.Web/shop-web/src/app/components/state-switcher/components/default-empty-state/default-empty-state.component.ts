@@ -11,7 +11,7 @@ import { EMPTY_STATE_IMAGE } from '../../state-switcher.config';
 })
 export class DefaultEmptyStateComponent {
   @Input() public image = EMPTY_STATE_IMAGE.emptyNoData;
-  @Input() public title = 'Unfortunately, there no data to display';//language
+  @Input() public title = 'Unfortunately, there no data to display';//TODO: language
   @Input() public subTitle = '';
   @Input() public justifyContent: 'start' | 'center' | 'end' = 'center';
   @Input() public paddingY = 8;

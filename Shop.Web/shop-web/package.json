@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^16.1.0",
     "@angular/router": "^16.1.0",
     "browser-image-compression": "^2.0.2",
+    "jwt-decode": "^4.0.0",
     "ngx-image-cropper": "^7.2.1",
     "primeflex": "^4.0.0",
     "primeicons": "^6.0.1",

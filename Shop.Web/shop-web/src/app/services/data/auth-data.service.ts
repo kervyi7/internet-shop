@@ -22,6 +22,10 @@ export class AuthDataService extends BaseDataService {
     return this._http.post<IAuthResponse>(this.getUrl("login"), value, this.defaultHttpOptions);
   }
 
+  public signUp(value: ILogin): Observable<IAuthResponse> {
+    return this._http.post<IAuthResponse>(this.getUrl("registration"), value, this.defaultHttpOptions);
+  }
+
   public logout(): Observable<void> {
     return this._http.get<void>(this.getUrl("logout"), this.defaultHttpOptions);
   }

@@ -1,8 +1,7 @@
-form {
+.form-container {
   display: flex;
   flex-direction: column;
   width: 350px;
-  height: 40vh;
   justify-content: center;
   gap: 20px;
   align-items: center;
@@ -12,4 +11,14 @@ form {
   transform: translate(-50%, -50%);
   border-radius: 8px;
   border: black 2px solid;
+}
+
+.error {
+  color: #f44336;
+  font-size: 0.85rem;
+  margin-top: -0.5rem;
+  align-self: flex-start;
+}
+.input.ng-invalid.ng-touched {
+  border-color: #f44336;
 }

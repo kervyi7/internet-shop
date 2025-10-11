@@ -5,14 +5,14 @@ import { AuthService } from "../services/auth.service";
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard {
+export class UserGuard {
   constructor(
     private _authService: AuthService,
     private _router: Router,
   ) { }
 
   public canActivate(): boolean {
-    if (this._authService.isAdmin()) {
+    if (this._authService.isLoggedIn() && !this._authService.isAdmin()) {
       return true;
     }
     this._router.navigate(['/not-found']);

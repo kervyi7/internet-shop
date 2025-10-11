@@ -9,18 +9,22 @@ import { map } from 'rxjs';
   selector: 'shop-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent extends BaseCompleteComponent implements OnInit {
   public isAuthorized: boolean;
 
   public totalQuantity$ = this.cartService.cart$.pipe(
-    map(items => items.reduce((sum, item) => sum + (item.selectedCount || 1), 0))
+    map((items) =>
+      items.reduce((sum, item) => sum + (item.selectedCount || 1), 0)
+    )
   );
 
-  constructor(private _authService: AuthService,
+  constructor(
+    private _authService: AuthService,
     private _router: Router,
-    private cartService: CartService) {
+    private cartService: CartService
+  ) {
     super();
   }
 
@@ -28,7 +32,15 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
     this.isAuthorized = this._authService.isLoggedIn();
   }
 
-  public goToAdmin(): void {
+  public redirect(): void {
+    if (this._authService.isAdmin()) {
+      this._router.navigate(['/admin']);
+    } else {
+      this._router.navigate(['/user']);
+    }
+  }
+
+  public goToUserPage(): void {
     this._router.navigate(['/admin']);
   }
 

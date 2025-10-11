@@ -1,20 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shop.Common.Constants;
 using Shop.Database;
+using Shop.Database.Identity;
 using Shop.Database.Models;
+using Shop.Server.Common;
 using Shop.Server.Controllers.Abstract;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
-using System.Threading.Tasks;
 using System;
-using System.Linq;
-using Shop.Server.Common;
-using Shop.Common.Constants;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = nameof(ApplicationUserRole.Administrator))]
     public class AdminProductController : BaseEntityController<Product>
     {
         public AdminProductController(DataContext dataContext) : base(dataContext)

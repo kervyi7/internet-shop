@@ -6,7 +6,7 @@
       {{ quantity }}
     </span>
   </p-button>
-  <p-button [text]="true" class="button" *ngIf="isAuthorized; else loginButton" (click)="goToAdmin()">
+  <p-button [text]="true" class="button" *ngIf="isAuthorized; else loginButton" (click)="redirect()">
     <span class="material-icons-outline">account_circle</span>
   </p-button>
   <ng-template #loginButton>

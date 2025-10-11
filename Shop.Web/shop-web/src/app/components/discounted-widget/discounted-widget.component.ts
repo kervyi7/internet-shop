@@ -58,7 +58,7 @@ export class DiscountedWidgetComponent {
             : [
                 {
                   ...item.images[0],
-                  body: 'assets/img/nopicture.svg', //add to EMPTY_STATE_IMAGE
+                  body: 'assets/img/nopicture.svg', //TODO: add to EMPTY_STATE_IMAGE
                 },
               ],
         }))
