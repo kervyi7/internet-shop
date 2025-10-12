@@ -1,43 +1,47 @@
-<div *ngIf="cart$ | async as cart; else emptyCart" class="flex justify-content-between gap-6 flex-column lg:flex-row">
-  <div class="w-full">
-    <div class="controls flex align-items-center gap-1 lg:gap-3">
-      <p-checkbox
-        label="Select all"
-        [binary]="true"
-        [(ngModel)]="selectAll"
-        (ngModelChange)="toggleSelectAll(cart)"
+<div *ngIf="cart$ | async as cart">
+  <div
+    *ngIf="cart.length; else emptyCart"
+    class="flex justify-content-between gap-6 flex-column lg:flex-row"
+  >
+    <div class="w-full">
+      <div class="controls flex align-items-center gap-1 lg:gap-3">
+        <p-checkbox
+          label="Select all"
+          [binary]="true"
+          [ngModel]="selectAll"
+          (ngModelChange)="toggleSelectAll(cart)"
+        >
+        </p-checkbox>
+        <p-button
+          label="Remove all"
+          icon="pi pi-trash"
+          (click)="clearCart()"
+          [text]="true"
+        />
+      </div>
+      <shop-cart-item
+        *ngFor="let item of cart"
+        [item]="item"
+        [isCart]="true"
+        (quantityChange)="updateQuantity(item)"
+        (remove)="removeItem(item.productId)"
+        (toggleSelect)="toggleSelection(item)"
       >
-      </p-checkbox>
-      <p-button
-        label="Remove all"
-        icon="pi pi-trash"
-        (click)="clearCart()"
-        [text]="true"
-      />
+      </shop-cart-item>
     </div>
-    <shop-cart-item
-      *ngFor="let product of cart"
-      [item]="product"
-      [isCart]="true"
-      [selected]="isSelected(product.id)"
-      (quantityChange)="updateQuantity(product)"
-      (remove)="removeItem(product.id)"
-      (toggleSelect)="toggleSelection(product.id)"
-    >
-    </shop-cart-item>
+
+    <div>
+      <shop-order-summary
+        [itemsAmount]="getSelectedTotal(cart)"
+        [isCart]="true"
+        [isDisabled]="isSelectedItems(cart)"
+      ></shop-order-summary>
+    </div>
   </div>
 
-  <div>
-    <shop-order-summary
-      [itemsAmount]="getSelectedTotal(cart)"
-      [isCart]="true"
-      [isDisabled]="selectedItems.size === 0"
-    ></shop-order-summary>
-  </div>
+  <shop-discounted-widget></shop-discounted-widget>
 </div>
 
-<shop-discounted-widget></shop-discounted-widget>
-
 <ng-template #emptyCart>
-  <p>Your cart is empty</p>
+  <h2 class="text-center">Your cart is empty</h2>
 </ng-template>

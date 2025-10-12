@@ -1,4 +1,6 @@
-<shop-discounted-widget></shop-discounted-widget>
+<div class="m-auto w-11 lg:w-9">
+  <shop-discounted-widget></shop-discounted-widget>
+</div>
 <ng-container *ngIf="(categoriesState$ | async)?.data as data">
   <div class="flex categories-container gap-3" *ngIf="data.length > 0">
     <div

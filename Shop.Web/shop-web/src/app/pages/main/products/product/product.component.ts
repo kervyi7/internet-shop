@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProductDataService } from '../../../../services/data/product-data.service';
 import { Converter } from '../../../../common/converter';
 import { IProduct } from '../../../../models/interfaces/product';
@@ -17,7 +17,7 @@ import {
   IProperty,
   IPropertyTemplate,
 } from '../../../../models/interfaces/property';
-import { CartService } from 'src/app/services/data/cart.service';
+import { CartService } from 'src/app/services/cart.service';
 import { FavoritesService } from 'src/app/services/favorites.service';
 
 @Component({
@@ -86,7 +86,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public addToCart(): void {
-    this._cartService.addToCart(this.product);
+    this._cartService.add(this.product);
   }
 
   public toggleFavorite(): void {

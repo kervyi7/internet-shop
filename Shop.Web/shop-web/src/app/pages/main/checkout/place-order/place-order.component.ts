@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Util } from 'src/app/common/util';
-import { IProduct } from 'src/app/models/interfaces/product';
-import { CartService } from 'src/app/services/data/cart.service';
+import { CartItem } from 'src/app/models/interfaces/cart';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'shop-place-order',
@@ -10,7 +10,7 @@ import { CartService } from 'src/app/services/data/cart.service';
   styleUrls: ['./place-order.component.scss'],
 })
 export class PlaceOrderComponent {
-  public cart: IProduct[] = [];
+  public cart: CartItem[] = [];
   public shippingCost = 4.99;
   public checkoutForm!: FormGroup;
   public total: number = 0;
@@ -21,8 +21,12 @@ export class PlaceOrderComponent {
     this.cartService.cart$.subscribe((cart) => (this.cart = cart));
 
     this.total =
-      this.cart.reduce((sum, i) => sum + i.price * (i.count || 1), 0) +
-      this.shippingCost;
+      this.cart.reduce(
+        (sum, i) =>
+          sum +
+          (i.product.discountPrice ?? i.product.price) * (i.quantity || 1),
+        0
+      ) + this.shippingCost;
 
     this.checkoutForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -58,7 +62,12 @@ export class PlaceOrderComponent {
 
   public getTotal(): number {
     return this.cart
-      .filter((item) => item.selected)
-      .reduce((sum, item) => sum + item.price * (item.selectedCount || 1), 0);
+      .filter((item) => item.isSelected)
+      .reduce(
+        (sum, i) =>
+          sum +
+          (i.product.discountPrice ?? i.product.price) * (i.quantity || 1),
+        0
+      );
   }
 }

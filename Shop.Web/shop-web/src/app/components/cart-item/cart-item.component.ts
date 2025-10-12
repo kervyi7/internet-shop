@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
-import { IProduct } from 'src/app/models/interfaces/product';
+import { CartItem } from 'src/app/models/interfaces/cart';
 
 @Component({
   selector: 'shop-cart-item',
@@ -27,13 +27,12 @@ import { IProduct } from 'src/app/models/interfaces/product';
   ],
 })
 export class CartItemComponent implements OnInit {
-  @Input() item!: IProduct;
-  @Input() selected = false;
+  @Input() item!: CartItem;
   @Input() public isCart: boolean = false;
 
   public isMobile = false;
 
-  @Output() public quantityChange = new EventEmitter<number>();
+  @Output() public quantityChange = new EventEmitter<CartItem>();
   @Output() public remove = new EventEmitter<void>();
   @Output() public toggleSelect = new EventEmitter<boolean>();
 
@@ -48,11 +47,11 @@ export class CartItemComponent implements OnInit {
 
   public onQuantityChange(newCount: number): void {
     if (!newCount) {
-      this.item.selectedCount = 1;
+      this.item.quantity = 1;
     } else {
-      this.item.selectedCount = newCount;
+      this.item.quantity = newCount;
     }
-    this.quantityChange.emit(this.item.selectedCount);
+    this.quantityChange.emit(this.item);
   }
 
   public onRemove(): void {

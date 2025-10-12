@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
-import { CartService } from 'src/app/services/data/cart.service';
+import { CartService } from 'src/app/services/cart.service';
 import { map } from 'rxjs';
 
 @Component({
@@ -16,7 +16,7 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
 
   public totalQuantity$ = this.cartService.cart$.pipe(
     map((items) =>
-      items.reduce((sum, item) => sum + (item.selectedCount || 1), 0)
+      items.reduce((sum, item) => sum + (item.quantity || 1), 0)
     )
   );
 

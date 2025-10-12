@@ -7,8 +7,8 @@
       <p-checkbox
         *ngIf="isCart"
         [binary]="true"
-        [(ngModel)]="selected"
-        (onChange)="onSelectChange($event.checked)"
+        [ngModel]="item.isSelected"
+        (ngModelChange)="onSelectChange($event.checked)"
       >
       </p-checkbox>
 
@@ -24,14 +24,14 @@
     <div class="flex gap-3 w-full">
       <div class="relative">
         <img
-          [src]="item.images[0].smallBody"
-          alt="{{ item.name }}"
+          [src]="item.product.images[0].smallBody"
+          alt="{{ item.product.name }}"
           width="80"
           height="80"
           class="border-round-sm"
         />
         <span *ngIf="!isCart" class="absolute count">
-          {{ item.selectedCount }}
+          {{ item.quantity }}
         </span>
       </div>
 
@@ -39,19 +39,22 @@
         class="flex gap-1 flex-column w-11rem md:w-12rem justify-content-between"
       >
         <div class="overflow-hidden text-overflow-ellipsis white-space-nowrap">
-          {{ item.name }}
+          {{ item.product.name }}
         </div>
 
         <div class="w-9rem text-xs">
-          {{ item.price * item.selectedCount }} USD
+          {{
+            (item.product.discountPrice || item.product.price) * item.quantity
+          }}
+          USD
         </div>
 
         <div *ngIf="isCart">
           <input
             pInputText
-            [ngModel]="item.selectedCount"
+            [ngModel]="item.quantity"
             [step]="1"
-            [max]="item.count"
+            [max]="item.product.count"
             [min]="1"
             (ngModelChange)="onQuantityChange($event)"
             [size]="1"
@@ -73,8 +76,8 @@
         <p-checkbox
           *ngIf="isCart"
           [binary]="true"
-          [(ngModel)]="selected"
-          (onChange)="onSelectChange($event.checked)"
+          [ngModel]="item.isSelected"
+          (ngModelChange)="onSelectChange($event.checked)"
         >
         </p-checkbox>
 
@@ -89,18 +92,18 @@
 
       <div class="relative">
         <img
-          [src]="item.images[0].smallBody"
-          alt="{{ item.name }}"
+          [src]="item.product.images[0].smallBody"
+          alt="{{ item.product.name }}"
           width="60"
           class="border-round-sm"
         />
         <span *ngIf="!isCart" class="absolute count">
-          {{ item.selectedCount }}
+          {{ item.quantity }}
         </span>
       </div>
 
       <div>
-        <div class="font-semibold">{{ item.name }}</div>
+        <div class="font-semibold">{{ item.product.name }}</div>
       </div>
     </div>
 
@@ -108,18 +111,22 @@
       <div *ngIf="isCart">
         <input
           pInputText
-          [ngModel]="item.selectedCount"
+          type="number"
+          [ngModel]="item.quantity"
           [step]="1"
-          [max]="item.count"
+          [max]="item.product.count"
           [min]="1"
           (ngModelChange)="onQuantityChange($event)"
           [size]="1"
-          class="p-1 lg:p-2 text-center"
+          class="p-1 lg:p-2 text-center cart-count"
         />
       </div>
 
       <div class="text-lg w-9rem text-right">
-        {{ item.price * item.selectedCount }} USD
+        {{
+          (item.product.discountPrice || item.product.price) * item.quantity
+        }}
+        USD
       </div>
     </div>
   </div>
