@@ -53,6 +53,12 @@
       >
         Add to cart
       </p-button>
+      <p-button [text]="true" class="button" (click)="toggleFavorite()">
+        <span *ngIf="isFavorite; else nonFavorite" class="material-icons-reg">favorite</span>
+        <ng-template #nonFavorite>
+          <span class="material-icons-outline">favorite</span>
+        </ng-template>
+      </p-button>
     </div>
   </div>
   <div class="property-description-container">

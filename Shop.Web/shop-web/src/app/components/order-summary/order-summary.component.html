@@ -21,6 +21,7 @@
         label="Checkout"
         styleClass="w-full"
         (click)="redirectToCheckout()"
+        [disabled]="isDisabled"
       />
       <ng-template #payButton>
         <p-button label="Pay" styleClass="w-full" (click)="pay()"

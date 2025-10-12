@@ -25,4 +25,7 @@ PM> Add-Migration FixPropertyProductId -Project Shop.Postgre.Migrations
 PM> Add-Migration FixProductDescription -Project Shop.Postgre.Migrations
 PM> Add-Migration FixProperty -Project Shop.Postgre.Migrations
 
+
+PM> Add-Migration AddOrders -Project Shop.Postgre.Migrations
+
 PM> Update-Database 

@@ -40,15 +40,15 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
     }
   }
 
-  public goToUserPage(): void {
-    this._router.navigate(['/admin']);
+  public goToFavorites(): void {
+    this._router.navigate(['/user/favorites']);
   }
 
   public goToLogin(): void {
     this._router.navigate(['/login']);
   }
 
-  public openCart(): void {
+  public goToCart(): void {
     this._router.navigate(['/checkout']);
   }
 

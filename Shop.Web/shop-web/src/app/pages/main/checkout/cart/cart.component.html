@@ -31,6 +31,7 @@
     <shop-order-summary
       [itemsAmount]="getSelectedTotal(cart)"
       [isCart]="true"
+      [isDisabled]="selectedItems.size === 0"
     ></shop-order-summary>
   </div>
 </div>

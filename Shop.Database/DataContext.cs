@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shop.Common.Settings;
 using Shop.Database.Identity;
 using Shop.Database.Models;
+
 namespace Shop.Database
 {
     public class DataContext : IdentityDbContext<ApplicationUser>
@@ -26,6 +27,10 @@ namespace Shop.Database
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
         public DbSet<PropertyTemplate> PropertyTemplate { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
+        public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {
@@ -54,8 +59,8 @@ namespace Shop.Database
         private CheckConstraintBuilder GetPropertyConstraint<T>(TableBuilder<T> builder, string name) where T : class
         {
             return builder.HasCheckConstraint(
-               $"ckProperty{name}_ProductOrTemplate",
-               $"\"{nameof(BaseProperty.ProductId)}\" IS NOT NULL OR \"{nameof(BaseProperty.PropertyTemplateId)}\" IS NOT NULL");
+                $"ckProperty{name}_ProductOrTemplate",
+                $"\"{nameof(BaseProperty.ProductId)}\" IS NOT NULL OR \"{nameof(BaseProperty.PropertyTemplateId)}\" IS NOT NULL");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -66,32 +71,26 @@ namespace Shop.Database
             modelBuilder.HasDefaultSchema("public");
             modelBuilder.Entity<ApplicationUser>().ToTable("IdentityUser");
             modelBuilder.Entity<PropertyTemplate>().ToTable("PropertyTemplate");
-            modelBuilder.Entity<ApplicationUser>().OwnsOne(x => x.Properties,
-                builder =>
-                {
-                    builder.ToTable("IdentityUser");
-                    builder.ToJson();
-                });
             modelBuilder.Entity<Category>()
-                 .HasOne(x => x.Image)
-                 .WithOne(x => x.Category)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Image)
+                .WithOne(x => x.Category)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<bool>>()
-                 .HasOne(x => x.Product)
-                 .WithMany(x => x.BoolProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.BoolProperties)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<decimal>>()
-                 .HasOne(x => x.Product)
-                 .WithMany(x => x.DecimalProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.DecimalProperties)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<string>>()
-                 .HasOne(x => x.Product)
-                 .WithMany(x => x.StringProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.StringProperties)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<DateTime>>()
-                 .HasOne(x => x.Product)
-                 .WithMany(x => x.DateProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.DateProperties)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<bool>>()
                 .ToTable(t => GetPropertyConstraint(t, "Bool"));
             modelBuilder.Entity<Property<decimal>>()
@@ -101,33 +100,52 @@ namespace Shop.Database
             modelBuilder.Entity<Property<DateTime>>()
                 .ToTable(t => GetPropertyConstraint(t, "DateTime"));
             modelBuilder.Entity<ProductImage>()
-                 .HasOne(x => x.Product)
-                 .WithMany(x => x.ProductImages)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.ProductImages)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProductImage>()
-                 .HasOne(x => x.Image)
-                 .WithMany(x => x.ProductImages)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Image)
+                .WithMany(x => x.ProductImages)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Category>()
-                 .HasOne(x => x.PropertyTemplate)
-                 .WithOne(x => x.Category)
-                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Property<bool>>()
-                 .HasOne(x => x.PropertyTemplate)
-                 .WithMany(x => x.BoolProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Property<decimal>>()
-                 .HasOne(x => x.PropertyTemplate)
-                 .WithMany(x => x.DecimalProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Property<string>>()
-                 .HasOne(x => x.PropertyTemplate)
-                 .WithMany(x => x.StringProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Property<DateTime>>()
-                 .HasOne(x => x.PropertyTemplate)
-                 .WithMany(x => x.DateProperties)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.PropertyTemplate)
+                .WithOne(x => x.Category)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany()
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(i => i.Order)
+                .WithMany(o => o.Items)
+                .HasForeignKey(i => i.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(i => i.Product)
+                .WithMany()
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<FavoriteProduct>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FavoriteProduct>()
+                .HasOne(f => f.Product)
+                .WithMany()
+                .HasForeignKey(f => f.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<DeliveryAddress>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.DeliveryAddress)
+                .WithMany(a => a.Orders)
+                .HasForeignKey(o => o.DeliveryAddressId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void RemovePluralizingTableNameConvention(ModelBuilder modelBuilder)

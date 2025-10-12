@@ -18,6 +18,7 @@ import {
   IPropertyTemplate,
 } from '../../../../models/interfaces/property';
 import { CartService } from 'src/app/services/data/cart.service';
+import { FavoritesService } from 'src/app/services/favorites.service';
 
 @Component({
   selector: 'shop-product',
@@ -27,27 +28,26 @@ import { CartService } from 'src/app/services/data/cart.service';
 })
 export class ProductComponent extends BaseCompleteComponent implements OnInit {
   private _code: string;
-  private _brand: string;
   public product: IProduct;
   public items: MenuItem[];
   public home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
   public responsiveOptions: GalleriaResponsiveOptions[];
   public imagesBody: any[] = [];
   public template: IPropertyTemplate;
+  public isFavorite = false;
 
   constructor(
     private _productDataService: ProductDataService,
-    private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _cd: ChangeDetectorRef,
-    private _cartService: CartService
+    private _cartService: CartService,
+    private _favoritesService: FavoritesService
   ) {
     super();
   }
 
   public ngOnInit(): void {
     this._code = this._activatedRoute.snapshot.paramMap.get('code')!;
-    this._brand = this._activatedRoute.snapshot.queryParamMap.get('brand');
     if (!this._code) {
       return;
     }
@@ -66,6 +66,14 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         numVisible: 1,
       },
     ];
+    this._favoritesService.favorites$
+      .pipe(takeUntil(this.__unsubscribe$))
+      .subscribe((favorites) => {
+        if (this.product) {
+          this.isFavorite = favorites.includes(this.product);
+          this._cd.markForCheck();
+        }
+      });
   }
 
   public getProperties(product: IProduct): IProperty[] {
@@ -81,38 +89,42 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     this._cartService.addToCart(this.product);
   }
 
+  public toggleFavorite(): void {
+    if (this.isFavorite) {
+      this._favoritesService.removeFromFavorites(this.product.id);
+    } else {
+      this._favoritesService.addToFavorites(this.product);
+    }
+  }
+
   private loadProduct(code: string): void {
     this._productDataService
       .getByCode(code)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IProduct) => {
-        data.images.map(
-          (image: IImage) =>
-            (image.smallBody = Converter.toFileSrc(
-              image.mimeType,
-              image.smallBody
-            ))
-        );
-        data.images.map((image: IImage) => {
+        this.imagesBody = data.images.map((image: IImage) => {
+          image.smallBody = Converter.toFileSrc(
+            image.mimeType,
+            image.smallBody
+          );
           image.body = Converter.toFileSrc(image.mimeType, image.body);
-          const imageForGallery = {
+          return {
             itemImageSrc: image.body,
             thumbnailImageSrc: image.smallBody,
-            alt: 'Description',
-            title: 'Title',
+            alt: data.name,
+            title: data.name,
           };
-          this.imagesBody.push(imageForGallery);
         });
         this.template = data.category.propertyTemplate;
         this.product = data;
-        //this.template.push(...this.getProperties(product)); TODO:check if needed
         this.items = [
           {
-            label: this.product.category.name,
-            routerLink: `/${this.product.category.name}`,
+            label: data.category.name,
+            routerLink: `/${data.category.name}`,
           },
-          { label: this.product.name },
+          { label: data.name },
         ];
+        this.isFavorite = this._favoritesService.isFavorite(data.id);
         this._cd.detectChanges();
       });
   }

@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { UserComponent } from "./user.component";
 import { UserRoutingModule } from "./user-routing.module";
+import { FavoriteProductsModule } from "./favorite-products/favorite-products.module";
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { UserRoutingModule } from "./user-routing.module";
   imports: [
     CommonModule,
     RouterModule,
-    UserRoutingModule
+    UserRoutingModule,
+    FavoriteProductsModule
   ],
   exports: [
     UserComponent

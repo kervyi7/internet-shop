@@ -1,1 +1,6 @@
-<p>favorite-products works!</p>
+<div *ngFor="let product of products">
+  <div class="favorite-item">
+    <span>{{ product.name || product.id }}</span>
+    <button (click)="delete(product)">Remove</button>
+  </div>
+</div>

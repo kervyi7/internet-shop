@@ -13,14 +13,14 @@ namespace Shop.Database.Identity
         }
 
         [Required]
-        [MaxLength(250)]
+        [MaxLength(50)]
         public string FirstName { get; set; }
 
         [Required]
-        [MaxLength(250)]
+        [MaxLength(50)]
         public string LastName { get; set; }
 
-        [MaxLength(250)]
+        [MaxLength(50)]
         public string Patronymic { get; set; }
 
         [MaxLength(250)]
@@ -31,14 +31,12 @@ namespace Shop.Database.Identity
         [MaxLength(50)]
         public string Language { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(20)]
         public string RegisterType { get; set; }
 
         public bool Confirmed { get; set; }
 
         public bool Active { get; set; }
-
-        public UserProperties Properties { get; set; }
 
         public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; }
     }

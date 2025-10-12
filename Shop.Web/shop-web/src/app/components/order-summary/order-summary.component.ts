@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class OrderSummaryComponent {
   @Input() public isCart: boolean = false;
+  @Input() public isDisabled: boolean = false;
   @Input() public itemsAmount: number = 0;
   @Input() public shippingAmount: number = 5;
   @Input() public currency: string = 'USD';
