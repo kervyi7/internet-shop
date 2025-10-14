@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
 import { Step } from 'src/app/models/interfaces/step';
+import { AuthService } from 'src/app/services/auth.service';
+import { AuthDataService } from 'src/app/services/data/auth-data.service';
 
 @Component({
   selector: 'shop-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
+  providers: [ConfirmationService],
 })
 export class UserComponent implements OnInit {
-  public isMobile = false;
   public activeTab: string = '';
   public steps: Step[] = [
     {
@@ -38,7 +41,12 @@ export class UserComponent implements OnInit {
     },
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private authDataService: AuthDataService,
+    private authService: AuthService
+  ) {}
 
   public ngOnInit(): void {
     this.setActiveTabFromRoute();
@@ -51,6 +59,24 @@ export class UserComponent implements OnInit {
   public goToStep(step: Step): void {
     this.activeTab = step.label;
     this.router.navigateByUrl(step.route);
+  }
+
+  public signOut(): void {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure that you want to sign out?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: 'none',
+      rejectIcon: 'none',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.authDataService.logout().subscribe(() => {
+          this.authService.removeTokenInfo();
+          this.router.navigate(['./']);
+        });
+      },
+    });
   }
 
   private setActiveTabFromRoute(): void {

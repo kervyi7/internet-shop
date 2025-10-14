@@ -7,7 +7,8 @@ import { FavoriteProductsModule } from './favorite-products/favorite-products.mo
 import { SettingsModule } from './settings/settings.module';
 import { DeliveryAddressesModule } from './delivery-addresses/delivery-addresses.module';
 import { SecurityModule } from './security/security.module';
-import { ButtonModule } from "primeng/button";
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [UserComponent],
@@ -19,8 +20,9 @@ import { ButtonModule } from "primeng/button";
     SettingsModule,
     DeliveryAddressesModule,
     SecurityModule,
-    ButtonModule
-],
+    ButtonModule,
+    ConfirmDialogModule,
+  ],
   exports: [UserComponent],
 })
 export class UserModule {}

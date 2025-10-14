@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   public isAdmin(): boolean {
-    return this.getRole() === 'Admin';
+    return this.getRole() === 'Administrator';
   }
 
   public getUserId(): string {
