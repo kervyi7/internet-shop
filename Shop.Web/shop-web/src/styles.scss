@@ -88,6 +88,12 @@ button {
   color: #bababa;
 }
 
-.p-steps-number {
-  display: none !important;
+@media (hover: none) and (pointer: coarse) {
+  *:hover {
+    background: none !important;
+    color: inherit !important;
+    transform: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+  }
 }

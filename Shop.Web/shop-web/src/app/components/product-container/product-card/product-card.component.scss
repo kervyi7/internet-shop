@@ -1,0 +1,44 @@
+:host {
+  width: 265px;
+}
+
+.product-image {
+  width: 265px;
+  height: 265px;
+  object-fit: contain;
+}
+
+.price {
+  color: #5f5757;
+}
+
+.product-wrapper {
+  cursor: pointer;
+  transition-duration: 0.5s;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 265px;
+  background-color: #fff;
+  box-shadow: 0px 0px 15px 0px #bfbfbf;
+
+  &:hover {
+    transform: scale(1.025);
+  }
+
+  .discount-label {
+    background-color: #9e1717;
+    color: #fff;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .first-section {
+    height: inherit;
+  }
+
+  .product-image {
+    //width: 150px;
+  }
+}

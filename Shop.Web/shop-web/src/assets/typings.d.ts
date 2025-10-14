@@ -1,1 +1,1 @@
-declare type propertyValue = string | number | boolean | Date;
+declare type propertyValue = string | number | boolean;

@@ -11,6 +11,6 @@ namespace Shop.Server.Models.DTO
     public class FavoriteProductDto
     {
         public int ProductId { get; set; }
-        public IEnumerable<ProductDto> Products { get; set; }
+        public ProductDto Product { get; set; }
     }
 }

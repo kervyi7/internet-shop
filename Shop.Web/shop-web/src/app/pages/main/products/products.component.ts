@@ -5,16 +5,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { ProductDataService } from '../../../services/data/product-data.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IProduct } from '../../../models/interfaces/product';
-import { Converter } from '../../../common/converter';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { MenuItem } from 'primeng/api';
 import { takeUntil } from 'rxjs';
-import {
-  IProperty,
-  IPropertyTemplate,
-} from '../../../models/interfaces/property';
 import { IPageData } from '../../../models/interfaces/page-data';
 import { PaginatorState } from 'primeng/paginator';
 import {
@@ -23,12 +18,14 @@ import {
   style,
   transition,
   animate,
-  AnimationEvent,
 } from '@angular/animations';
 import {
   ProductFilters,
   ProductRequest,
 } from 'src/app/models/interfaces/filters';
+import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
+import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
+import { ScreenService } from 'src/app/services/screen.service';
 
 @Component({
   selector: 'shop-products',
@@ -55,32 +52,32 @@ import {
 })
 export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   private filters: ProductFilters;
+  public isMobile: boolean = false;
   public category: string;
   public products: IProduct[];
   public isFiltersOpen = false;
-  public isShowLayout = false;
-  public items: MenuItem[];
+  public breadcrumbItems: MenuItem[];
   public home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-  //public templateProperties: IProperty[] = []; 
-  public template: IPropertyTemplate; //TODO: maybe deprecated
-  public skip = 0;
-  public countPerPage = 10;
-  public count = 0;
+  public pagination: IGetModelsRequest = { skip: 0, count: 10 };
+  public total = 0;
+  public isRowsView: boolean = false;
   public countOptions = [
     { label: 10, value: 10 },
     { label: 20, value: 20 },
     { label: 30, value: 30 },
+    { label: 40, value: 40 },
+    { label: 50, value: 50 },
   ];
   public sortBy = [
     { label: 'price high to low' },
-    { label: 'price low to high' },
+    { label: 'price low to high' }, //TODO: fix sorting, it's not working
   ];
 
   constructor(
     private _productDataService: ProductDataService,
-    private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private screenService: ScreenService
   ) {
     super();
   }
@@ -90,74 +87,56 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
     if (!this.category) {
       return;
     }
-    this.items = [{ label: this.category, routerLink: `/${this.category}` }];
+    this.breadcrumbItems = [
+      { label: this.category, routerLink: `/${this.category}` },
+    ];
     this.loadProductList();
+    this.isMobile = this.screenService.isMobile();
+    this.screenService.screenSize$.subscribe((size) => {
+      this.isMobile = size === ScreenSizes.Mobile;
+      this._cd.detectChanges();
+    });
   }
 
-  public goToProduct(product: IProduct): void {
-    this._router.navigate([`/${product.category.name}`, product.code]);
-  }
-
-  public getProperties(product: IProduct): IProperty[] {
-    let properties: IProperty[] = [];
-    properties.push(...product.stringProperties);
-    properties.push(...product.decimalProperties);
-    properties.push(...product.boolProperties);
-    properties.push(...product.dateProperties);
-    return properties;
+  public changeProductsView(): void {
+    this.isRowsView = !this.isRowsView;
   }
 
   public onCountChange(): void {
-    this.skip = 0;
+    this.pagination.skip = 0;
     this.loadProductList();
   }
 
   public changeFiltersMenuState(): void {
     this.isFiltersOpen = !this.isFiltersOpen;
-    this.isShowLayout = true;
   }
 
-  // public onAnimationDone(event: AnimationEvent): void {
-  //   if (event.fromState == 'void') {
-  //     return;
-  //   }
-  //   event.fromState == 'closed' ? this.isShowLayout = false : this.isShowLayout = true;
-  // }
-
   public onPageChange(event: PaginatorState): void {
-    this.skip = event.first;
-    this.countPerPage = event.rows;
+    this.pagination = {
+      skip: event.first,
+      count: event.rows,
+    };
     this.loadProductList();
   }
 
-  public loadProductList(): void {
+  public updateFilters(filters: ProductFilters): void {
+    this.filters = filters;
+    this.loadProductList();
+    this.changeFiltersMenuState();
+  }
+
+  private loadProductList(): void {
     const params: ProductRequest = {
-      skip: this.skip,
-      count: this.countPerPage,
+      ...this.pagination,
       ...this.filters,
     };
     this._productDataService
       .getByCategory(this.category, params)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IPageData<IProduct[]>) => {
-        this.template = data.data[0].category.propertyTemplate;
-        data.data.map((item: IProduct) => {
-          item.images[0].smallBody = Converter.toFileSrc(
-            item.images[0].mimeType,
-            item.images[0].smallBody
-          );
-        });
-        this.count = data.count;
+        this.total = data.count;
         this.products = data.data;
-        // for (let product of this.products) {
-        //   this.templateProperties.push(...this.getProperties(product));
-        // }
         this._cd.detectChanges();
       });
-  }
-
-  public updateFilters(filters: ProductFilters) {
-    this.filters = filters;
-    this.loadProductList();
   }
 }

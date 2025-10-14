@@ -9,7 +9,6 @@ import {
   Output,
 } from '@angular/core';
 import {
-  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
@@ -23,7 +22,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SliderModule } from 'primeng/slider';
-import { PropertyTypes } from 'src/app/models/enums/property-types';
 import {
   CategoryFiltersResponse,
   LabelValueModel,
@@ -32,7 +30,6 @@ import {
 } from 'src/app/models/interfaces/filters';
 import { CategoryDataService } from 'src/app/services/data/category-data.service';
 
-//TODO: fix any
 @Component({
   selector: 'shop-filters-list',
   templateUrl: './filters-list.component.html',
@@ -48,13 +45,31 @@ import { CategoryDataService } from 'src/app/services/data/category-data.service
     MultiSelectModule,
     SliderModule,
     CheckboxModule,
-    InputTextModule
+    InputTextModule,
   ],
 })
 export class FiltersListComponent implements OnInit {
-  @Input() public categoryName: string;
-  public filterForm: FormGroup;
-  public filters: CategoryFiltersResponse;
+  @Input() public categoryName: string = '';
+  @Output() public filterApplied = new EventEmitter<ProductFilters>();
+
+  public filters!: CategoryFiltersResponse;
+
+  public filterForm: FormGroup = this.fb.group({
+    brands: [[]],
+    types: [[]],
+    range: [[0, 0]],
+    properties: this.fb.array([]),
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private categoryDataService: CategoryDataService,
+    private cd: ChangeDetectorRef
+  ) {}
+
+  public ngOnInit(): void {
+    this.loadFilters();
+  }
 
   public get properties(): FormArray {
     return this.filterForm.get('properties') as FormArray;
@@ -69,103 +84,49 @@ export class FiltersListComponent implements OnInit {
   }
 
   public get rangeControl(): FormControl {
-    return this.filterForm.get('range') as FormControl<number[]>;
-  }
-
-  @Output() public filterApplied = new EventEmitter<ProductFilters>();
-
-  constructor(
-    private fb: FormBuilder,
-    private categoryDataService: CategoryDataService,
-    private cd: ChangeDetectorRef
-  ) {}
-
-  public ngOnInit(): void {
-    this.loadFilters();
+    return this.filterForm.get('range') as FormControl;
   }
 
   public loadFilters(): void {
-    this.categoryDataService
-      .getCategoryFilters(this.categoryName)
-      .subscribe((filters) => {
+    this.categoryDataService.getCategoryFilters(this.categoryName).subscribe({
+      next: (filters) => {
         this.filters = filters;
-        this.filterForm = this.fb.group({
-          brandsGroup: this.fb.group({
-            brands: [[]],
-          }),
-          typesGroup: this.fb.group({
-            types: [[]],
-          }),
-          range: [[this.filters.minPrice, this.filters.maxPrice]],
-          properties: this.fb.array(
-            this.filters.properties.map((p) => this.createPropertyControl(p))
-          ),
+        this.filterForm.patchValue({
+          brands: [],
+          types: [],
+          range: [this.filters.minPrice, this.filters.maxPrice],
         });
-        this.cd.detectChanges();
-      });
+        const propsArray = this.fb.array(
+          this.filters.properties.map((p) => this.createPropertyControl(p))
+        );
+        this.filterForm.setControl('properties', propsArray);
+        this.cd.markForCheck();
+      },
+    });
   }
 
-  public createPropertyControl(p: PropertyFilter): FormGroup {
-    switch (p.type) {
-      case PropertyTypes.string:
-      case PropertyTypes.number:
-      case PropertyTypes.bool:
-        return this.fb.group({
-          name: [p.name],
-          type: [p.type],
-          values: [[]],
-        });
-      case PropertyTypes.date:
-        return this.fb.group({
-          name: [p.name],
-          type: [p.type],
-          from: [null],
-          to: [null],
-        });
-      default:
-        console.warn('Unknown property type', p.type + '' + p.name);
-        return this.fb.group({
-          name: [p.name],
-          type: [p.type ?? 0],
-          values: [[]],
-        });
-    }
-  }
-
-  public onCheckboxChange(event: Event, index: number): void {
-    const checkbox = event.target as HTMLInputElement;
-    const control = this.properties.at(index).get('values') as FormControl;
-    const selected = control.value as any[];
-
-    if (checkbox.checked) {
-      control.setValue([...selected, checkbox.value]);
-    } else {
-      control.setValue(selected.filter((v) => v !== checkbox.value));
-    }
+  private createPropertyControl(p: PropertyFilter): FormGroup {
+    return this.fb.group({
+      name: [p.name],
+      type: [p.type],
+      values: [[]],
+    });
   }
 
   public getPropertyOptions(index: number): LabelValueModel[] {
-    return this.filters.properties[index].values.map((v) => ({
-      label: String(v),
-      value: v,
-    }));
+    return (
+      this.filters?.properties[index]?.values.map((v) => ({
+        label: String(v),
+        value: v,
+      })) || []
+    );
   }
 
   public getValuesControl(index: number): FormControl {
     return this.properties.at(index).get('values') as FormControl;
   }
 
-  public isMultiSelect(prop: AbstractControl): boolean {
-    const type = prop.get('type')?.value;
-    return ['string', 'number', 'bool'].includes(type);
-  }
-
-  public isDate(prop: AbstractControl): boolean {
-    return prop.get('type')?.value === 'date';
-  }
-
   public onPriceInputChange(event: Event, index: number): void {
-    debugger;
     const input = event.target as HTMLInputElement;
     let value = Number(input.value);
     const range = [...(this.rangeControl.value || [0, 0])];
@@ -182,77 +143,59 @@ export class FiltersListComponent implements OnInit {
 
     range[index] = value;
     this.rangeControl.setValue(range);
-    this.cd.detectChanges();
+    this.cd.markForCheck();
   }
 
   public applyFilters(): void {
-    const formValue = this.filterForm.value;
-    const [priceFrom, priceTo] = formValue.range || [
+    const fv = this.filterForm.value;
+
+    const priceRange: number[] = fv.range || [
       this.filters.minPrice,
       this.filters.maxPrice,
     ];
+
     const request: ProductFilters = {
-      brandIds: ((formValue.brands as any[]) || [])
-        .map((b) => (typeof b === 'object' ? b.id : b))
-        .filter((b) => !!b),
-      typeIds: ((formValue.types as any[]) || [])
-        .map((t) => (typeof t === 'object' ? t.id : t))
-        .filter((t) => !!t),
-
-      priceFrom,
-      priceTo,
-
-      properties: ((formValue.properties as any[]) || [])
-        .map((propForm, i) => {
-          if (!propForm) return null;
-          const p = this.filters.properties[i];
-          if (!p) return null;
-
-          switch (p.type) {
-            case PropertyTypes.string:
-            case PropertyTypes.number:
-            case PropertyTypes.bool:
-              return (propForm.values || []).length
-                ? { name: p.name, type: p.type, values: propForm.values }
-                : null;
-
-            case PropertyTypes.date:
-              const vals = [];
-              if (propForm.from) vals.push(propForm.from);
-              if (propForm.to) vals.push(propForm.to);
-              return vals.length
-                ? { name: p.name, type: p.type, values: vals }
-                : null;
-
-            default:
-              return null;
-          }
-        })
-        .filter((p) => p != null),
+      brandIds: (fv.brands || [])
+        .map((b: any) => (typeof b === 'object' ? b.id : b))
+        .filter(Boolean),
+      typeIds: (fv.types || [])
+        .map((t: any) => (typeof t === 'object' ? t.id : t))
+        .filter(Boolean),
+      priceFrom: priceRange[0],
+      priceTo: priceRange[1],
+      properties: this.propertiesToFilters(fv.properties || []),
     };
 
     this.filterApplied.emit(request);
+    this.cd.markForCheck();
+  }
+
+  private propertiesToFilters(propForms: any[]): PropertyFilter[] {
+    if (!this.filters?.properties) return [];
+
+    return propForms
+      .map((pf, i) => {
+        const original = this.filters.properties[i];
+        if (!original) return null;
+        const vals = pf.values || [];
+        if (!vals.length) return null;
+        return { name: original.name, type: original.type, values: vals };
+      })
+      .filter((p) => p != null) as PropertyFilter[];
   }
 
   public resetFilters(): void {
     if (!this.filters) return;
 
-    this.filterForm.reset({
+    const propsArray = this.fb.array(
+      this.filters.properties.map((p) => this.createPropertyControl(p))
+    );
+    this.filterForm.setControl('properties', propsArray);
+
+    this.filterForm.patchValue({
       brands: [],
       types: [],
       range: [this.filters.minPrice, this.filters.maxPrice],
-      properties: this.filters.properties.map((p) => {
-        if (p.type === PropertyTypes.date) {
-          return {
-            name: p.name,
-            type: p.type,
-            from: null as any,
-            to: null as any,
-          };
-        } else {
-          return { name: p.name, type: p.type, values: [] as any };
-        }
-      }),
     });
 
     this.filterApplied.emit({
@@ -263,6 +206,6 @@ export class FiltersListComponent implements OnInit {
       properties: [],
     });
 
-    this.cd.detectChanges();
+    this.cd.markForCheck();
   }
 }

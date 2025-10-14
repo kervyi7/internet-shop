@@ -78,6 +78,22 @@ namespace Shop.Server.Common
             return sources.Select(ToViewModel);
         }
 
+        public static IEnumerable<FavoriteProductDto> ToViewModels(this IEnumerable<FavoriteProduct> sources)
+        {
+            return sources.Select(ToViewModel);
+        }
+
+        public static FavoriteProductDto ToViewModel(this FavoriteProduct source)
+        {
+            var dto = new FavoriteProductDto()
+            {
+                ProductId = source.ProductId,
+                Product = source.Product.ToViewModel()
+
+            };
+            return dto;
+        }
+
         public static ProductDto ToViewModel(this Product source)
         {
             var productDto = new ProductDto()
@@ -96,7 +112,6 @@ namespace Shop.Server.Common
                 StringProperties = CreatePropertiesDto(source.StringProperties),
                 DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
-                DateProperties = CreatePropertiesDto(source.DateProperties),
                 Images = ToViewModels(source.ProductImages.Select(x => x.Image))
             };
             return productDto;
@@ -156,7 +171,6 @@ namespace Shop.Server.Common
                 StringProperties = CreatePropertiesDto(source.StringProperties),
                 DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
-                DateProperties = CreatePropertiesDto(source.DateProperties),
             };
             return propertyTemplateDto;
         }

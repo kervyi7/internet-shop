@@ -13,11 +13,10 @@ import { map } from 'rxjs';
 })
 export class MainComponent extends BaseCompleteComponent implements OnInit {
   public isAuthorized: boolean;
+  public isAdmin: boolean;
 
   public totalQuantity$ = this.cartService.cart$.pipe(
-    map((items) =>
-      items.reduce((sum, item) => sum + (item.quantity || 1), 0)
-    )
+    map((items) => items.reduce((sum, item) => sum + (item.quantity || 1), 0))
   );
 
   constructor(
@@ -30,14 +29,15 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
 
   public ngOnInit(): void {
     this.isAuthorized = this._authService.isLoggedIn();
+    this.isAdmin = this._authService.isAdmin();
   }
 
-  public redirect(): void {
-    if (this._authService.isAdmin()) {
-      this._router.navigate(['/admin']);
-    } else {
-      this._router.navigate(['/user']);
-    }
+  public goToAdmin(): void {
+    this._router.navigate(['/admin']);
+  }
+
+  public goToUser(): void {
+    this._router.navigate(['/user']);
   }
 
   public goToFavorites(): void {

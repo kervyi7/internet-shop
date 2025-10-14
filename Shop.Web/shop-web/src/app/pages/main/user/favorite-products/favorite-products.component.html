@@ -1,6 +1,6 @@
-<div *ngFor="let product of products">
-  <div class="favorite-item">
-    <span>{{ product.name || product.id }}</span>
-    <button (click)="delete(product)">Remove</button>
-  </div>
+<div class="flex w-full flex-wrap products-container': isRowsView">
+  <ng-container *ngFor="let product of products">
+    <shop-product-container [product]="product" [isRow]="isRowsView">
+    </shop-product-container>
+  </ng-container>
 </div>

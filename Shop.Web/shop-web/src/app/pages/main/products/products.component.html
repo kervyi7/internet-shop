@@ -1,37 +1,56 @@
-<div class="breadcrumb-params-container">
-  <div class="breadcrumb-container">
-    <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+<div
+  class="flex lg:justify-content-between md:justify-content-between sm:justify-content-center flex-wrap w-full flex-column sm:flex-row md:flex-row lg:flex-row gap-3 align-items-center border-y-1 border-primary p-3"
+>
+  <div class="w-min">
+    <p-breadcrumb
+      styleClass="max-w-18rem sm:max-w-full p-1 border-none sm:p-3 sm:border-1"
+      [model]="breadcrumbItems"
+      [home]="home"
+    ></p-breadcrumb>
   </div>
-  <div class="paginator-filters">
-    <p-button (onClick)="changeFiltersMenuState()">Filters</p-button>
-    <p-dropdown
-      [options]="sortBy"
-      optionLabel="label"
-      optionValue="label"
-      (onChange)="onCountChange()"
-    ></p-dropdown>
-    <p-paginator
-      [first]="skip"
-      [rows]="countPerPage"
-      [totalRecords]="count"
-      (onPageChange)="onPageChange($event)"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="{first} - {last} of {totalRecords}"
-      [showPageLinks]="false"
-    ></p-paginator>
-    <p-dropdown
-      [options]="countOptions"
-      optionLabel="label"
-      optionValue="value"
-      [(ngModel)]="countPerPage"
-      (onChange)="onCountChange()"
-    ></p-dropdown>
+  <div class="flex align-items-center gap-3 flex-wrap justify-content-center">
+    <p-button
+      *ngIf="!isMobile"
+      (onClick)="changeProductsView()"
+      [text]="true"
+      [icon]="isRowsView ? 'pi pi-list' : 'pi pi-th-large'"
+    ></p-button>
+    <p-button (onClick)="changeFiltersMenuState()" label="Filters"></p-button>
+    <div>
+      <span class="p-float-label">
+        <p-dropdown
+          id="count"
+          [options]="countOptions"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="pagination.count"
+          (onChange)="onCountChange()"
+        ></p-dropdown>
+        <label htmlFor="count">
+          <span>Show</span>
+        </label>
+      </span>
+    </div>
+    <div>
+      <span class="p-float-label">
+        <p-dropdown
+          id="sortBy"
+          [options]="sortBy"
+          optionLabel="label"
+          optionValue="label"
+          (onChange)="onCountChange()"
+        ></p-dropdown>
+        <label htmlFor="sortBy">
+          <span>Sort by</span>
+        </label>
+      </span>
+    </div>
   </div>
 </div>
-<div class="filters-products-container my-4">
+<div class="filters-products-container my-4 flex justify-content-center">
   <div [class.filters-layout]="isFiltersOpen">
     <div
-      class="filters-container flex flex-column align-items-end"
+      class="filters-container flex flex-column align-items-end absolute top-0 p-4"
       [@openClose]="isFiltersOpen ? 'open' : 'closed'"
     >
       <p-button
@@ -48,40 +67,30 @@
       ></shop-filters-list>
     </div>
   </div>
-  <!-- TODO: create another component for products rows and cards -->
-  <div class="products-container">
-    <div
-      *ngFor="let product of products"
-      (click)="goToProduct(product)"
-      class="product"
-    >
-      <img [src]="product.images[0].smallBody" />
-      <div class="data">
-        <h2>{{ product.name }}</h2>
-        <shop-properties-list
-          [template]="template"
-          [properties]="getProperties(product)"
-          [isProduct]="true"
-          [isEditable]="false"
-          [isList]="false"
-        ></shop-properties-list>
-      </div>
-      <div class="price-container">
-        <ng-container *ngIf="product.discountPrice; else price">
-          <span class="discount"
-            >{{ product.discountPrice }}{{ product.currency }}</span
-          >
-          <span class="through-lined-price"
-            >{{ product.price }}{{ product.currency }}</span
-          >
-        </ng-container>
-        <ng-template #price>
-          <span class="regular-price">
-            {{ product.price }}{{ product.currency }}
-          </span>
-        </ng-template>
-        <p-button>Add to Cart</p-button>
-      </div>
+  <div
+    class="flex gap-4 flex-wrap justify-content-center"
+    [ngClass]="{
+      ' w-full flex-column products-container': isRowsView && !isMobile
+    }"
+  >
+    <div *ngFor="let product of products">
+      <shop-product-container
+        [product]="product"
+        [isRow]="isRowsView && !isMobile"
+      ></shop-product-container>
     </div>
+  </div>
+</div>
+<div *ngIf="products" class="flex flex-column">
+  <p-paginator
+    [first]="pagination.skip"
+    [rows]="pagination.count"
+    [totalRecords]="total"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
+  <!-- TODO: test -->
+  <div class="flex align-self-center" >
+    {{ pagination.skip + 1 }} - {{ pagination.skip + products.length }} of
+    {{ total }}
   </div>
 </div>

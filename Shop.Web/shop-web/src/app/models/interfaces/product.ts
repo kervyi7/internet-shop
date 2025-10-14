@@ -16,6 +16,5 @@ export interface IProduct extends ICodeName, IPropertyAll {
 }
 
 export interface IProductResponse extends IPropertyResponse, IProduct {
-  dateProperties: IProperty<string>[];
   propertyTemplate?: IPropertyTemplate;
 }

@@ -31,10 +31,6 @@ export class Converter {
   }
 
   public static prepareProperties(propertyResponse: IPropertyResponse): void {
-    for (const property of propertyResponse.dateProperties) {
-      (property.value as unknown) = new Date(property.value);
-      property.type = PropertyTypes.date;
-    }
     for (const property of propertyResponse.stringProperties) {
       property.type = PropertyTypes.string;
     }

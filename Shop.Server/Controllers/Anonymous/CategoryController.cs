@@ -115,21 +115,6 @@ namespace Shop.Server.Controllers.Admin
                 })
                 .ToList();
 
-            var datePropsRaw = await _dataContext.DateProperties
-                .Where(dp => dp.Product.Category.Name == categoryName)
-                .GroupBy(dp => dp.Name)
-                .Select(g => new { Name = g.Key, Values = g.Select(x => x.Value) })
-                .ToListAsync();
-
-            var dateProps = datePropsRaw
-                .Select(g => new PropertyFilterDto
-                {
-                    Name = g.Name,
-                    Type = PropertyTypes.Date,
-                    Values = g.Values.Distinct().Select(v => v.ToString("yyyy-MM-dd")).ToList()
-                })
-                .ToList();
-
             var filters = new CategoryFiltersDto
             {
                 Brands = brands,
@@ -139,7 +124,7 @@ namespace Shop.Server.Controllers.Admin
                 Properties = stringProps
                     .Concat(decimalProps)
                     .Concat(boolProps)
-                    .Concat(dateProps)
+                    //.Concat(dateProps)
                     .ToList()
             };
 

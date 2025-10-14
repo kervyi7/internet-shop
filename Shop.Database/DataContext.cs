@@ -88,10 +88,6 @@ namespace Shop.Database
                 .HasOne(x => x.Product)
                 .WithMany(x => x.StringProperties)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Property<DateTime>>()
-                .HasOne(x => x.Product)
-                .WithMany(x => x.DateProperties)
-                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<bool>>()
                 .ToTable(t => GetPropertyConstraint(t, "Bool"));
             modelBuilder.Entity<Property<decimal>>()

@@ -1,0 +1,37 @@
+<div (click)="redirect()" class="product flex text-overflow-ellipsis mx-2">
+  <img [src]="product.images[0].smallBody" />
+  <div class="w-full overflow-hidden">
+    <h2 class="white-space-nowrap overflow-hidden text-overflow-ellipsis">
+      {{ product.name }}
+    </h2>
+    <shop-properties-view
+      [template]="template"
+      [properties]="properties"
+    ></shop-properties-view>
+  </div>
+  <div
+    class="price-container flex flex-column gap-4 align-items-center justify-content-center"
+  >
+    <div
+      *ngIf="product.discountPrice; else price"
+      class="flex flex-column align-items-center"
+    >
+      <span class="discount text-xl"
+        >{{ product.discountPrice }}{{ product.currency }}</span
+      >
+      <span class="text-xs"
+        >Usual price: {{ product.price }}{{ product.currency }}</span
+      >
+    </div>
+    <ng-template #price>
+      <span class="text-xl"> {{ product.price }}{{ product.currency }} </span>
+    </ng-template>
+    <div class="flex gap-2">
+      <p-button (onClick)="addToCart($event)">Add to Cart</p-button>
+      <shop-favorites-button
+        [isFavorite]="isFav$ | async"
+        (click)="toggleFavorite($event)"
+      ></shop-favorites-button>
+    </div>
+  </div>
+</div>

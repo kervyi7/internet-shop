@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { FavoriteProductsDataService } from './data/favorite-product-data.service';
 import { FavoriteProductRequest } from '../models/interfaces/favorite-product';
@@ -67,8 +67,10 @@ export class FavoritesService {
       .subscribe();
   }
 
-  public isFavorite(productId: number): boolean {
-    return this._favorites$.value.some((p) => p.id === productId);
+  public isFavorite$(productId: number): Observable<boolean> {
+    return this._favorites$.pipe(
+      map((favorites: IProduct[]) => favorites.some((p) => p.id === productId))
+    );
   }
 
   public getUserId(): string | null {

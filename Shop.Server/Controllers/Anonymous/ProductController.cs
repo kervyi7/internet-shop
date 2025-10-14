@@ -32,7 +32,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
                 .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
-                .Include(x => x.DateProperties.Where(x => x.IsTitle))
                 .ToListAsync();
             return Ok(products.ToViewModels());
         }
@@ -48,7 +47,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties)
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
-                .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image)
                 .Where(x => x.Category.Name == category)
@@ -96,7 +94,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties)
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
-                .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages)
                 .ThenInclude(x => x.Image)
                 .FirstOrDefaultAsync(x => x.Code == code);
@@ -152,20 +149,6 @@ namespace Shop.Server.Controllers.Admin
                     var boolValues = filter.Values.Select(bool.Parse).ToList();
                     return query.Where(p =>
                         p.BoolProperties.Any(bp => bp.Name == filter.Name && boolValues.Contains(bp.Value)));
-                case PropertyTypes.Date:
-                    if (filter.Values.Count == 2)
-                    {
-                        var from = DateTime.Parse(filter.Values[0]);
-                        var to = DateTime.Parse(filter.Values[1]);
-                        return query.Where(p =>
-                            p.DateProperties.Any(dp => dp.Name == filter.Name && dp.Value >= from && dp.Value <= to));
-                    }
-                    else
-                    {
-                        var dateValues = filter.Values.Select(DateTime.Parse).ToList();
-                        return query.Where(p =>
-                            p.DateProperties.Any(dp => dp.Name == filter.Name && dateValues.Contains(dp.Value)));
-                    }
             }
             return query;
         }

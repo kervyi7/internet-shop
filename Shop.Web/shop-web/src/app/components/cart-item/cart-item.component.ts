@@ -11,7 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
+import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
 import { CartItem } from 'src/app/models/interfaces/cart';
+import { ScreenService } from 'src/app/services/screen.service';
 
 @Component({
   selector: 'shop-cart-item',
@@ -36,13 +38,13 @@ export class CartItemComponent implements OnInit {
   @Output() public remove = new EventEmitter<void>();
   @Output() public toggleSelect = new EventEmitter<boolean>();
 
-  @HostListener('window:resize')
-  public onResize(): void {
-    this.updateIsMobile();
-  }
+  constructor(private screenService: ScreenService) {}
 
   public ngOnInit(): void {
-    this.updateIsMobile();
+    this.isMobile = this.screenService.isMobile();
+    this.screenService.screenSize$.subscribe((size) => {
+      this.isMobile = size === ScreenSizes.Mobile;
+    });
   }
 
   public onQuantityChange(newCount: number): void {
@@ -60,9 +62,5 @@ export class CartItemComponent implements OnInit {
 
   public onSelectChange(checked: boolean): void {
     this.toggleSelect.emit(checked);
-  }
-
-  private updateIsMobile(): void {
-    this.isMobile = window.innerWidth < 768;
   }
 }

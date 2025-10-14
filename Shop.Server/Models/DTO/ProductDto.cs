@@ -17,6 +17,5 @@ namespace Shop.Server.Models.DTO
         public IEnumerable<PropertyDto<string>> StringProperties { get; set; }
         public IEnumerable<PropertyDto<decimal>> DecimalProperties { get; set; }
         public IEnumerable<PropertyDto<bool>> BoolProperties { get; set; }
-        public IEnumerable<PropertyDto<DateTime>> DateProperties { get; set; }
     }
 }

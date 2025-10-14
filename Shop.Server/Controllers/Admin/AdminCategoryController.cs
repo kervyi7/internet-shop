@@ -77,7 +77,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.PropertyTemplate).ThenInclude(x => x.StringProperties.Where(x => x.ProductId == null))
                 .Include(x => x.PropertyTemplate).ThenInclude(x => x.DecimalProperties.Where(x => x.ProductId == null))
                 .Include(x => x.PropertyTemplate).ThenInclude(x => x.BoolProperties.Where(x => x.ProductId == null))
-                .Include(x => x.PropertyTemplate).ThenInclude(x => x.DateProperties.Where(x => x.ProductId == null))
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (category == null)
             {
@@ -208,12 +207,12 @@ namespace Shop.Server.Controllers.Admin
             return Ok(baseModel);
         }
 
-        [HttpPost($"add-property/{PropertyTypes.Date}")]
-        public async Task<ActionResult> AddPropertyDate(PropertyDto<DateTime> model)
-        {
-            var baseModel = await AddProperty(model);
-            return Ok(baseModel);
-        }
+        //[HttpPost($"add-property/{PropertyTypes.Date}")]
+        //public async Task<ActionResult> AddPropertyDate(PropertyDto<DateTime> model)
+        //{
+        //    var baseModel = await AddProperty(model);
+        //    return Ok(baseModel);
+        //}
 
         [HttpPut($"edit-property/{PropertyTypes.String}/" + "{id:int}")]
         public async Task<ActionResult> EditPropertyString(int id, PropertyDto<string> model)
@@ -236,12 +235,12 @@ namespace Shop.Server.Controllers.Admin
             return Ok();
         }
 
-        [HttpPut($"edit-property/{PropertyTypes.Date}/" + "{id:int}")]
-        public async Task<ActionResult> EditPropertyDate(int id, PropertyDto<DateTime> model)
-        {
-            await EditProperty(id, model);
-            return Ok();
-        }
+        //[HttpPut($"edit-property/{PropertyTypes.Date}/" + "{id:int}")]
+        //public async Task<ActionResult> EditPropertyDate(int id, PropertyDto<DateTime> model)
+        //{
+        //    await EditProperty(id, model);
+        //    return Ok();
+        //}
 
         [HttpDelete("remove-property/{id:int}/property/{propertyId:int}/type/{type}")]
         public async Task<ActionResult> DeleteProperty(int id, int propertyId, string type)
@@ -271,8 +270,8 @@ namespace Shop.Server.Controllers.Admin
                     return dataContext.DecimalProperties;
                 case PropertyTypes.Bool:
                     return dataContext.BoolProperties;
-                case PropertyTypes.Date:
-                    return dataContext.DateProperties;
+                //case PropertyTypes.Date:
+                //    return dataContext.DateProperties;
                 default:
                     throw new ConflictException("not reference");
             }

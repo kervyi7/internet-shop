@@ -16,13 +16,11 @@ export interface IPropertyTemplate extends ICodeName, IPropertyAll {
   categoryId: number;
   extension: ITemplateExtension;
 }
-
+//TODO: check if needed
 export interface IPropertyTemplateResponse extends IPropertyResponse, IPropertyTemplate {
-  dateProperties: IProperty<string>[];
 }
 
 export interface IPropertyResponse extends IPropertyAll {
-  dateProperties: IProperty<string>[];
 }
 
 export interface IPropertyAll {

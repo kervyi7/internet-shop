@@ -7,10 +7,10 @@ export interface IImage extends IBaseImage {
 export interface IBaseImage extends IBaseModel {
   body: string;
   smallBody: string;
-  fileSize: number;
-  fileName: string;
+  fileSize?: number;
+  fileName?: string;
   name: string;
   mimeType: string;
-  isBinding: boolean;
-  isTitle: boolean;
+  isBinding?: boolean;
+  isTitle?: boolean;
 }

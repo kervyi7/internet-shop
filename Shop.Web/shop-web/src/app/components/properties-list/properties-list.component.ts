@@ -18,9 +18,8 @@ import { takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertiesListComponent extends BaseCompleteComponent implements OnInit {
-  @Input() public isProduct: boolean;
+  @Input() public isDeleteAllowed: boolean;
   @Input() public isEditable: boolean;
-  @Input() public isList: boolean;
   @Input() public template: IPropertyTemplate;
   @Input() public properties: IProperty[];
 
@@ -101,7 +100,7 @@ export class PropertiesListComponent extends BaseCompleteComponent implements On
       if (!newProperty) {
         return;
       }
-      if (this.isProduct) {
+      if (this.isDeleteAllowed) {
         property.value = newProperty.value;
       } else {
         property.code = newProperty.code;

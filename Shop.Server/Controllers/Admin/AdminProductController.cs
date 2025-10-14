@@ -36,7 +36,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
                 .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
-                .Include(x => x.DateProperties.Where(x => x.IsTitle))
                 .ToListAsync();
             return Ok(products.ToViewModels());
         }
@@ -50,7 +49,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties)
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
-                .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages)
                 .ThenInclude(x => x.Image)
                 .Include(x => x.Category)
@@ -71,7 +69,6 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties)
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
-                .Include(x => x.DateProperties)
                 .FirstOrDefaultAsync(x => x.CategoryId == model.Category.Id);
             if (model.DiscountPrice > model.Price)
             {
@@ -98,7 +95,6 @@ namespace Shop.Server.Controllers.Admin
             AddPropertiesByTemplate(template.StringProperties, item, user);
             AddPropertiesByTemplate(template.DecimalProperties, item, user);
             AddPropertiesByTemplate(template.BoolProperties, item, user);
-            AddPropertiesByTemplate(template.DateProperties, item, user);
             await DataContext.SaveChangesAsync();
             transaction.Commit();
 
@@ -145,13 +141,6 @@ namespace Shop.Server.Controllers.Admin
 
         [HttpPut($"edit-property/{PropertyTypes.Bool}/" + "{id:int}")]
         public async Task<ActionResult> EditPropertyBool(int id, PropertyDto<bool> model)
-        {
-            await EditProperty(id, model);
-            return Ok();
-        }
-
-        [HttpPut($"edit-property/{PropertyTypes.Date}/" + "{id:int}")]
-        public async Task<ActionResult> EditPropertyDate(int id, PropertyDto<DateTime> model)
         {
             await EditProperty(id, model);
             return Ok();
@@ -216,8 +205,6 @@ namespace Shop.Server.Controllers.Admin
                     return dataContext.DecimalProperties;
                 case PropertyTypes.Bool:
                     return dataContext.BoolProperties;
-                case PropertyTypes.Date:
-                    return dataContext.DateProperties;
                 default:
                     throw new ConflictException("not reference");
             }

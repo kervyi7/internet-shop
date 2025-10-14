@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Database.Models;
+using Shop.Server.Common;
 using Shop.Server.Models.DTO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,10 +23,19 @@ namespace Shop.Server.Controllers.Anonymous
         public async Task<ActionResult<FavoriteProductDto[]>> GetAll(string userId)
         {
             var favorites = await _dataContext.FavoriteProducts
-                .Include(f => f.Product)
                 .Where(f => f.UserId == userId)
-                .ToArrayAsync();
-            return Ok(favorites);
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.Type)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.ProductImages)
+                        .ThenInclude(pi => pi.Image)
+                .ToListAsync();
+
+            return Ok(favorites.ToViewModels());
         }
 
         [HttpPost]

@@ -16,8 +16,6 @@ namespace Shop.Server.Models
 
         public IEnumerable<PropertyDto<bool>> BoolProperties { get; set; }
 
-        public IEnumerable<PropertyDto<DateTime>> DateProperties { get; set; }
-
         public int CategoryId { get; set; }
     }
 }

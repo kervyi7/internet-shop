@@ -46,8 +46,6 @@ namespace Shop.Database.Models
 
         public ICollection<Property<bool>> BoolProperties { get; set; } = new List<Property<bool>>();
 
-        public ICollection<Property<DateTime>> DateProperties { get; set; } = new List<Property<DateTime>>();
-
         public ICollection<ProductImage> ProductImages { get; } = new List<ProductImage>();
     }
 }

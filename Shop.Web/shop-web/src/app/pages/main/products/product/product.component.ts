@@ -81,7 +81,6 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     properties.push(...product.stringProperties);
     properties.push(...product.decimalProperties);
     properties.push(...product.boolProperties);
-    properties.push(...product.dateProperties);
     return properties;
   }
 
@@ -124,7 +123,6 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
           },
           { label: data.name },
         ];
-        this.isFavorite = this._favoritesService.isFavorite(data.id);
         this._cd.detectChanges();
       });
   }

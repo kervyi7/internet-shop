@@ -16,11 +16,6 @@
           [disabled]="isDisabled"></p-radioButton>
         <label for="typeBool" class="label">{{lang.propertyTypes.boolean}}</label>
       </div>
-      <div>
-        <p-radioButton name="type" [value]="propertyTypes.date" [(ngModel)]="selectedType" inputId="typeDate"
-          [disabled]="isDisabled"></p-radioButton>
-        <label for="typeDate" class="label">{{lang.propertyTypes.dateTime}}</label>
-      </div>
     </div>
     <div class="inputs-container" [ngSwitch]="selectedType">
       <input [(ngModel)]="editedProperty.name" type="text" pInputText
@@ -41,9 +36,9 @@
           {{editedProperty.value === true ? lang.boolProperties.yes : lang.boolProperties.no}}
         </label>
       </div>
-      <div *ngSwitchCase="propertyTypes.date">
+      <!-- <div *ngSwitchCase="propertyTypes.date">
         <p-calendar [(ngModel)]="editedProperty.value" placeholder="{{lang.placeholders.propertyValue}}"></p-calendar>
-      </div>
+      </div> -->
     </div>
     <div class="checkbox-container">
       <div>

@@ -20,15 +20,18 @@
     [text]="true"
     class="button"
     *ngIf="isAuthorized; else loginButton"
-    (click)="redirect()"
+    (click)="goToUser()"
   >
     <span class="material-icons-outline">account_circle</span>
+  </p-button>
+  <p-button [text]="true" class="button" *ngIf="isAdmin" (click)="goToAdmin()">
+    <span class="material-icons-outline">settings</span>
   </p-button>
   <ng-template #loginButton>
     <p-button [text]="true" (click)="goToLogin()">Sign In</p-button>
   </ng-template>
 </header>
-<main class="my-4">
+<main class="mb-4">
   <router-outlet></router-outlet>
 </main>
 <footer>

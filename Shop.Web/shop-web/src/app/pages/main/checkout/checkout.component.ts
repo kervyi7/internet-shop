@@ -1,6 +1,8 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
 import { Step } from 'src/app/models/interfaces/step';
+import { ScreenService } from 'src/app/services/screen.service';
 
 @Component({
   selector: 'shop-checkout',
@@ -21,14 +23,13 @@ export class CheckoutComponent implements OnInit {
     return this.steps.findIndex((s) => this.router.url.startsWith(s.route));
   }
 
-  @HostListener('window:resize')
-  public onResize(): void {
-    this.updateIsMobile();
-  }
+  constructor(private router: Router, private screenService: ScreenService) {}
 
-  constructor(private router: Router) {}
   public ngOnInit(): void {
-    this.updateIsMobile();
+    this.isMobile = this.screenService.isMobile();
+    this.screenService.screenSize$.subscribe((size) => {
+      this.isMobile = size === ScreenSizes.Mobile;
+    });
   }
 
   public isActive(route: string): boolean {
@@ -43,9 +44,5 @@ export class CheckoutComponent implements OnInit {
     } else {
       return;
     }
-  }
-
-  private updateIsMobile(): void {
-    this.isMobile = window.innerWidth < 768;
   }
 }

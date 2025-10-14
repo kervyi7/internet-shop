@@ -12,7 +12,7 @@ export class UserGuard {
   ) { }
 
   public canActivate(): boolean {
-    if (this._authService.isLoggedIn() && !this._authService.isAdmin()) {
+    if (this._authService.isLoggedIn()) {
       return true;
     }
     this._router.navigate(['/not-found']);
