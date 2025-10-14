@@ -41,7 +41,18 @@ namespace Shop.Server.Controllers.Anonymous
             var address = await _dataContext.DeliveryAddresses
                 .FirstOrDefaultAsync(a => a.Id == id && a.UserId == dto.UserId);
 
-            if (address == null) return NotFound();
+            if (address == null)
+                return NotFound("Address not found");
+
+            if (dto.IsDefault)
+            {
+                var userAddresses = await _dataContext.DeliveryAddresses
+                    .Where(a => a.UserId == dto.UserId && a.Id != id)
+                    .ToListAsync();
+
+                foreach (var addr in userAddresses)
+                    addr.IsDefault = false;
+            }
 
             address.FirstName = dto.FirstName;
             address.LastName = dto.LastName;
@@ -60,8 +71,8 @@ namespace Shop.Server.Controllers.Anonymous
             return Ok(address);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id, [FromBody] string userId)
+        [HttpDelete("{id}/{userId}")]
+        public async Task<ActionResult> Delete(int id, string userId)
         {
             var address = await _dataContext.DeliveryAddresses
                 .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);

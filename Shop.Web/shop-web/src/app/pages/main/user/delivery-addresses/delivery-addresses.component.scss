@@ -1,0 +1,19 @@
+.card {
+  box-shadow: 0px 0px 3px 0px #cecece;
+}
+
+.required-asterisk {
+  color: #d9534f;
+  margin-left: 4px;
+}
+
+.p-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex.gap-2 {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

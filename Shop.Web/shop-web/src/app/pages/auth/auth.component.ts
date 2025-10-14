@@ -76,7 +76,7 @@ export class AuthComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private validatePasswords(): void {
-    const { password, confirmPassword } = this.userForm.controls as any;
+    const { password, confirmPassword } = this.userForm.controls;
     if (!password || !confirmPassword) {
       return;
     }

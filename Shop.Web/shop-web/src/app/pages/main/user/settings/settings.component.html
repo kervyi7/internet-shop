@@ -1,0 +1,87 @@
+<div class="card p-3 flex flex-column gap-4">
+  <div class="flex align-items-center">
+    <h3>User Information</h3>
+    <p-button
+      [text]="true"
+      icon="pi pi-pencil"
+      (click)="showEditForm()"
+    ></p-button>
+  </div>
+  <div class="flex lg:flex-row flex-column gap-2">
+    <label>Username:</label>
+    <span class="font-semibold">{{ user?.userName }}</span>
+  </div>
+
+  <div class="flex lg:flex-row flex-column gap-2">
+    <label>Email:</label>
+    <span class="font-semibold">{{ user?.email }}</span>
+  </div>
+
+  <div class="flex lg:flex-row flex-column gap-2">
+    <label>First and last name:</label>
+    <span class="font-semibold"
+      >{{ user?.firstName }} {{ user?.lastName }}</span
+    >
+  </div>
+
+  <div class="flex lg:flex-row flex-column gap-2">
+    <label>Phone number:</label>
+    <span class="font-semibold">{{ user?.phoneNumber || "-" }}</span>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="formVisible"
+  header="Edit Profile"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+>
+  <form
+    *ngIf="profileForm"
+    [formGroup]="profileForm"
+    (ngSubmit)="saveProfile()"
+    class="p-fluid"
+  >
+    <div class="flex flex-column gap-4 w-full">
+      <ng-container *ngFor="let f of fields">
+        <div class="flex flex-column gap-2 align-items-start w-full">
+          <label [for]="f.name">
+            {{ f.label
+            }}<span *ngIf="f.required" class="required-asterisk"> *</span>
+          </label>
+
+          <input
+            pInputText
+            [type]="f.type"
+            [id]="f.name"
+            [formControlName]="f.name"
+            [attr.placeholder]="f.placeholder"
+            [attr.aria-label]="f.label"
+          />
+
+          <small class="p-error" *ngIf="getError(f.name)">{{
+            getError(f.name)
+          }}</small>
+        </div>
+      </ng-container>
+
+      <div class="p-field flex gap-2">
+        <button
+          pButton
+          type="submit"
+          label="Save"
+          icon="pi pi-check"
+          [disabled]="profileForm.invalid"
+        ></button>
+
+        <button
+          pButton
+          type="button"
+          label="Cancel"
+          icon="pi pi-times"
+          (click)="formVisible = false"
+        ></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>

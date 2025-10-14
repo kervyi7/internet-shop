@@ -7,8 +7,6 @@ namespace Shop.Database
 {
     internal sealed class ContextSeed
     {
-        private const string DefAdministratorLanguage = "uk-UA";
-
         public void Seed(DataContext context)
         {
             SeedAdminIdentity(context);
@@ -57,7 +55,6 @@ namespace Shop.Database
                 NormalizedUserName = "ADMINISTRATOR",
                 FirstName = "Administrator",
                 LastName = "Administrator",
-                Language = DefAdministratorLanguage,
                 RegisterType = nameof(RegisterTypes.Admin),
                 Confirmed = true,
                 Active = true

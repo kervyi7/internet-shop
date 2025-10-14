@@ -1,0 +1,134 @@
+<div>
+  <button
+    pButton
+    label="Add new address"
+    icon="pi pi-plus"
+    (click)="showAddForm()"
+    class="mt-3"
+  ></button>
+  <div class="flex gap-4 pt-4 flex-wrap">
+    <div *ngFor="let address of addresses" class="card p-3 w-4 border-round-lg lg:min-w-min md:min-w-min min-w-full">
+      <div class="flex align-items-center gap-2 justify-content-between">
+        <p-radioButton
+          name="defaultAddress"
+          [value]="address.id"
+          [(ngModel)]="selectedDefaultId"
+          (onClick)="changeDefault(address)"
+        ></p-radioButton>
+        <div>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            (click)="showEditForm(address)"
+            class="p-button-text"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            (click)="deleteAddress(address.id!)"
+            class="p-button-text"
+          ></button>
+        </div>
+      </div>
+      <div class="flex justify-content-between">
+        <div class="text-overflow-ellipsis">
+          <p>{{ address.firstName }} {{ address.lastName }}</p>
+          <p>{{ address.country }}, {{ address.city }}</p>
+          <p>
+            {{ address.street }} {{ address.houseNumber }}
+            {{ address.apartment }}
+          </p>
+          <p>{{ address.postcode }}</p>
+          <p>{{ address.phone }}</p>
+          <p>{{ address.email }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-dialog
+    [(visible)]="formVisible"
+    [header]="isEdit ? 'Edit Address' : 'Add Address'"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+  >
+    <!-- change -->
+    <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="p-fluid">
+      <div class="flex flex-column gap-4 w-full">
+        <ng-container *ngFor="let f of addressFields">
+          <div class="flex flex-column gap-2 align-items-start w-full">
+            <label [for]="f.name">
+              {{ f.label
+              }}<span *ngIf="f.required" class="required-asterisk"> *</span>
+            </label>
+            <ng-container [ngSwitch]="f.type">
+              <input
+                *ngSwitchCase="'text'"
+                pInputText
+                [id]="f.name"
+                [formControlName]="f.name"
+                [attr.placeholder]="f.placeholder"
+                [attr.aria-label]="f.label"
+              />
+              <input
+                *ngSwitchCase="'email'"
+                pInputText
+                type="email"
+                [id]="f.name"
+                [formControlName]="f.name"
+                [attr.placeholder]="f.placeholder"
+                [attr.aria-label]="f.label"
+              />
+              <input
+                *ngSwitchCase="'tel'"
+                pInputText
+                type="tel"
+                [id]="f.name"
+                [formControlName]="f.name"
+                [attr.placeholder]="f.placeholder"
+                [attr.aria-label]="f.label"
+              />
+              <input
+                *ngSwitchDefault
+                pInputText
+                [id]="f.name"
+                [formControlName]="f.name"
+                [attr.placeholder]="f.placeholder"
+                [attr.aria-label]="f.label"
+              />
+            </ng-container>
+            <small class="p-error" *ngIf="getError(f.name)">{{
+              getError(f.name)
+            }}</small>
+          </div>
+        </ng-container>
+        <div class="p-col-12 p-field">
+          <label for="notes">Notes</label>
+          <textarea
+            pInputTextarea
+            id="notes"
+            formControlName="notes"
+            rows="4"
+            [attr.placeholder]="'Additional information (optional)'"
+          ></textarea>
+        </div>
+        <div class="p-col-12 p-field flex gap-2">
+          <button
+            pButton
+            type="submit"
+            label="Save"
+            icon="pi pi-check"
+            [disabled]="addressForm.invalid"
+          ></button>
+          <button
+            pButton
+            type="button"
+            label="Cancel"
+            icon="pi pi-times"
+            (click)="formVisible = false"
+          ></button>
+        </div>
+      </div>
+    </form>
+  </p-dialog>
+</div>

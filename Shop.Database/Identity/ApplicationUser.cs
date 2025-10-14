@@ -26,11 +26,6 @@ namespace Shop.Database.Identity
         [MaxLength(250)]
         public string Address { get; set; }
 
-        public string Avatar { get; set; }
-
-        [MaxLength(50)]
-        public string Language { get; set; }
-
         [MaxLength(20)]
         public string RegisterType { get; set; }
 

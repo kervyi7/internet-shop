@@ -1,0 +1,14 @@
+.steps {
+  ::ng-deep p-button {
+    border-radius: 8px;
+    box-shadow: 0px 0px 3px 0px #cecece;
+
+    &.active {
+      background: #f6f6f6;
+    }
+  }
+}
+
+.shadow {
+  box-shadow: 0px 0px 3px 0px #cecece;
+}

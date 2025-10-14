@@ -1,10 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-interface Step {
-  label: string;
-  route: string;
-}
+import { Step } from 'src/app/models/interfaces/step';
 
 @Component({
   selector: 'shop-checkout',
@@ -21,6 +17,10 @@ export class CheckoutComponent implements OnInit {
 
   public isMobile = false;
 
+  public get currentStepIndex(): number {
+    return this.steps.findIndex((s) => this.router.url.startsWith(s.route));
+  }
+
   @HostListener('window:resize')
   public onResize(): void {
     this.updateIsMobile();
@@ -33,10 +33,6 @@ export class CheckoutComponent implements OnInit {
 
   public isActive(route: string): boolean {
     return this.router.url.startsWith(route);
-  }
-
-  public get currentStepIndex(): number {
-    return this.steps.findIndex((s) => this.router.url.startsWith(s.route));
   }
 
   public goToStep(step: Step, index: number): void {
