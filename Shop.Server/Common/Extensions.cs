@@ -94,6 +94,77 @@ namespace Shop.Server.Common
             return dto;
         }
 
+        public static IEnumerable<OrderDto> ToViewModels(this IEnumerable<Order> sources)
+        {
+            return sources.Select(ToViewModel);
+        }
+
+        public static OrderDto ToViewModel(this Order source)
+        {
+            if (source == null)
+                return null;
+
+            return new OrderDto
+            {
+                Id = source.Id,
+                UserId = source.UserId,
+                DeliveryAddressId = source.DeliveryAddressId,
+                ShippingOptionId = source.ShippingOptionId,
+                Status = source.Status,
+                Notes = source.Notes,
+                DeliveryAddress = source.DeliveryAddress?.ToViewModel(),
+                ShippingOption = source.ShippingOption?.ToViewModel(),
+                Items = source.Items?.Select(i => i.ToViewModel()).ToList()
+            };
+        }
+
+
+        public static DeliveryAddressDto ToViewModel(this DeliveryAddress source)
+        {
+            if (source == null)
+                return null;
+
+            return new DeliveryAddressDto
+            {
+                Country = source.Country,
+                City = source.City,
+                Street = source.Street,
+                HouseNumber = source.HouseNumber,
+                Apartment = source.Apartment,
+                Postcode = source.Postcode,
+                Notes = source.Notes
+            };
+        }
+
+        public static ShippingOptionDto ToViewModel(this ShippingOption source)
+        {
+            if (source == null)
+                return null;
+
+            return new ShippingOptionDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Cost = source.Cost,
+                Description = source.Description
+            };
+        }
+
+        public static OrderItemDto ToViewModel(this OrderItem source)
+        {
+            if (source == null)
+                return null;
+
+            return new OrderItemDto
+            {
+                ProductId = source.ProductId,
+                Quantity = source.Quantity,
+                PriceAtPurchase = source.PriceAtPurchase,
+                Product = source.Product?.ToShortViewModel()
+            };
+        }
+
+
         public static ProductDto ToViewModel(this Product source)
         {
             var productDto = new ProductDto()
@@ -116,6 +187,22 @@ namespace Shop.Server.Common
             };
             return productDto;
         }
+
+        public static ShortProductDto ToShortViewModel(this Product source)
+        {
+            if (source == null)
+                return null;
+
+            return new ShortProductDto
+            {
+                Id = source.Id,
+                Code = source.Code,
+                Name = source.Name,
+                Category = source.Category?.Name,
+                Images = source.ProductImages?.Select(pi => pi.Image).Where(i => i.IsTitle).ToViewModels()
+            };
+        }
+
 
         public static CategoryDto ToViewModel(this Category source)
         {

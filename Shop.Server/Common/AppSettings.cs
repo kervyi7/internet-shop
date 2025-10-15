@@ -18,10 +18,12 @@ namespace Shop.Server.Common
         public bool IsDebugMode { get; private set; }
         public IdentityConfig IdentityConfig { get; private set; }
         public AuthConfig AuthConfig { get; private set; }
+        public PaymentConfig PaymentConfig { get; private set; }
 
         private void Load()
         {
             ConnectionString = _configuration.GetConnectionString(DefaultConnectionKey);
+            PaymentConfig = _configuration.GetSection(nameof(PaymentConfig)).Get<PaymentConfig>();
             IdentityConfig = _configuration.GetSection(nameof(IdentityConfig)).Get<IdentityConfig>();
             AuthConfig = _configuration.GetSection(nameof(AuthConfig)).Get<AuthConfig>();
             Verification(DefaultConnectionKey, ConnectionString);

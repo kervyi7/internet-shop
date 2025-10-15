@@ -4,9 +4,10 @@
     {
         Pending = 0,
         Paid = 1,
-        Processing = 2,
-        Shipped = 3,
-        Delivered = 4,
-        Cancelled = 5
+        PaymentCancelled = 2,
+        Processing = 3,
+        Shipped = 4,
+        Delivered = 5,
+        Cancelled = 6
     }
 }

@@ -17,6 +17,14 @@ export class OrderDataService extends BaseDataService {
     super(_appConfigService);
   }
 
+  public getAll(userId: string): Observable<Order[]> {
+    return this.http.get<Order[]>(this.getUrl(userId), this.defaultHttpOptions);
+  }
+
+  public getById(id: number, userId: string): Observable<Order> {
+    return this.http.get<Order>(`${this.getUrlById(userId)}/${id}`, this.defaultHttpOptions);
+  }
+
   public create(order: Order): Observable<IBaseModel> {
     return this.http.post(this.getUrl(), order);
   }

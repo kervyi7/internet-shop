@@ -1,1 +1,5 @@
-<p>payment works!</p>
+<shop-order-details
+  [order]="order"
+  [showPayButton]="true"
+  (pay)="buy()"
+></shop-order-details>

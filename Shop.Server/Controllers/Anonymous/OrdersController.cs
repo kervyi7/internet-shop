@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Database.Models;
+using Shop.Server.Common;
 using Shop.Server.Models.DTO;
 using System;
 using System.Collections.Generic;
@@ -19,31 +20,38 @@ namespace Shop.Server.Controllers.Anonymous
             _dataContext = dataContext;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<Order[]>> GetAll()
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<OrderDto[]>> GetAll(string userId)
         {
-            var userId = User.Identity.Name;
             var orders = await _dataContext.Orders
                 .Include(o => o.Items)
                 .ThenInclude(i => i.Product)
                 .Include(o => o.DeliveryAddress)
                 .Where(o => o.UserId == userId)
                 .ToArrayAsync();
-            return Ok(orders);
+
+            return Ok(orders.ToViewModels());
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> Get(int id)
+        [HttpGet("{userId}/{id}")]
+        public async Task<ActionResult<OrderDto>> Get(string userId, int id)
         {
-            var userId = User.Identity.Name;
             var order = await _dataContext.Orders
                 .Include(o => o.Items)
-                .ThenInclude(i => i.Product)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.Category)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.ProductImages)
+                            .ThenInclude(pi => pi.Image)
                 .Include(o => o.DeliveryAddress)
+                .Include(o => o.ShippingOption)
                 .FirstOrDefaultAsync(o => o.Id == id && o.UserId == userId);
 
-            if (order == null) return NotFound();
-            return Ok(order);
+            if (order == null)
+                return NotFound();
+
+            return Ok(order.ToViewModel());
         }
 
         [HttpPost]

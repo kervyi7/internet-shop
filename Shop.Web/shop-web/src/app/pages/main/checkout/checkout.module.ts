@@ -20,6 +20,7 @@ import { OrderSummaryComponent } from 'src/app/components/order-summary/order-su
 import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/discounted-widget.component';
 import { AddressCardComponent } from 'src/app/components/address-card/address-card.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { OrderDetailsComponent } from 'src/app/components/order-details/order-details.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     CheckboxModule,
     DiscountedWidgetComponent,
     AddressCardComponent,
-    RadioButtonModule
+    RadioButtonModule,
+    OrderDetailsComponent
   ],
   providers: [DialogService],
   exports: [CheckoutComponent],

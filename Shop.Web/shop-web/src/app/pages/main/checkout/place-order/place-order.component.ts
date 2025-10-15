@@ -80,7 +80,6 @@ export class PlaceOrderComponent {
   }
 
   public submitOrder(): void {
-    debugger;
     if (this.deliveryAddresses.length === 0 && this.checkoutForm.invalid) {
       Util.markAllAsDirty(this.checkoutForm);
       return;
@@ -96,6 +95,7 @@ export class PlaceOrderComponent {
       .map(
         (i): OrderItem => ({
           productId: i.product.id,
+          product: null,
           quantity: i.quantity || 1,
         })
       );
@@ -132,7 +132,6 @@ export class PlaceOrderComponent {
 
     this.orderService.create(orderPayload).subscribe({
       next: (id) => {
-        debugger;
         alert('Order placed successfully!');
         this.cartService.removeSelected();
         this.router.navigate(['/checkout/payment', id]);

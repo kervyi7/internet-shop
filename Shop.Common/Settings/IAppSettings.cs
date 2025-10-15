@@ -9,5 +9,6 @@ namespace Shop.Common.Settings
 
         IdentityConfig IdentityConfig { get; }
         AuthConfig AuthConfig { get; }
+        PaymentConfig PaymentConfig { get; }
     }
 }

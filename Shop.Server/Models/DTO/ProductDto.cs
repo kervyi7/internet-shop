@@ -18,4 +18,13 @@ namespace Shop.Server.Models.DTO
         public IEnumerable<PropertyDto<decimal>> DecimalProperties { get; set; }
         public IEnumerable<PropertyDto<bool>> BoolProperties { get; set; }
     }
+
+    public class ShortProductDto : CodeNameDto
+    {
+        public string Category { get; set; }
+        public decimal Price { get; set; }
+        public decimal? DiscountedPrice { get; set; }
+        public decimal Count { get; set; }
+        public IEnumerable<ImageDto> Images { get; set; }
+    }
 }

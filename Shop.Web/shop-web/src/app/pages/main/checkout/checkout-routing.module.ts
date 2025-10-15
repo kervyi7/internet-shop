@@ -20,11 +20,11 @@ const routes: Routes = [
         component: PlaceOrderComponent
       },
       {
-        path: 'payment',
+        path: 'payment/:id',
         component: PaymentComponent
       },
       {
-        path: 'confirmation',
+        path: 'confirmation/:id',
         component: ConfirmationComponent
       },
       {

@@ -1,0 +1,51 @@
+<div *ngIf="order" class="border p-4 border-round-2xl shadow bg-white">
+  <h3 class="text-xl font-semibold mb-3">Order #{{ order.id }}</h3>
+
+  <div class="mb-4 flex align-items-center justify-content-between">
+    <span class="font-medium">Status:</span>
+    <span
+      [ngClass]="{
+        'text-yellow-600': order.status === statuses.Pending,
+        'text-green-600': order.status === statuses.Paid,
+        'text-blue-600': order.status === statuses.Processing,
+        'text-gray-600': order.status === statuses.Shipped,
+        'text-purple-600': order.status === statuses.Delivered,
+        'text-red-600': order.status === statuses.Cancelled,
+        'text-orange-600': order.status === statuses.PaymentCancelled
+      }"
+      class="font-semibold"
+    >
+      {{ statusName }}
+    </span>
+  </div>
+
+  <div>
+    <h4 class="font-medium mb-2">Items:</h4>
+    <div
+      *ngFor="let item of order.items"
+      class="flex justify-content-between mb-2"
+    >
+      <div>
+        <img [src]="item.product?.images[0].smallBody" class="w-5rem" />
+      </div>
+      <span>{{ item.product?.name || "Product" }}</span>
+      <span>x{{ item.quantity }} — {{ item.priceAtPurchase }}</span>
+    </div>
+
+    <hr class="my-2" />
+
+    <div class="flex justify-content-between">
+      <span>Shipping ({{ order.shippingOption?.name }}):</span>
+      <span>{{ order.shippingOption?.cost | currency }}</span>
+    </div>
+
+    <div class="flex justify-content-between mt-2 text-lg font-bold">
+      <span>Total:</span>
+      <span>{{ getTotal() | currency }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="showPayButton && canPay()" class="text-right mt-6">
+    <p-button (click)="onPayClick()" label="Pay Now"></p-button>
+  </div>
+</div>

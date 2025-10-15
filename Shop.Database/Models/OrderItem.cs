@@ -20,7 +20,7 @@ namespace Shop.Database.Models
         public Product Product { get; set; }
 
         [Required]
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Required]
         public decimal PriceAtPurchase { get; set; }
