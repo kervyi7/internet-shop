@@ -27,5 +27,9 @@ PM> Add-Migration FixProperty -Project Shop.Postgre.Migrations
 
 
 PM> Add-Migration AddOrders -Project Shop.Postgre.Migrations
+PM> Add-Migration OdrderRemake -Project Shop.Postgre.Migrations
+PM> Add-Migration AddShippingOptions -Project Shop.Postgre.Migrations
+PM> Add-Migration FixOrders -Project Shop.Postgre.Migrations
+PM> Add-Migration FixShippingOptions -Project Shop.Postgre.Migrations
 
 PM> Update-Database 

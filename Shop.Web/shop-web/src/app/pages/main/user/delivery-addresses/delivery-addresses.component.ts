@@ -7,7 +7,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CustomValidators } from 'src/app/common/validators';
-import { DeliveryAddress } from 'src/app/models/interfaces/delivery-address.model';
+import { DeliveryAddress } from 'src/app/models/interfaces/delivery-address';
 import { AuthService } from 'src/app/services/auth.service';
 import { DeliveryAddressDataService } from 'src/app/services/data/delivery-address-data.service';
 
@@ -201,10 +201,10 @@ export class DeliveryAddressesComponent implements OnInit {
     }
   }
 
-  public deleteAddress(id: number): void {
-    this.dataService.delete(id, this.userId).subscribe({
+  public deleteAddress(address: DeliveryAddress): void {
+    this.dataService.delete(address.id, this.userId).subscribe({
       next: () => {
-        this.addresses = this.addresses.filter((a) => a.id !== id);
+        this.addresses = this.addresses.filter((a) => a.id !== address.id);
         this.cd.markForCheck();
         this.messageService.add({
           severity: 'info',

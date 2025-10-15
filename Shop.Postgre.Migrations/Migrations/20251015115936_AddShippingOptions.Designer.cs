@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shop.Database;
@@ -11,9 +12,11 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251015115936_AddShippingOptions")]
+    partial class AddShippingOptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -532,6 +535,11 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedByUser")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("Currency")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -593,6 +601,11 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedByUser")
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -1333,7 +1346,7 @@ namespace Shop.Postgre.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Shop.Database.Models.ShippingOption", "ShippingOption")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("ShippingOptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1551,6 +1564,11 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Navigation("DecimalProperties");
 
                     b.Navigation("StringProperties");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.ShippingOption", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

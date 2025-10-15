@@ -18,6 +18,8 @@ import { CartItemComponent } from 'src/app/components/cart-item/cart-item.compon
 import { CheckboxModule } from 'primeng/checkbox';
 import { OrderSummaryComponent } from 'src/app/components/order-summary/order-summary.component';
 import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/discounted-widget.component';
+import { AddressCardComponent } from 'src/app/components/address-card/address-card.component';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,7 @@ import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/
     CartComponent,
     PaymentComponent,
     PlaceOrderComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
   ],
   imports: [
     CommonModule,
@@ -41,11 +43,11 @@ import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/
     CartItemComponent,
     OrderSummaryComponent,
     CheckboxModule,
-    DiscountedWidgetComponent
+    DiscountedWidgetComponent,
+    AddressCardComponent,
+    RadioButtonModule
   ],
   providers: [DialogService],
-  exports: [
-    CheckoutComponent
-  ]
+  exports: [CheckoutComponent],
 })
-export class CheckoutModule { }
+export class CheckoutModule {}

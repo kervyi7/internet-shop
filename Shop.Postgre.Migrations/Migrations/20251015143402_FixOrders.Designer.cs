@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shop.Database;
@@ -11,9 +12,11 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251015143402_FixOrders")]
+    partial class FixOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1333,7 +1336,7 @@ namespace Shop.Postgre.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Shop.Database.Models.ShippingOption", "ShippingOption")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("ShippingOptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1551,6 +1554,11 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Navigation("DecimalProperties");
 
                     b.Navigation("StringProperties");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.ShippingOption", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

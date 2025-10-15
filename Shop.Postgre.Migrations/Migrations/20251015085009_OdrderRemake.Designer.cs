@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shop.Database;
@@ -11,9 +12,11 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251015085009_OdrderRemake")]
+    partial class OdrderRemake
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -532,6 +535,11 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedByUser")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("Currency")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -548,9 +556,6 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<DateTime?>("ShippedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ShippingOptionId")
-                        .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -594,14 +599,17 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UpdatedByUser")
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
+
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DeliveryAddressId");
-
-                    b.HasIndex("ShippingOptionId");
 
                     b.HasIndex("UserId");
 
@@ -1177,33 +1185,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.ToTable("PropertyTemplate", "public");
                 });
 
-            modelBuilder.Entity("Shop.Database.Models.ShippingOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShippingOption", "public");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1332,20 +1313,12 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasForeignKey("DeliveryAddressId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Shop.Database.Models.ShippingOption", "ShippingOption")
-                        .WithMany()
-                        .HasForeignKey("ShippingOptionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Shop.Database.Identity.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("DeliveryAddress");
-
-                    b.Navigation("ShippingOption");
 
                     b.Navigation("User");
                 });

@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AppConfigService } from '../app-config.service';
-import { CartItem, CartItemRequest } from 'src/app/models/interfaces/cart';
+import {
+  CartItem,
+  CartItemDeleteRequest,
+  CartItemRequest,
+} from 'src/app/models/interfaces/cart';
 import { BaseDataService } from './base-data.service';
 
 @Injectable({
@@ -27,6 +31,14 @@ export class CartDataService extends BaseDataService {
 
   public add(model: CartItemRequest): Observable<void> {
     return this.http.post<void>(this.getUrl(), model, this.defaultHttpOptions);
+  }
+
+  public deleteSelected(model: CartItemDeleteRequest): Observable<any> {
+    return this.http.post(
+      this.getUrl(`/delete-selected`),
+      model,
+      this.defaultHttpOptions
+    );
   }
 
   public delete(model: CartItemRequest): Observable<void> {

@@ -49,33 +49,76 @@ namespace Shop.Server.Controllers.Anonymous
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] OrderDto dto)
         {
+            if (dto.ShippingOptionId <= 0)
+                return BadRequest("Shipping option is required.");
+
+            var shippingOption = await _dataContext.ShippingOptions
+                .FirstOrDefaultAsync(x => x.Id == dto.ShippingOptionId && x.IsActive);
+
+            if (shippingOption == null)
+                return BadRequest("Invalid or inactive shipping option.");
+
             var order = new Order
             {
                 UserId = dto.UserId,
-                DeliveryAddressId = dto.DeliveryAddressId,
                 CreatedAt = DateTime.UtcNow,
-                Notes = dto.Notes
+                Notes = dto.Notes,
+                Currency = "USD",
+                ShippingOptionId = dto.ShippingOptionId
             };
+
+            if (!string.IsNullOrEmpty(dto.UserId) && dto.DeliveryAddress == null)
+            {
+                if (!dto.DeliveryAddressId.HasValue)
+                    return BadRequest("DeliveryAddressId is required for registered user.");
+
+                var addressExists = await _dataContext.DeliveryAddresses
+                    .AnyAsync(a => a.Id == dto.DeliveryAddressId && a.UserId == dto.UserId);
+
+                if (!addressExists)
+                    return BadRequest("Invalid delivery address.");
+
+                order.DeliveryAddressId = dto.DeliveryAddressId;
+            }
+            else
+            {
+                if (dto.DeliveryAddress == null)
+                    return BadRequest("Delivery address is required for guest order.");
+
+                order.TempFirstName = dto.DeliveryAddress.FirstName;
+                order.TempLastName = dto.DeliveryAddress.LastName;
+                order.TempCountry = dto.DeliveryAddress.Country;
+                order.TempCity = dto.DeliveryAddress.City;
+                order.TempStreet = dto.DeliveryAddress.Street;
+                order.TempHouseNumber = dto.DeliveryAddress.HouseNumber;
+                order.TempApartment = dto.DeliveryAddress.Apartment;
+                order.TempPostcode = dto.DeliveryAddress.Postcode;
+                order.TempPhone = dto.DeliveryAddress.Phone;
+                order.TempEmail = dto.DeliveryAddress.Email;
+                order.TempNotes = dto.DeliveryAddress.Notes;
+            }
 
             order.Items = new List<OrderItem>();
             foreach (var itemDto in dto.Items)
             {
                 var product = await _dataContext.Products.FirstOrDefaultAsync(p => p.Id == itemDto.ProductId);
-                if (product == null) return BadRequest($"Product {itemDto.ProductId} not found");
+                if (product == null)
+                    return BadRequest($"Product {itemDto.ProductId} not found");
 
                 order.Items.Add(new OrderItem
                 {
                     ProductId = itemDto.ProductId,
                     Quantity = itemDto.Quantity,
-                    PriceAtPurchase = product.SalePrice ?? product.Price
+                    PriceAtPurchase = product.DiscountedPrice ?? product.Price
                 });
             }
 
-            order.TotalPrice = order.Items.Sum(i => i.PriceAtPurchase * i.Quantity);
+            order.TotalPrice = order.Items.Sum(i => i.PriceAtPurchase * i.Quantity) + shippingOption.Cost;
 
             _dataContext.Orders.Add(order);
             await _dataContext.SaveChangesAsync();
-            return Ok(order);
+
+            return Ok(order.Id);
         }
     }
 }

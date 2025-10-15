@@ -19,7 +19,7 @@ namespace Shop.Database.Models
         [Required]
         public decimal Price { get; set; }
 
-        public decimal? SalePrice { get; set; }//discountPrice rename in migration
+        public decimal? DiscountedPrice { get; set; }
 
         [Required]
         public decimal Count { get; set; }

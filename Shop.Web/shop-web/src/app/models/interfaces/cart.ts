@@ -1,4 +1,4 @@
-import { IProduct } from "./product";
+import { IProduct } from './product';
 
 export interface CartItem {
   userId: string;
@@ -12,4 +12,9 @@ export interface CartItemRequest {
   userId: string;
   productId: number;
   quantity: number;
+}
+
+export interface CartItemDeleteRequest {
+  userId: string;
+  productIds: number[];
 }

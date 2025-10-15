@@ -9,6 +9,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { AddressCardComponent } from 'src/app/components/address-card/address-card.component';
 
 @NgModule({
   declarations: [DeliveryAddressesComponent],
@@ -22,7 +23,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ReactiveFormsModule,
     DialogModule,
     RadioButtonModule,
-    InputTextareaModule
+    InputTextareaModule,
+    AddressCardComponent
   ],
   exports: [DeliveryAddressesComponent],
 })

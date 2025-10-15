@@ -25,5 +25,4 @@ namespace Shop.Database.Models
         [Required]
         public decimal PriceAtPurchase { get; set; }
     }
-
 }

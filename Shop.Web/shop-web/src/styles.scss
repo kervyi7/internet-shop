@@ -1,25 +1,25 @@
 //@import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "./assets/themes/md-light-indigo/theme.css";
 @import "primeng/resources/primeng.css";
-@import '~primeicons/primeicons.css';
-@import '/node_modules/primeflex/primeflex.css';
+@import "~primeicons/primeicons.css";
+@import "/node_modules/primeflex/primeflex.css";
 
 @font-face {
-  font-family: 'Material Icons Regular';
+  font-family: "Material Icons Regular";
   font-style: normal;
   font-weight: 400;
-  src: url("assets/font-material/v128.woff2") format('woff2');
+  src: url("assets/font-material/v128.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Material Icons Outline';
+  font-family: "Material Icons Outline";
   font-style: normal;
   font-weight: 400;
-  src: url("assets/font-material/outline.woff2") format('woff2');
+  src: url("assets/font-material/outline.woff2") format("woff2");
 }
 
 .material-icons-reg {
-  font-family: 'Material Icons Regular';
+  font-family: "Material Icons Regular";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -30,12 +30,12 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
 
 .material-icons-outline {
-  font-family: 'Material Icons Outline';
+  font-family: "Material Icons Outline";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -46,7 +46,7 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
 
@@ -88,12 +88,21 @@ button {
   color: #bababa;
 }
 
-@media (hover: none) and (pointer: coarse) {
-  *:hover {
-    background: none !important;
-    color: inherit !important;
-    transform: none !important;
-    box-shadow: none !important;
-    cursor: default !important;
-  }
+.error {
+  color: #f44336;
+  font-size: 0.85rem;
+  align-self: flex-start;
 }
+
+.input.ng-invalid.ng-touched {
+  border-color: #f44336;
+}
+// @media (hover: none) and (pointer: coarse) {
+//   *:hover {
+//     background: none !important;
+//     color: inherit !important;
+//     transform: none !important;
+//     box-shadow: none !important;
+//     cursor: default !important;
+//   }
+// }

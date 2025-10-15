@@ -11,8 +11,10 @@ namespace Shop.Server.Models.DTO
     public class OrderDto
     {
         public string UserId { get; set; }
-        public int DeliveryAddressId { get; set; }
-        public List<OrderItemDto> Items { get; set; }
+        public int? DeliveryAddressId { get; set; }
+        public int ShippingOptionId { get; set; }
         public string Notes { get; set; }
+        public DeliveryAddressDto DeliveryAddress { get; set; }
+        public List<OrderItemDto> Items { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Shop.Server.Models.DTO
         public CodeNameDto Brand { get; set; }
         public CategoryDto Category { get; set; }
         public decimal Price { get; set; }
-        public decimal? DiscountPrice { get; set; }
+        public decimal? DiscountedPrice { get; set; }
         public decimal Count { get; set; }
         public string Currency { get; set; }
         public string Description { get; set; }

@@ -24,7 +24,11 @@
         [disabled]="isDisabled"
       />
       <ng-template #payButton>
-        <p-button label="Pay" styleClass="w-full" (click)="pay()"
+        <p-button
+          label="Pay"
+          styleClass="w-full"
+          (click)="pay()"
+          [disabled]="isDisabled"
       /></ng-template>
       <p-button
         *ngIf="isCart"

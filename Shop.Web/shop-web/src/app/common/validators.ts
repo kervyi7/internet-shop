@@ -24,8 +24,9 @@ export class CustomValidators {
   }
 
   static getErrorMessage(control: AbstractControl | null): string | null {
-    if (!control || !control.touched || !control.errors) return null;
-
+    if (!control || (!control.touched && !control.dirty) || !control.errors)
+      return null;
+    
     const errors = control.errors;
 
     if (errors['required']) return 'Field is required';

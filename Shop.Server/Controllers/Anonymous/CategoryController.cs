@@ -67,7 +67,7 @@ namespace Shop.Server.Controllers.Admin
                 .Distinct()
                 .ToListAsync();
 
-            var minPrice = await productsQuery.MinAsync(p => (decimal?)p.SalePrice);
+            var minPrice = await productsQuery.MinAsync(p => (decimal?)p.DiscountedPrice);
             var maxPrice = await productsQuery.MaxAsync(p => (decimal?)p.Price);
 
             var stringPropsRaw = await _dataContext.StringProperties

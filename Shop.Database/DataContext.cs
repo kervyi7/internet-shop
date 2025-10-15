@@ -32,6 +32,7 @@ namespace Shop.Database
         public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
         public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<ShippingOption> ShippingOptions { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {

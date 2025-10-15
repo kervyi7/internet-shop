@@ -90,6 +90,28 @@ export class CartService {
     }
   }
 
+  public removeSelected(): void {
+    const selectedIds = this.items
+      .filter((item) => item.isSelected)
+      .map((item) => item.productId);
+
+    if (!selectedIds.length) return;
+
+    if (!this.userId) {
+      this.items = this.items.filter(
+        (item) => !selectedIds.includes(item.productId)
+      );
+      this.saveCart();
+    } else {
+      this.cartDataService
+        .deleteSelected({
+          userId: this.userId!,
+          productIds: selectedIds,
+        })
+        .subscribe(() => this.refreshServerCart());
+    }
+  }
+
   public clear(): void {
     if (!this.userId) {
       this.items = [];
@@ -122,7 +144,7 @@ export class CartService {
   public getTotalPrice(): number {
     return this.items
       .filter((i) => i.isSelected !== false)
-      .reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+      .reduce((sum, i) => sum + (i.product.discountPrice ?? i.product.price) * i.quantity, 0);
   }
 
   public getTotalQuantity(): number {

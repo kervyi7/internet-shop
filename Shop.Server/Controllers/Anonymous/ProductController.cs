@@ -78,7 +78,7 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.Category)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image)
-                .Where(x => x.SalePrice != 0 && x.SalePrice != null)
+                .Where(x => x.DiscountedPrice != 0 && x.DiscountedPrice != null)
                 .ToListAsync();
             return Ok(products.ToViewModels());
         }

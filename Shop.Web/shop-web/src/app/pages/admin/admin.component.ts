@@ -49,6 +49,10 @@ export class AdminComponent extends BaseCompleteComponent {
     this._router.navigate(['/admin/products']);
   }
 
+  public openShipping(): void {
+    this._router.navigate(['/admin/shipping']);
+  }
+
   public openSettings(): void {
     this._router.navigate(['/admin/settings']);
   }

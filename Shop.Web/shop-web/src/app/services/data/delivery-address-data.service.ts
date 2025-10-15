@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppConfigService } from '../app-config.service';
 import { BaseDataService } from './base-data.service';
-import { DeliveryAddress } from 'src/app/models/interfaces/delivery-address.model';
+import { DeliveryAddress } from 'src/app/models/interfaces/delivery-address';
 
 @Injectable({ providedIn: 'root' })
 export class DeliveryAddressDataService extends BaseDataService {

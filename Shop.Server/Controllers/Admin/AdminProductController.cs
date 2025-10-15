@@ -70,7 +70,7 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
                 .FirstOrDefaultAsync(x => x.CategoryId == model.Category.Id);
-            if (model.DiscountPrice > model.Price)
+            if (model.DiscountedPrice > model.Price)
             {
                 throw new ConflictException("The discount price cannot be higher than the regular price.");
             }
@@ -81,7 +81,7 @@ namespace Shop.Server.Controllers.Admin
                 Code = model.Code,
                 TypeId = model.Type.Id,
                 BrandId = model.Brand.Id,
-                SalePrice = model.DiscountPrice,
+                DiscountedPrice = model.DiscountedPrice,
                 Description = model.Description,
                 Count = model.Count,
                 Price = model.Price,
@@ -163,7 +163,7 @@ namespace Shop.Server.Controllers.Admin
             item.Code = model.Code;
             item.TypeId = model.Type.Id;
             item.BrandId = model.Brand.Id;
-            item.SalePrice = model.DiscountPrice;
+            item.DiscountedPrice = model.DiscountedPrice;
             item.Description = model.Description;
             item.Count = model.Count;
             item.Price = model.Price;

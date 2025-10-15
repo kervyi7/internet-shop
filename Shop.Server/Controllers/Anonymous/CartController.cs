@@ -78,6 +78,26 @@ namespace Shop.Server.Controllers
             return Ok();
         }
 
+        [HttpPost("delete-selected")]
+        public async Task<ActionResult> DeleteSelected([FromBody] DeleteSelectedDto dto)
+        {
+            if (string.IsNullOrEmpty(dto.UserId) || dto.ProductIds == null || !dto.ProductIds.Any())
+                return BadRequest("Invalid data");
+
+            var itemsToRemove = await _dataContext.CartItems
+                .Where(c => c.UserId == dto.UserId && dto.ProductIds.Contains(c.ProductId))
+                .ToListAsync();
+
+            if (!itemsToRemove.Any())
+                return NotFound("No matching items found in cart");
+
+            _dataContext.CartItems.RemoveRange(itemsToRemove);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(new { removed = itemsToRemove.Count });
+        }
+
+
         [HttpPost("{userId}/select-all/{isSelected}")]
         public async Task<ActionResult> SelectAll(string userId, bool isSelected)
         {

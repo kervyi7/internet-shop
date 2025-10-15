@@ -7,19 +7,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shop.Database.Models
 {
-    public class Order : BaseCreateUpdate
+    public class Order : BaseModel
     {
-        [Required]
         public string UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
-
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? PaidAt { get; set; }
-
         public DateTime? ShippedAt { get; set; }
-
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
+
+        [Required]
+        public int ShippingOptionId { get; set; }
+
+        [ForeignKey(nameof(ShippingOptionId))]
+        public ShippingOption ShippingOption { get; set; }
 
         [Required]
         public decimal TotalPrice { get; set; }
@@ -29,12 +33,22 @@ namespace Shop.Database.Models
         public string Currency { get; set; }
 
         public string Notes { get; set; }
-
-        public int DeliveryAddressId { get; set; }
+        public int? DeliveryAddressId { get; set; }
 
         [ForeignKey(nameof(DeliveryAddressId))]
         public DeliveryAddress DeliveryAddress { get; set; }
 
+        public string TempFirstName { get; set; }
+        public string TempLastName { get; set; }
+        public string TempCountry { get; set; }
+        public string TempCity { get; set; }
+        public string TempStreet { get; set; }
+        public string TempHouseNumber { get; set; }
+        public string TempApartment { get; set; }
+        public string TempPostcode { get; set; }
+        public string TempPhone { get; set; }
+        public string TempEmail { get; set; }
+        public string TempNotes { get; set; }
         public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
 }

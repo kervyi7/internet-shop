@@ -1,6 +1,6 @@
 export interface DeliveryAddress {
   id?: number;
-  userId: string;
+  userId?: string;
   firstName: string;
   lastName: string;
   country: string;
@@ -12,5 +12,5 @@ export interface DeliveryAddress {
   phone: string;
   email: string;
   notes?: string;
-  isDefault: boolean;
+  isDefault?: boolean;
 }
