@@ -80,14 +80,17 @@
         *ngFor="let item of order.items"
         class="flex justify-content-between gap-3 sm:align-items-center mb-3 border-bottom-1 pb-2 flex-column sm:flex-row"
       >
-        <div class="flex align-items-center gap-1 sm:gap-3" (click)="onProductClick(item.product)">
+        <div class="flex align-items-center gap-1 sm:gap-3">
           <img
             [src]="
               item.product?.images[0]?.smallBody || 'assets/img/nopicture.svg'
             "
-            class="w-2rem sm:w-5rem border-round shadow-sm"
+            class="w-2rem sm:w-5rem border-round shadow-sm cursor-pointer"
+            (click)="onProductClick(item.product)"
           />
-          <span>{{ item.product?.name || "Product" }}</span>
+          <span class="cursor-pointer" (click)="onProductClick(item.product)">
+            {{ item.product?.name || "Product" }}
+          </span>
         </div>
         <span
           >x{{ item.quantity }} — {{ item.priceAtPurchase | currency }}</span
