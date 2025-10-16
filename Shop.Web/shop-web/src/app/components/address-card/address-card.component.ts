@@ -14,7 +14,7 @@ import { DeliveryAddress } from 'src/app/models/interfaces/delivery-address';
 })
 export class AddressCardComponent {
   @Input() public address: DeliveryAddress;
-  @Input() public selectedAddressId: number;
+  @Input() public selectedAddressId: number | null;
   @Input() public isEdit: boolean = false;
   @Output() public edit: EventEmitter<DeliveryAddress> = new EventEmitter();
   @Output() public select: EventEmitter<DeliveryAddress> = new EventEmitter();

@@ -50,7 +50,6 @@ export class PlaceOrderComponent {
     this.cartService.cart$.subscribe(
       (cart) => (this.cart = cart.filter((item) => item.isSelected))
     );
-
     this.total = this.cartService.getTotalPrice();
     this.createForms();
     if (this.authService.isLoggedIn()) {
@@ -58,11 +57,13 @@ export class PlaceOrderComponent {
       this.deliveryService.getAll(this.userId).subscribe((addresses) => {
         if (addresses.length) {
           this.deliveryAddresses = addresses;
-          this.selectedAddress = addresses.filter((item) => item.isDefault)[0];
+          const defaultAddress = addresses.find((item) => item.isDefault);
+          this.selectedAddress = defaultAddress ?? addresses[0];
           this.cd.detectChanges();
         }
       });
     }
+
     this.loadShippingOptions();
   }
 

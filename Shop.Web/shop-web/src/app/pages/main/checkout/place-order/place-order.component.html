@@ -54,7 +54,7 @@
             <shop-address-card
               [address]="address"
               [isEdit]="false"
-              [selectedAddressId]="selectedAddress.id"
+              [selectedAddressId]="selectedAddress?.id"
               (select)="selectDeliveryAddress($event)"
             ></shop-address-card>
           </ng-container>
