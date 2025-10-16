@@ -50,7 +50,7 @@ export class CartComponent implements OnInit {
       .reduce(
         (sum, x) =>
           sum +
-          (x.product.discountPrice ?? x.product.price) * (x.quantity || 1),
+          (x.product.discountedPrice ?? x.product.price) * (x.quantity || 1),
         0
       );
   }

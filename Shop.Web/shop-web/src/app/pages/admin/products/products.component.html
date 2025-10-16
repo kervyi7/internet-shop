@@ -10,7 +10,7 @@
       <th>{{lang.placeholders.brand}}</th>
       <th>{{lang.placeholders.productCount}}</th>
       <th>{{lang.placeholders.productPrice}}</th>
-      <th>{{lang.placeholders.productDiscountPrice}}</th>
+      <th>{{lang.placeholders.productdiscountedPrice}}</th>
       <th></th>
     </tr>
   </ng-template>
@@ -33,7 +33,7 @@
       <td>{{ product.brand.name }}</td>
       <td>{{ product.count }}</td>
       <td>{{ product.price }}</td>
-      <td>{{ product.discountPrice }}</td>
+      <td>{{ product.discountedPrice }}</td>
       <td>
         <span class="material-icons-reg danger" (click)="tryDelete($event, product)">
           {{mIcons.delete}}

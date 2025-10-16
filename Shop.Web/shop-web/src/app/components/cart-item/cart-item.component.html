@@ -44,7 +44,7 @@
 
         <div class="w-9rem text-xs">
           {{
-            (item.product.discountPrice || item.product.price) * item.quantity
+            (item.product.discountedPrice || item.product.price) * item.quantity
           }}
           USD
         </div>
@@ -124,7 +124,7 @@
 
       <div class="text-lg w-9rem text-right">
         {{
-          (item.product.discountPrice || item.product.price) * item.quantity
+          (item.product.discountedPrice || item.product.price) * item.quantity
         }}
         USD
       </div>

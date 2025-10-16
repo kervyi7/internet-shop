@@ -50,7 +50,7 @@ export class PaymentComponent implements OnInit {
     const total = this.order.items.reduce(
       (sum, item) =>
         sum +
-        (item.product?.discountPrice ?? item.product?.price ?? 0) *
+        (item.product?.discountedPrice ?? item.product?.price ?? 0) *
           (item.quantity || 1),
       this.order.shippingOption?.cost ?? 0
     );

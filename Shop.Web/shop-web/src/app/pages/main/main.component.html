@@ -31,7 +31,7 @@
     <p-button [text]="true" (click)="goToLogin()">Sign In</p-button>
   </ng-template>
 </header>
-<main class="mb-4">
+<main class="mb-4 min-h-screen">
   <router-outlet></router-outlet>
 </main>
 <footer>
@@ -40,14 +40,22 @@
   </div>
   <!-- add config file -->
   <div class="contacts">
+    <h1>Information</h1>
+    <a class="text-white no-underline" routerLink="/info/shipping">Shipping</a>
+    <a class="text-white no-underline" routerLink="/info/refund">Refund</a>
+    <a class="text-white no-underline" routerLink="/info/legal">Legal</a>
+    <a class="text-white no-underline" routerLink="/info/terms">Terms</a>
+    <a class="text-white no-underline" routerLink="/info/privacy">Privacy</a>
+  </div>
+  <div class="contacts align-items-center gap-3">
     <h1>Contacts</h1>
     <span>+380888888888</span>
     <span>mail&commat;gmail.com</span>
-  </div>
-  <div class="social-networks">
-    <img src="assets/img/social-networks/instagram.svg" />
-    <img src="assets/img/social-networks/facebook.svg" />
-    <img src="assets/img/social-networks/x.svg" />
-    <img src="assets/img/social-networks/youtube.svg" />
+    <div class="social-networks">
+      <img src="assets/img/social-networks/instagram.svg" />
+      <img src="assets/img/social-networks/facebook.svg" />
+      <img src="assets/img/social-networks/x.svg" />
+      <img src="assets/img/social-networks/youtube.svg" />
+    </div>
   </div>
 </footer>

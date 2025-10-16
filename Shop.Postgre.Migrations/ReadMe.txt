@@ -33,5 +33,6 @@ PM> Add-Migration FixOrders -Project Shop.Postgre.Migrations
 PM> Add-Migration FixShippingOptions -Project Shop.Postgre.Migrations
 PM> Add-Migration FixDeliveryAddress -Project Shop.Postgre.Migrations
 PM> Add-Migration RemoveTempAddress -Project Shop.Postgre.Migrations
+PM> Add-Migration AddInfoPages -Project Shop.Postgre.Migrations
 
 PM> Update-Database 

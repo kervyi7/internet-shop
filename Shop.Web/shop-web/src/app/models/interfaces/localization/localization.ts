@@ -81,7 +81,7 @@ export interface IPlaceholdersLocalization {
   login: string;
   password: string;
   productCount: string;
-  productDiscountPrice: string;
+  productdiscountedPrice: string;
   productDescription: string;
   properties: string;
 }

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AdminRoutingModule } from './admin-routing.module';
 import { ShippingConfigurationModule } from './shipping-configuration/shipping-configuration.module';
 import { AdminOrdersModule } from './orders/orders.module';
+import { InfoConfigModule } from './info-config/info-config.module';
 
 @NgModule({
   declarations: [AdminComponent],
@@ -13,7 +14,8 @@ import { AdminOrdersModule } from './orders/orders.module';
     RouterModule,
     AdminRoutingModule,
     ShippingConfigurationModule,
-    AdminOrdersModule
+    AdminOrdersModule,
+    InfoConfigModule
   ],
   exports: [AdminComponent],
 })

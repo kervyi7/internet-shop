@@ -10,6 +10,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StateSwitcherModule } from 'src/app/components/state-switcher/state-switcher.module';
 import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/discounted-widget.component';
+import { InfoModule } from './info/info.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/
     ButtonModule,
     CarouselModule,
     StateSwitcherModule,
-    DiscountedWidgetComponent
+    DiscountedWidgetComponent,
+    InfoModule
   ],
   providers: [DialogService],
   exports: [

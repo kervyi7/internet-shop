@@ -29,9 +29,9 @@
         </ng-template>
       </div>
       <div class="price-container">
-        <ng-container *ngIf="product.discountPrice; else price">
+        <ng-container *ngIf="product.discountedPrice; else price">
           <span class="discount"
-            >{{ product.discountPrice }}{{ product.currency }}</span
+            >{{ product.discountedPrice }}{{ product.currency }}</span
           >
           <span class="through-lined-price"
             >{{ product.price }}{{ product.currency }}</span

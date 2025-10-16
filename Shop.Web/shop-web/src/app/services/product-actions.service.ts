@@ -90,8 +90,8 @@ export class ProductActionsService {
   }
 
   public getDiscountPercentage(product: IProduct): number {
-    return product.discountPrice
-      ? Math.round(100 - (product.discountPrice / product.price) * 100)
+    return product.discountedPrice
+      ? Math.round(100 - (product.discountedPrice / product.price) * 100)
       : 0;
   }
 }

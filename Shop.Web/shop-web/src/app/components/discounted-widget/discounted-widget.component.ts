@@ -36,7 +36,7 @@ export class DiscountedWidgetComponent implements OnInit {
       numScroll: 1,
     },
     {
-      breakpoint: '991px',
+      breakpoint: '1100px',
       numVisible: 2,
       numScroll: 1,
     },

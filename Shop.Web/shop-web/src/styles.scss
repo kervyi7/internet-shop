@@ -3,6 +3,8 @@
 @import "primeng/resources/primeng.css";
 @import "~primeicons/primeicons.css";
 @import "/node_modules/primeflex/primeflex.css";
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
 
 @font-face {
   font-family: "Material Icons Regular";
@@ -97,12 +99,19 @@ button {
 .input.ng-invalid.ng-touched {
   border-color: #f44336;
 }
-// @media (hover: none) and (pointer: coarse) {
-//   *:hover {
-//     background: none !important;
-//     color: inherit !important;
-//     transform: none !important;
-//     box-shadow: none !important;
-//     cursor: default !important;
-//   }
-// }
+
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-left {
+  text-align: left;
+}
+
+.ql-align-justify {
+  text-align: justify;
+}

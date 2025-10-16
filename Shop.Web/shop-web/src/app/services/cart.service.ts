@@ -144,7 +144,7 @@ export class CartService {
   public getTotalPrice(): number {
     return this.items
       .filter((i) => i.isSelected !== false)
-      .reduce((sum, i) => sum + (i.product.discountPrice ?? i.product.price) * i.quantity, 0);
+      .reduce((sum, i) => sum + (i.product.discountedPrice ?? i.product.price) * i.quantity, 0);
   }
 
   public getTotalQuantity(): number {

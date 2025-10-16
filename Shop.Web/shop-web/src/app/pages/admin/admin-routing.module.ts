@@ -6,6 +6,7 @@ import { ProductsModule } from './products/products.module';
 import { SettingsModule } from './settings/settings.module';
 import { ShippingConfigurationComponent } from './shipping-configuration/shipping-configuration.component';
 import { OrdersComponent } from './orders/orders.component';
+import { InfoConfigComponent } from './info-config/info-config.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
       {
         path: 'orders',
         component: OrdersComponent,
+      },
+      {
+        path: 'info',
+        component: InfoConfigComponent,
       },
       {
         path: 'settings',

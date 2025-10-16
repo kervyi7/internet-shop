@@ -8,7 +8,7 @@ export interface IProduct extends ICodeName, IPropertyAll {
   type: ICodeName;
   brand: ICodeName;
   price: number;
-  discountPrice?: number;
+  discountedPrice?: number;
   count: number;
   description: string;
   currency: string;

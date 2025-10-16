@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { CheckoutModule } from 'src/app/pages/main/checkout/checkout.module';
 import { UserModule } from 'src/app/pages/main/user/user.module';
 import { UserGuard } from 'src/app/guards/user.guard';
+import { InfoComponent } from './info/info.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,9 @@ const routes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [() => inject(UserGuard).canActivate()],
         loadChildren: (): Promise<Type<UserModule>> =>
-          import('src/app/pages/main/user/user.module').then((m) => m.UserModule),
+          import('src/app/pages/main/user/user.module').then(
+            (m) => m.UserModule
+          ),
       },
       {
         path: 'checkout',
@@ -31,6 +34,10 @@ const routes: Routes = [
           import('src/app/pages/main/checkout/checkout.module').then(
             (m) => m.CheckoutModule
           ),
+      },
+      {
+        path: 'info/:key',
+        component: InfoComponent,
       },
       {
         path: ':category',

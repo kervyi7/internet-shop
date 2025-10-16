@@ -222,9 +222,9 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       return;
     }
     const product: IProduct = { ...this.productForm.getRawValue(), images: [] };
-    if (product.discountPrice >= product.price) {
+    if (product.discountedPrice >= product.price) {
       this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
-      this.productForm.controls.discountPrice.setErrors({'incorrect': true});
+      this.productForm.controls.discountedPrice.setErrors({'incorrect': true});
       this.productForm.controls.price.setErrors({'incorrect': true});
       this._cd.detectChanges();
       return;
@@ -290,7 +290,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       type: new FormControl<ICodeName | null>(null, Validators.required),
       brand: new FormControl<ICodeName | null>(null, Validators.required),
       price: new FormControl(null, Validators.required),
-      discountPrice: new FormControl(null),
+      discountedPrice: new FormControl(null),
       count: new FormControl(null, Validators.required),
       description: new FormControl(""),
       currency: new FormControl("", Validators.required),

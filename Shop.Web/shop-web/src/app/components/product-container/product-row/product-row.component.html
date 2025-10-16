@@ -13,11 +13,11 @@
     class="price-container flex flex-column gap-4 align-items-center justify-content-center"
   >
     <div
-      *ngIf="product.discountPrice; else price"
+      *ngIf="product.discountedPrice; else price"
       class="flex flex-column align-items-center"
     >
       <span class="discount text-xl"
-        >{{ product.discountPrice }}{{ product.currency }}</span
+        >{{ product.discountedPrice }}{{ product.currency }}</span
       >
       <span class="text-xs"
         >Usual price: {{ product.price }}{{ product.currency }}</span
