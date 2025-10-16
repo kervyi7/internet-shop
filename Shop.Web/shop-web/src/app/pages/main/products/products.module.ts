@@ -15,6 +15,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { GalleriaModule } from 'primeng/galleria';
 import { FiltersListComponent } from 'src/app/components/filters-list/filters-list.component';
 import { ProductContainerComponent } from 'src/app/components/product-container/product-container.component';
+import { AccordionModule } from 'primeng/accordion';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ProductContainerComponent } from 'src/app/components/product-container/
     PaginatorModule,
     GalleriaModule,
     FiltersListComponent,
-    ProductContainerComponent
+    ProductContainerComponent,
+    AccordionModule
   ],
   providers: [DialogService],
   exports: [

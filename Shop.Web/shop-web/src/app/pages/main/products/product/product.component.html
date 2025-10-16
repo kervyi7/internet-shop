@@ -1,25 +1,30 @@
-<div class="breadcrumb-container">
+<div class="w-min max-w-full m-4">
   <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
 </div>
 <div *ngIf="product" class="product-wrapper">
-  <div class="gallery-main-info-container">
-    <p-galleria
-      [value]="imagesBody"
-      [responsiveOptions]="responsiveOptions"
-      [containerStyle]="{ 'max-width': '500px' }"
-      [numVisible]="5"
-    >
-      <ng-template pTemplate="item" let-item>
-        <img [src]="item.itemImageSrc" style="width: 100%" />
-      </ng-template>
-      <ng-template pTemplate="thumbnail" let-item>
-        <div class="grid grid-nogutter justify-content-center">
-          <img [src]="item.thumbnailImageSrc" style="height: 50px" />
-        </div>
-      </ng-template>
-    </p-galleria>
-    <div class="info-container">
-      <h1>{{ product.name }}</h1>
+  <div
+    class="flex w-11 sm:w-9 mx-auto justify-content-between gap-6 md:gap-8 flex-column md:flex-row"
+  >
+    <!-- TODO: make own one -->
+    <div class="md:w-30rem">
+      <p-galleria
+        [value]="imagesBody"
+        [responsiveOptions]="responsiveOptions"
+        [containerStyle]="{ 'max-width': '500px' }"
+        [numVisible]="5"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item.itemImageSrc" style="width: 100%" />
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+          <div class="grid grid-nogutter justify-content-center">
+            <img [src]="item.thumbnailImageSrc" style="height: 50px" />
+          </div>
+        </ng-template>
+      </p-galleria>
+    </div>
+    <div class="flex flex-column gap-4 flex-1 justify-content-center">
+      <h1 class="m-0">{{ product.name }}</h1>
       <div>
         <ng-container *ngIf="product.count; else outOfStock">
           <span class="count">In stock ({{ product.count }} left)</span>
@@ -28,63 +33,67 @@
           <span class="count">Out of stock</span>
         </ng-template>
       </div>
-      <div class="price-container">
-        <ng-container *ngIf="product.discountedPrice; else price">
-          <span class="discount">
-            {{ product.discountedPrice | currency : product.currency }}</span
-          >
-          <span class="through-lined-price">{{
-            product.price | currency : product.currency
-          }}</span>
-        </ng-container>
-        <ng-template #price>
-          <span class="regular-price">
-            {{ product.price }} {{ product.currency }}
-          </span>
-        </ng-template>
-      </div>
-      <p-button
-        [style]="{
-          width: '-webkit-fill-available',
-          display: 'block',
-          'border-radius': '8px'
-        }"
-        (onClick)="addToCart()"
+      <div
+        *ngIf="product.discountedPrice; else price"
+        class="flex flex-column gap-1"
       >
-        Add to cart
-      </p-button>
-      <p-button [text]="true" class="button" (click)="toggleFavorite()">
-        <span *ngIf="isFavorite; else nonFavorite" class="material-icons-reg"
-          >favorite</span
+        <span class="discount text-4xl">{{
+          product.discountedPrice | currency : product.currency
+        }}</span>
+        <span class="text-xs">
+          Usual price: {{ product.price | currency : product.currency }}
+        </span>
+      </div>
+      <ng-template #price>
+        <span class="text-4xl">
+          {{ product.price }} {{ product.currency }}
+        </span>
+      </ng-template>
+      <div class="flex w-full">
+        <p-button
+          label="Add to cart"
+          styleClass="w-10rem md:w-15rem"
+          (onClick)="addToCart()"
         >
-        <ng-template #nonFavorite>
-          <span class="material-icons-outline">favorite</span>
-        </ng-template>
-      </p-button>
-    </div>
-  </div>
-  <div class="property-description-container">
-    <div *ngIf="product.description" class="description-container">
-      <h2>Description of {{ product.name }}</h2>
-      <p>{{ product.description }}</p>
-    </div>
-    <div class="properties-container">
-      <h2>Properties</h2>
-      <div class="default-values-container">
-        <span>Brand:</span>
-        <span>{{ product.brand.name }}</span>
-        <span>Type:</span>
-        <span>{{ product.type.name }}</span>
-        <span>Category:</span>
-        <span>{{ product.category.name }}</span>
+        </p-button>
+        <!-- TODO: fix -->
+        <p-button [text]="true" class="button" (click)="toggleFavorite()">
+          <span *ngIf="isFavorite; else nonFavorite" class="material-icons-reg"
+            >favorite</span
+          >
+          <ng-template #nonFavorite>
+            <span class="material-icons-outline">favorite</span>
+          </ng-template>
+        </p-button>
       </div>
-      <shop-properties-list
-        [template]="template"
-        [properties]="getProperties(product)"
-        [isDeleteAllowed]="false"
-        [isEditable]="false"
-      >
-      </shop-properties-list>
+      <div class="bg-white">
+        <p-accordion [activeIndex]="0">
+          <p-accordionTab header="Description">
+            <div *ngIf="product.description" class="description-container">
+              <p>{{ product.description }}</p>
+            </div>
+          </p-accordionTab>
+          <p-accordionTab header="Properties">
+            <div class="properties-container">
+              <div class="default-values-container p-2">
+                <span>Brand:</span>
+                <span>{{ product.brand.name }}</span>
+                <span>Type:</span>
+                <span>{{ product.type.name }}</span>
+                <span>Category:</span>
+                <span>{{ product.category.name }}</span>
+              </div>
+              <shop-properties-list
+                [template]="template"
+                [properties]="getProperties(product)"
+                [isDeleteAllowed]="false"
+                [isEditable]="false"
+              >
+              </shop-properties-list>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
     </div>
   </div>
 </div>

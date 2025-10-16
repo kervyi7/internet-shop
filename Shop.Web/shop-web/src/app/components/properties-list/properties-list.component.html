@@ -8,7 +8,7 @@
 </div>
 <div [ngClass]="!isDeleteAllowed ? 'flex-row' : 'flex-column w-full gap-1'">
   <ng-container *ngFor="let group of groups">
-    <div class="flex flex-column gap-4 mt-3 p-2 list-wrapper">
+    <div class="flex flex-column gap-4 mt-3 p-2">
       <div class="flex align-items-center gap-4">
         <h4 class="m-0">{{ group.name }}</h4>
         <ng-container *ngIf="isDeleteAllowed">

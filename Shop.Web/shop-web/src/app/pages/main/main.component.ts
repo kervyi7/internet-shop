@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
@@ -43,7 +43,8 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
     private _authService: AuthService,
     private _router: Router,
     private cartService: CartService,
-    private screenService: ScreenService
+    private screenService: ScreenService,
+    private cd: ChangeDetectorRef
   ) {
     super();
   }
@@ -52,6 +53,7 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
     this.isMobile = this.screenService.isMobile();
     this.screenService.screenSize$.subscribe((size) => {
       this.isMobile = size === ScreenSizes.Mobile;
+      this.cd.detectChanges();
     });
     this.isAuthorized = this._authService.isLoggedIn();
     this.isAdmin = this._authService.isAdmin();
