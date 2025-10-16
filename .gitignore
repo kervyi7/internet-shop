@@ -20,3 +20,10 @@
 /Shop.Database/bin/Debug/net8.0
 /Shop.Web/shop-web/coverage/shop-web
 /Shop.Web/.angular/cache/16.2.16
+/Shop.Web/shop-web/dist/shop-web
+/Shop.Server/bin/Release/net8.0
+/Shop.Common/bin/Release/net8.0
+/Shop.Database/bin/Release/net8.0
+/Shop.Postgre.Migrations/bin/Release/net8.0
+/publish
+/Shop.Web/bin/Release/net8.0

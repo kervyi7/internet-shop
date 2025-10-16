@@ -6,6 +6,8 @@ import { CartService } from 'src/app/services/cart.service';
 import { map } from 'rxjs';
 import { InfoPageDataService } from 'src/app/services/data/info-pages-data.service';
 import { ShopContactInfo } from 'src/app/models/interfaces/info-pages';
+import { ScreenService } from 'src/app/services/screen.service';
+import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
 
 @Component({
   selector: 'shop-main',
@@ -14,9 +16,11 @@ import { ShopContactInfo } from 'src/app/models/interfaces/info-pages';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent extends BaseCompleteComponent implements OnInit {
-  public isAuthorized: boolean;
-  public isAdmin: boolean;
+  public isAuthorized: boolean = false;
+  public isAdmin: boolean = false;
+  public isMobile: boolean = false;
   public contacts: ShopContactInfo;
+  public isMenuOpen: boolean = false;
   public socialLinks = [
     { key: 'instagram', label: 'Instagram', icon: 'pi pi-instagram' },
     { key: 'facebook', label: 'Facebook', icon: 'pi pi-facebook' },
@@ -38,15 +42,23 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
     private infoPageDataService: InfoPageDataService,
     private _authService: AuthService,
     private _router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private screenService: ScreenService
   ) {
     super();
   }
 
   public ngOnInit(): void {
+    this.isMobile = this.screenService.isMobile();
+    this.screenService.screenSize$.subscribe((size) => {
+      this.isMobile = size === ScreenSizes.Mobile;
+    });
     this.isAuthorized = this._authService.isLoggedIn();
     this.isAdmin = this._authService.isAdmin();
     this.loadContacts();
+  }
+  public toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   public goToAdmin(): void {

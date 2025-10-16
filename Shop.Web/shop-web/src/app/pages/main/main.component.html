@@ -1,35 +1,60 @@
 <header>
   <img class="logo" src="assets/img/logo.svg" (click)="goToHome()" />
+
   <p-button
     [text]="true"
-    class="button"
-    *ngIf="isAuthorized"
-    (click)="goToFavorites()"
+    class="menu-toggle"
+    icon="pi pi-bars"
+    *ngIf="isMobile"
+    (click)="toggleMenu()"
   >
-    <span class="material-icons-outline">favorite</span>
   </p-button>
-  <p-button [text]="true" class="button">
-    <span class="material-icons-outline" (click)="goToCart()"
-      >shopping_cart</span
+
+  <nav [class.open]="isMenuOpen || !isMobile">
+    <p-button
+      [text]="true"
+      class="button"
+      *ngIf="isAuthorized"
+      (click)="goToFavorites()"
     >
-    <span *ngIf="totalQuantity$ | async as quantity" class="cart-quantity">
-      {{ quantity }}
-    </span>
-  </p-button>
-  <p-button
-    [text]="true"
-    class="button"
-    *ngIf="isAuthorized; else loginButton"
-    (click)="goToUser()"
-  >
-    <span class="material-icons-outline">account_circle</span>
-  </p-button>
-  <p-button [text]="true" class="button" *ngIf="isAdmin" (click)="goToAdmin()">
-    <span class="material-icons-outline">settings</span>
-  </p-button>
-  <ng-template #loginButton>
-    <p-button [text]="true" (click)="goToLogin()">Sign In</p-button>
-  </ng-template>
+      <span class="material-icons-outline">favorite</span>
+      <span *ngIf="isMobile" class="ml-3">Favorites</span>
+    </p-button>
+
+    <p-button [text]="true" class="button">
+      <span class="material-icons-outline" (click)="goToCart()"
+        >shopping_cart</span
+      >
+      <span *ngIf="isMobile" class="ml-3">Cart</span>
+      <span *ngIf="totalQuantity$ | async as quantity" class="cart-quantity">
+        {{ quantity }}
+      </span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      class="button"
+      *ngIf="isAuthorized; else loginButton"
+      (click)="goToUser()"
+    >
+      <span class="material-icons-outline">account_circle</span>
+      <span *ngIf="isMobile" class="ml-3">Account</span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      class="button"
+      *ngIf="isAdmin"
+      (click)="goToAdmin()"
+    >
+      <span class="material-icons-outline">settings</span>
+      <span *ngIf="isMobile" class="ml-3">Admin</span>
+    </p-button>
+
+    <ng-template #loginButton>
+      <p-button [text]="true" (click)="goToLogin()">Sign In</p-button>
+    </ng-template>
+  </nav>
 </header>
 <main class="mb-4 min-h-screen">
   <router-outlet></router-outlet>
@@ -46,8 +71,12 @@
   </div>
   <div class="flex flex-column gap-3 align-items-center md:align-items-start">
     <h2 class="text-center md:text-left">Account</h2>
-    <a class="text-white no-underline" routerLink="/user/delivery-addresses">Delivery</a>
-    <a class="text-white no-underline" routerLink="/user/favorites">Favorites</a>
+    <a class="text-white no-underline" routerLink="/user/delivery-addresses"
+      >Delivery</a
+    >
+    <a class="text-white no-underline" routerLink="/user/favorites"
+      >Favorites</a
+    >
     <a class="text-white no-underline" routerLink="/user/orders">Orders</a>
   </div>
   <div class="flex flex-column gap-3 align-items-center md:align-items-start">
