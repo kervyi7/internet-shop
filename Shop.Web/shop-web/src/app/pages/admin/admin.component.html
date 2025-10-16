@@ -26,6 +26,10 @@
         <span class="material-icons-outline">local_shipping</span>
         <span class="menu-list-item-name" *ngIf="isMenuOpen">Shipping configuration</span>
       </div>
+      <div class="menu-list-item" (click)="openOrders()">
+        <span class="material-icons-outline">barcode_reader</span>
+        <span class="menu-list-item-name" *ngIf="isMenuOpen">Orders management</span>
+      </div>
     </div>
     <div class="menu-list">
       <div class="menu-list-item" (click)="openSettings()">

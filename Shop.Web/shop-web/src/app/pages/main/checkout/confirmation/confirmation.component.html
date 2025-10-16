@@ -1,1 +1,6 @@
-<p>confirmation works!</p>
+<h2 class="text-center">Success!</h2>
+<shop-order-details
+  [orders]="[order]"
+  [isExpanded]="true"
+  (productClick)="redirect($event)"
+></shop-order-details>

@@ -6,7 +6,6 @@
   class="mt-3"
 ></button>
 
-<!-- Список методов доставки -->
 <div class="flex gap-4 pt-4 flex-wrap w-full">
   <ng-container *ngFor="let option of shippingOptions">
     <div
@@ -47,7 +46,6 @@
   </ng-container>
 </div>
 
-<!-- Диалог добавления/редактирования -->
 <p-dialog
   [(visible)]="formVisible"
   [header]="isEdit ? 'Edit Shipping Method' : 'Add Shipping Method'"

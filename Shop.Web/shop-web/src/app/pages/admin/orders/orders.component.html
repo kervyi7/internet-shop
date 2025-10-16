@@ -1,0 +1,43 @@
+<shop-order-details
+  [orders]="orders"
+  [isExpanded]="false"
+  [isEditable]="true"
+  (edit)="handleEdit($event)"
+  [showPayButton]="false"
+></shop-order-details>
+<p-dialog
+  [(visible)]="formVisible"
+  [header]="'Edit order #' + currentEditId"
+  [modal]="true"
+  [style]="{ width: '500px', height: '400px' }"
+>
+  <form *ngIf="orderForm" [formGroup]="orderForm" class="flex flex-column justify-content-between h-full">
+    <p-dropdown
+      formControlName="status"
+      [options]="statuses"
+      optionLabel="name"
+      filterBy="name"
+      placeholder="Select Status"
+      [style]="{ width: '100%' }"
+    ></p-dropdown>
+
+    <div class="flex gap-2 justify-content-end mt-4">
+      <button
+        pButton
+        type="button"
+        label="Save"
+        icon="pi pi-check"
+        (click)="save()"
+        [disabled]="orderForm.invalid"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-secondary"
+        (click)="formVisible = false"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

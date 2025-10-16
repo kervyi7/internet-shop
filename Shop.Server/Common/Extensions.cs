@@ -112,6 +112,8 @@ namespace Shop.Server.Common
                 ShippingOptionId = source.ShippingOptionId,
                 Status = source.Status,
                 Notes = source.Notes,
+                Date = source.CreatedAt,
+                TotalPrice = source.TotalPrice,
                 DeliveryAddress = source.DeliveryAddress?.ToViewModel(),
                 ShippingOption = source.ShippingOption?.ToViewModel(),
                 Items = source.Items?.Select(i => i.ToViewModel()).ToList()
@@ -126,13 +128,18 @@ namespace Shop.Server.Common
 
             return new DeliveryAddressDto
             {
+                FirstName = source.FirstName,
+                LastName = source.LastName,
+                Phone = source.Phone,
+                Email = source.Email,
                 Country = source.Country,
                 City = source.City,
                 Street = source.Street,
                 HouseNumber = source.HouseNumber,
                 Apartment = source.Apartment,
                 Postcode = source.Postcode,
-                Notes = source.Notes
+                Notes = source.Notes,
+                IsDefault = source.IsDefault
             };
         }
 

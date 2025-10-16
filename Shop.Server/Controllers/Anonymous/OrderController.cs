@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 namespace Shop.Server.Controllers.Anonymous
 {
     [Route("api/[controller]")]
-    public class OrdersController : ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly DataContext _dataContext;
-        public OrdersController(DataContext dataContext)
+        public OrderController(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
@@ -25,8 +25,14 @@ namespace Shop.Server.Controllers.Anonymous
         {
             var orders = await _dataContext.Orders
                 .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.Category)
+                .Include(o => o.Items)
                 .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.ProductImages)
+                            .ThenInclude(pi => pi.Image)
                 .Include(o => o.DeliveryAddress)
+                .Include(o => o.ShippingOption)
                 .Where(o => o.UserId == userId)
                 .ToArrayAsync();
 
@@ -57,6 +63,9 @@ namespace Shop.Server.Controllers.Anonymous
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] OrderDto dto)
         {
+            if (dto == null)
+                return BadRequest("Order data is required.");
+
             if (dto.ShippingOptionId <= 0)
                 return BadRequest("Shipping option is required.");
 
@@ -72,46 +81,55 @@ namespace Shop.Server.Controllers.Anonymous
                 CreatedAt = DateTime.UtcNow,
                 Notes = dto.Notes,
                 Currency = "USD",
-                ShippingOptionId = dto.ShippingOptionId
+                ShippingOptionId = dto.ShippingOptionId,
+                Items = new List<OrderItem>()
             };
 
-            if (!string.IsNullOrEmpty(dto.UserId) && dto.DeliveryAddress == null)
+            DeliveryAddress deliveryAddress = null;
+
+            if (dto.DeliveryAddressId.HasValue)
             {
-                if (!dto.DeliveryAddressId.HasValue)
-                    return BadRequest("DeliveryAddressId is required for registered user.");
+                deliveryAddress = await _dataContext.DeliveryAddresses
+                    .FirstOrDefaultAsync(a => a.Id == dto.DeliveryAddressId);
 
-                var addressExists = await _dataContext.DeliveryAddresses
-                    .AnyAsync(a => a.Id == dto.DeliveryAddressId && a.UserId == dto.UserId);
+                if (deliveryAddress == null)
+                    return BadRequest("Invalid delivery address ID.");
+            }
+            else if (dto.DeliveryAddress != null)
+            {
+                deliveryAddress = new DeliveryAddress
+                {
+                    UserId = dto.UserId,
+                    FirstName = dto.DeliveryAddress.FirstName,
+                    LastName = dto.DeliveryAddress.LastName,
+                    Country = dto.DeliveryAddress.Country,
+                    City = dto.DeliveryAddress.City,
+                    Street = dto.DeliveryAddress.Street,
+                    HouseNumber = dto.DeliveryAddress.HouseNumber,
+                    Apartment = dto.DeliveryAddress.Apartment,
+                    Postcode = dto.DeliveryAddress.Postcode,
+                    Phone = dto.DeliveryAddress.Phone,
+                    Email = dto.DeliveryAddress.Email,
+                    Notes = dto.DeliveryAddress.Notes
+                };
 
-                if (!addressExists)
-                    return BadRequest("Invalid delivery address.");
-
-                order.DeliveryAddressId = dto.DeliveryAddressId;
+                _dataContext.DeliveryAddresses.Add(deliveryAddress);
+                await _dataContext.SaveChangesAsync();
             }
             else
             {
-                if (dto.DeliveryAddress == null)
-                    return BadRequest("Delivery address is required for guest order.");
-
-                order.TempFirstName = dto.DeliveryAddress.FirstName;
-                order.TempLastName = dto.DeliveryAddress.LastName;
-                order.TempCountry = dto.DeliveryAddress.Country;
-                order.TempCity = dto.DeliveryAddress.City;
-                order.TempStreet = dto.DeliveryAddress.Street;
-                order.TempHouseNumber = dto.DeliveryAddress.HouseNumber;
-                order.TempApartment = dto.DeliveryAddress.Apartment;
-                order.TempPostcode = dto.DeliveryAddress.Postcode;
-                order.TempPhone = dto.DeliveryAddress.Phone;
-                order.TempEmail = dto.DeliveryAddress.Email;
-                order.TempNotes = dto.DeliveryAddress.Notes;
+                return BadRequest("Delivery address is required.");
             }
 
-            order.Items = new List<OrderItem>();
+            order.DeliveryAddressId = deliveryAddress.Id;
+
             foreach (var itemDto in dto.Items)
             {
-                var product = await _dataContext.Products.FirstOrDefaultAsync(p => p.Id == itemDto.ProductId);
+                var product = await _dataContext.Products
+                    .FirstOrDefaultAsync(p => p.Id == itemDto.ProductId);
+
                 if (product == null)
-                    return BadRequest($"Product {itemDto.ProductId} not found");
+                    return BadRequest($"Product {itemDto.ProductId} not found.");
 
                 order.Items.Add(new OrderItem
                 {
@@ -128,5 +146,6 @@ namespace Shop.Server.Controllers.Anonymous
 
             return Ok(order.Id);
         }
+
     }
 }

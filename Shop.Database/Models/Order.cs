@@ -38,17 +38,6 @@ namespace Shop.Database.Models
         [ForeignKey(nameof(DeliveryAddressId))]
         public DeliveryAddress DeliveryAddress { get; set; }
 
-        public string TempFirstName { get; set; }
-        public string TempLastName { get; set; }
-        public string TempCountry { get; set; }
-        public string TempCity { get; set; }
-        public string TempStreet { get; set; }
-        public string TempHouseNumber { get; set; }
-        public string TempApartment { get; set; }
-        public string TempPostcode { get; set; }
-        public string TempPhone { get; set; }
-        public string TempEmail { get; set; }
-        public string TempNotes { get; set; }
         public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
 }

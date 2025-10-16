@@ -13,6 +13,8 @@ export interface Order extends IBaseModel {
   items: OrderItem[];
   deliveryAddress?: DeliveryAddress;
   shippingOption?: ShippingOption;
+  totalPrice?: number;
+  date?: string;
 }
 
 export interface OrderItem {

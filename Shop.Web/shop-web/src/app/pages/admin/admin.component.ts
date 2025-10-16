@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
-import { trigger, state, style, transition, animate, AnimationEvent } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+  AnimationEvent,
+} from '@angular/animations';
 
 @Component({
   selector: 'shop-admin',
@@ -12,14 +19,14 @@ import { trigger, state, style, transition, animate, AnimationEvent } from '@ang
       state(
         'open',
         style({
-          width: '300px'
-        }),
+          width: '300px',
+        })
       ),
       state(
         'closed',
         style({
-          width: '88px'
-        }),
+          width: '88px',
+        })
       ),
       transition('open <=> closed', [animate('0.25s')]),
     ]),
@@ -28,13 +35,14 @@ import { trigger, state, style, transition, animate, AnimationEvent } from '@ang
 export class AdminComponent extends BaseCompleteComponent {
   public isMenuOpen = false;
   showButtonNames = false;
-  constructor(
-    private _router: Router) {
+  constructor(private _router: Router) {
     super();
   }
 
   public onAnimationEvent(event: AnimationEvent): void {
-    event.fromState == 'closed' ? this.showButtonNames = true : this.showButtonNames = false;
+    event.fromState == 'closed'
+      ? (this.showButtonNames = true)
+      : (this.showButtonNames = false);
   }
 
   public changeMenuState(): void {
@@ -47,6 +55,10 @@ export class AdminComponent extends BaseCompleteComponent {
 
   public openProducts(): void {
     this._router.navigate(['/admin/products']);
+  }
+
+  public openOrders(): void {
+    this._router.navigate(['/admin/orders']);
   }
 
   public openShipping(): void {

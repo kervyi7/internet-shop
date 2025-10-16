@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shop.Database;
@@ -11,9 +12,11 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251016091912_FixDeliveryAddress")]
+    partial class FixDeliveryAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -553,6 +556,39 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<string>("TempApartment")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempCity")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempCountry")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempFirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempHouseNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempLastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempNotes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempPhone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempPostcode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TempStreet")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("numeric");

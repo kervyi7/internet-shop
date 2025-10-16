@@ -8,7 +8,7 @@ import { IBaseModel } from 'src/app/models/interfaces/base/base-model';
 
 @Injectable({ providedIn: 'root' })
 export class OrderDataService extends BaseDataService {
-  public baseUrl = 'orders';
+  public baseUrl = 'order';
 
   constructor(
     public readonly http: HttpClient,

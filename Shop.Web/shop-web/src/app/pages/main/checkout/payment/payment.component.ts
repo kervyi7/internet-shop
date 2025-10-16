@@ -30,20 +30,21 @@ export class PaymentComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {}
 
-public ngOnInit(): void {
-  this.orderId = +this.route.snapshot.paramMap.get('id')!;
-  this.userId = this.authService.getUserId();
+  public ngOnInit(): void {
+    this.orderId = +this.route.snapshot.paramMap.get('id')!;
+    this.userId = this.authService.getUserId();
 
-  this.orderService.getById(this.orderId, this.userId).subscribe({
-    next: (order) => {
-      order.items.forEach((i) => (i.product = ImageMapper.mapProduct(i.product)));
+    this.orderService.getById(this.orderId, this.userId).subscribe({
+      next: (order) => {
+        order.items.forEach(
+          (i) => (i.product = ImageMapper.mapProduct(i.product))
+        );
 
-      this.order = order;
-      this.cd.detectChanges();
-    },
-  });
-}
-
+        this.order = order;
+        this.cd.detectChanges();
+      },
+    });
+  }
 
   public buy(): void {
     const total = this.order.items.reduce(

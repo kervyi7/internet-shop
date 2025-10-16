@@ -1,7 +1,5 @@
 .steps {
-  margin: auto;
   font-size: 28px;
-  justify-content: space-between;
   color: #C0C0C0;
 
   span {
@@ -18,7 +16,7 @@
 
     &.disabled {
       opacity: 0.5;
-      cursor: not-allowed;
+      cursor: default;
     }
 
     &:not(.disabled):hover {
