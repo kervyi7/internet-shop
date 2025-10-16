@@ -33,42 +33,12 @@ footer {
   background-color: #000;
   color: #fff;
   letter-spacing: 4px;
-  display: flex;
-  justify-content: space-between;
-  gap: 50px;
-  padding: 40px 50px;
 
   .logo {
-    height: 45px;
     cursor: pointer;
     filter: invert(1);
     flex-grow: 1;
     align-self: center;
-  }
-
-  .contacts {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    h1 {
-      text-transform: capitalize;
-      font-weight: 100;
-    }
-
-    span {
-      cursor: pointer;
-    }
-  }
-
-  .social-networks {
-    display: flex;
-    gap: 12px;
-
-    img {
-      width: 50px;
-      cursor: pointer;
-    }
   }
 }
 
@@ -101,16 +71,6 @@ footer {
       span {
         font-size: 28px;
       }
-    }
-  }
-
-  footer {
-    flex-direction: column;
-    height: inherit;
-    align-items: center;
-
-    .contacts {
-      text-align: center;
     }
   }
 }

@@ -5,8 +5,12 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Editor } from 'primeng/editor';
-import { InfoPage } from 'src/app/models/interfaces/info-pages';
+import { Util } from 'src/app/common/util';
+import {
+  InfoPage
+} from 'src/app/models/interfaces/info-pages';
 import { InfoPageDataService } from 'src/app/services/data/info-pages-data.service';
 
 @Component({
@@ -23,17 +27,18 @@ export class InfoConfigComponent implements OnInit {
   public editMode = false;
   public editedHtml = '';
   public selectedPage: InfoPage | null = null;
+  public contactForm!: FormGroup;
 
   constructor(
     private infoPageDataService: InfoPageDataService,
+    private fb: FormBuilder,
     private cd: ChangeDetectorRef
   ) {}
 
   public ngOnInit(): void {
-    this.infoPageDataService.getAll().subscribe((p) => {
-      this.pages = p;
-      this.cd.detectChanges();
-    });
+    this.loadPages();
+    this.createContactForm();
+    this.loadContacts();
   }
 
   public onEditorInit(event: any) {
@@ -56,13 +61,13 @@ export class InfoConfigComponent implements OnInit {
     }, 100);
   }
 
-  public cancel(): void {
+  public cancelEditPage(): void {
     this.editMode = false;
     this.selectedPage = null;
     this.editedHtml = '';
   }
 
-  public save(): void {
+  public savePage(): void {
     if (!this.selectedPage || !this.editorInstance) return;
     const htmlContent = this.editorInstance.root.innerHTML;
     const updated: InfoPage = {
@@ -73,6 +78,50 @@ export class InfoConfigComponent implements OnInit {
       this.selectedPage!.htmlContent = updatedPage.htmlContent;
       this.editMode = false;
       this.selectedPage = null;
+      this.cd.detectChanges();
+    });
+  }
+
+  public saveContacts(): void {
+    if (this.contactForm.invalid) {
+      Util.markAllAsDirty(this.contactForm);
+    }
+    this.infoPageDataService
+      .updateContacts(this.contactForm.value)
+      .subscribe(() => {
+        alert('Contacts saved successfully!');
+      });
+  }
+
+  private createContactForm(): void {
+    this.contactForm = this.fb.group({
+      email: ['', [Validators.email]],
+      phone: [''],
+      address: [''],
+      instagram: [''],
+      github: [''],
+      facebook: [''],
+      discord: [''],
+      linkedin: [''],
+      pinterest: [''],
+      reddit: [''],
+      telegram: [''],
+      youtube: [''],
+      twitch: [''],
+      twitter: [''],
+    });
+  }
+
+  private loadPages(): void {
+    this.infoPageDataService.getAll().subscribe((p) => {
+      this.pages = p;
+      this.cd.detectChanges();
+    });
+  }
+
+  private loadContacts(): void {
+    this.infoPageDataService.getContacts().subscribe((data) => {
+      this.contactForm.patchValue(data);
       this.cd.detectChanges();
     });
   }

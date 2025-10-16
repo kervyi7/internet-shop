@@ -34,28 +34,53 @@
 <main class="mb-4 min-h-screen">
   <router-outlet></router-outlet>
 </main>
-<footer>
+<footer
+  class="flex justify-content-between gap-8 py-5 px-7 flex-column md:flex-row align-items-center md:align-items-start"
+>
   <div class="logo">
-    <img src="assets/img/logo.svg" (click)="goToHome()" />
+    <img
+      src="assets/img/logo.svg"
+      (click)="goToHome()"
+      class="w-full max-w-20rem"
+    />
   </div>
-  <!-- add config file -->
-  <div class="contacts">
-    <h1>Information</h1>
+  <div class="flex flex-column gap-3 align-items-center md:align-items-start">
+    <h2 class="text-center md:text-left">Account</h2>
+    <a class="text-white no-underline" routerLink="/user/delivery-addresses">Delivery</a>
+    <a class="text-white no-underline" routerLink="/user/favorites">Favorites</a>
+    <a class="text-white no-underline" routerLink="/user/orders">Orders</a>
+  </div>
+  <div class="flex flex-column gap-3 align-items-center md:align-items-start">
+    <h2 class="text-center md:text-left">Information</h2>
     <a class="text-white no-underline" routerLink="/info/shipping">Shipping</a>
     <a class="text-white no-underline" routerLink="/info/refund">Refund</a>
     <a class="text-white no-underline" routerLink="/info/legal">Legal</a>
     <a class="text-white no-underline" routerLink="/info/terms">Terms</a>
     <a class="text-white no-underline" routerLink="/info/privacy">Privacy</a>
   </div>
-  <div class="contacts align-items-center gap-3">
-    <h1>Contacts</h1>
-    <span>+380888888888</span>
-    <span>mail&commat;gmail.com</span>
-    <div class="social-networks">
-      <img src="assets/img/social-networks/instagram.svg" />
-      <img src="assets/img/social-networks/facebook.svg" />
-      <img src="assets/img/social-networks/x.svg" />
-      <img src="assets/img/social-networks/youtube.svg" />
+  <div class="flex flex-column gap-3">
+    <h2 class="text-center md:text-left">Contacts</h2>
+    <div *ngIf="contacts">
+      <div
+        class="flex flex-column gap-3 align-items-center md:align-items-start"
+      >
+        <span>{{ contacts.phone }}</span>
+        <span>{{ contacts.email }}</span>
+        <span class="text-center md:text-left">{{ contacts.address }}</span>
+        <div class="flex flex-wrap gap-3 mt-2">
+          <ng-container *ngFor="let social of socialLinks">
+            <a
+              *ngIf="contacts[social.key]"
+              [href]="contacts[social.key]"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-white no-underline flex align-items-center gap-1"
+            >
+              <i [class]="social.icon"></i>
+            </a>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

@@ -34,6 +34,7 @@ namespace Shop.Database
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<ShippingOption> ShippingOptions { get; set; }
         public DbSet<InfoPage> InfoPages { get; set; }
+        public DbSet<ShopContactInfo> ShopContactInfos { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {

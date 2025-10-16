@@ -15,7 +15,7 @@ export class UserGuard {
     if (this._authService.isLoggedIn()) {
       return true;
     }
-    this._router.navigate(['/not-found']);
+    this._router.navigate(['/sign-in']);
     return false;
   }
 }

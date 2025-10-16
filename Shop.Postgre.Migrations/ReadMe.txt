@@ -34,5 +34,7 @@ PM> Add-Migration FixShippingOptions -Project Shop.Postgre.Migrations
 PM> Add-Migration FixDeliveryAddress -Project Shop.Postgre.Migrations
 PM> Add-Migration RemoveTempAddress -Project Shop.Postgre.Migrations
 PM> Add-Migration AddInfoPages -Project Shop.Postgre.Migrations
+PM> Add-Migration AddContactsInfo -Project Shop.Postgre.Migrations
+PM> Add-Migration RemovePinterest -Project Shop.Postgre.Migrations
 
 PM> Update-Database 

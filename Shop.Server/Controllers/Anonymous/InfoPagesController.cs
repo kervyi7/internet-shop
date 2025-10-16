@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Database.Models;
 using Shop.Server.Models.DTO;
 using System.Threading.Tasks;
 
@@ -42,6 +42,29 @@ namespace Shop.Server.Controllers.Anonymous
             page.HtmlContent = dto.HtmlContent;
             await _dataContext.SaveChangesAsync();
             return Ok(page);
+        }
+
+        [HttpGet("contacts")]
+        public async Task<ActionResult<ShopContactInfo>> GetContacts()
+        {
+            var info = await _dataContext.ShopContactInfos.FirstOrDefaultAsync();
+            if (info == null) return Ok(new ShopContactInfo());
+            return Ok(info);
+        }
+
+        [HttpPut("contacts")]
+        public async Task<ActionResult> UpdateContacts([FromBody] ShopContactInfo dto)
+        {
+            var existing = await _dataContext.ShopContactInfos.FirstOrDefaultAsync();
+            if (existing == null)
+            {
+                existing = new ShopContactInfo();
+                _dataContext.ShopContactInfos.Add(existing);
+            }
+
+            _dataContext.Entry(existing).CurrentValues.SetValues(dto);
+            await _dataContext.SaveChangesAsync();
+            return Ok(existing);
         }
     }
 }

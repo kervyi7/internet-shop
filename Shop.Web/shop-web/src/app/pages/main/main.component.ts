@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
 import { CartService } from 'src/app/services/cart.service';
 import { map } from 'rxjs';
+import { InfoPageDataService } from 'src/app/services/data/info-pages-data.service';
+import { ShopContactInfo } from 'src/app/models/interfaces/info-pages';
 
 @Component({
   selector: 'shop-main',
@@ -14,12 +16,26 @@ import { map } from 'rxjs';
 export class MainComponent extends BaseCompleteComponent implements OnInit {
   public isAuthorized: boolean;
   public isAdmin: boolean;
+  public contacts: ShopContactInfo;
+  public socialLinks = [
+    { key: 'instagram', label: 'Instagram', icon: 'pi pi-instagram' },
+    { key: 'facebook', label: 'Facebook', icon: 'pi pi-facebook' },
+    { key: 'telegram', label: 'Telegram', icon: 'pi pi-send' },
+    { key: 'twitter', label: 'Twitter', icon: 'pi pi-twitter' },
+    { key: 'twitch', label: 'Twitch', icon: 'pi pi-video' },
+    { key: 'youtube', label: 'YouTube', icon: 'pi pi-youtube' },
+    { key: 'linkedin', label: 'LinkedIn', icon: 'pi pi-linkedin' },
+    { key: 'github', label: 'GitHub', icon: 'pi pi-github' },
+    { key: 'reddit', label: 'Reddit', icon: 'pi pi-reddit' },
+    { key: 'discord', label: 'Discord', icon: 'pi pi-discord' },
+  ];
 
   public totalQuantity$ = this.cartService.cart$.pipe(
     map((items) => items.reduce((sum, item) => sum + (item.quantity || 1), 0))
   );
 
   constructor(
+    private infoPageDataService: InfoPageDataService,
     private _authService: AuthService,
     private _router: Router,
     private cartService: CartService
@@ -30,6 +46,7 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
   public ngOnInit(): void {
     this.isAuthorized = this._authService.isLoggedIn();
     this.isAdmin = this._authService.isAdmin();
+    this.loadContacts();
   }
 
   public goToAdmin(): void {
@@ -57,5 +74,11 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
       return;
     }
     this._router.navigate(['/']);
+  }
+
+  private loadContacts(): void {
+    this.infoPageDataService.getContacts().subscribe((data) => {
+      this.contacts = data;
+    });
   }
 }

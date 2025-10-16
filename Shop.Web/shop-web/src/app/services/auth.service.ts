@@ -36,6 +36,9 @@ export class AuthService {
 
   public getUserId(): string {
     const token = this.getToken();
+    if (!token) {
+      return null;
+    }
     const decoded: any = jwtDecode(token);
     return decoded[
       'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
@@ -44,7 +47,9 @@ export class AuthService {
 
   private getRole(): string | null {
     const token = this.getToken();
-    if (!token) return null;
+    if (!token) {
+      return null;
+    }
 
     const decoded: any = jwtDecode(token);
     return decoded[
