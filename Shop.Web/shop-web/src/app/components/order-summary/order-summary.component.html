@@ -4,17 +4,17 @@
     <div class="flex flex-column gap-2">
       <div class="flex justify-content-between">
         <span>Items:</span>
-        <span>{{ itemsAmount }} {{ currency }}</span>
+        <span>{{ itemsAmount | currency : currency }}</span>
       </div>
       <div class="flex justify-content-between">
         <span>Shipping:</span>
-        <span>{{ shippingAmount }} {{ currency }}</span>
+        <span>{{ shippingAmount | currency : currency }}</span>
       </div>
     </div>
     <div class="flex flex-column gap-2">
       <div class="flex justify-content-between text-lg font-semibold">
         <span>Total:</span>
-        <span>{{ itemsAmount + shippingAmount }} {{ currency }}</span>
+        <span>{{ itemsAmount + shippingAmount | currency : currency }}</span>
       </div>
       <p-button
         *ngIf="isCart; else payButton"

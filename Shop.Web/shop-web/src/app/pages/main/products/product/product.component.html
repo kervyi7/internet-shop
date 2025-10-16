@@ -30,12 +30,12 @@
       </div>
       <div class="price-container">
         <ng-container *ngIf="product.discountedPrice; else price">
-          <span class="discount"
-            >{{ product.discountedPrice }}{{ product.currency }}</span
+          <span class="discount">
+            {{ product.discountedPrice | currency : product.currency }}</span
           >
-          <span class="through-lined-price"
-            >{{ product.price }}{{ product.currency }}</span
-          >
+          <span class="through-lined-price">{{
+            product.price | currency : product.currency
+          }}</span>
         </ng-container>
         <ng-template #price>
           <span class="regular-price">
@@ -54,7 +54,9 @@
         Add to cart
       </p-button>
       <p-button [text]="true" class="button" (click)="toggleFavorite()">
-        <span *ngIf="isFavorite; else nonFavorite" class="material-icons-reg">favorite</span>
+        <span *ngIf="isFavorite; else nonFavorite" class="material-icons-reg"
+          >favorite</span
+        >
         <ng-template #nonFavorite>
           <span class="material-icons-outline">favorite</span>
         </ng-template>
