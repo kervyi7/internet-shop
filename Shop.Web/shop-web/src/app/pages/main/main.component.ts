@@ -19,8 +19,9 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
   public isAuthorized: boolean = false;
   public isAdmin: boolean = false;
   public isMobile: boolean = false;
-  public contacts: ShopContactInfo;
   public isMenuOpen: boolean = false;
+  public date: Date = new Date();
+  public contacts: ShopContactInfo;
   public socialLinks = [
     { key: 'instagram', label: 'Instagram', icon: 'pi pi-instagram' },
     { key: 'facebook', label: 'Facebook', icon: 'pi pi-facebook' },

@@ -1,6 +1,6 @@
 .steps {
   font-size: 28px;
-  color: #C0C0C0;
+  //color: #C0C0C0;
 
   span {
     cursor: pointer;
@@ -14,10 +14,10 @@
       font-weight: bold;
     }
 
-    &.disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
+    // &.disabled {
+    //   opacity: 0.5;
+    //   cursor: default;
+    // }
 
     &:not(.disabled):hover {
       background: #f9f9f9;

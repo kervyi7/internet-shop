@@ -1,4 +1,4 @@
-<div *ngIf="cart$ | async as cart">
+<div *ngIf="cart$ | async as cart" class="mx-auto w-11 lg:w-9">
   <div
     *ngIf="cart.length; else emptyCart"
     class="flex justify-content-between gap-6 flex-column lg:flex-row"
@@ -9,7 +9,7 @@
           label="Select all"
           [binary]="true"
           [ngModel]="selectAll"
-          (ngModelChange)="toggleSelectAll(cart)"
+          (ngModelChange)="toggleSelectAll()"
         >
         </p-checkbox>
         <p-button
@@ -38,10 +38,11 @@
       ></shop-order-summary>
     </div>
   </div>
-
-  <shop-discounted-widget></shop-discounted-widget>
 </div>
 
+<shop-product-sections
+  [sections]="[SectionType.New, SectionType.Discounted]"
+></shop-product-sections>
 <ng-template #emptyCart>
   <h2 class="text-center">Your cart is empty</h2>
 </ng-template>

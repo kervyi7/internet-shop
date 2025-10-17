@@ -1,6 +1,6 @@
-<div class="m-auto w-11">
-  <shop-discounted-widget></shop-discounted-widget>
-</div>
+<shop-product-sections
+  [sections]="[SectionType.Discounted]"
+></shop-product-sections>
 <ng-container *ngIf="(categoriesState$ | async)?.data as data">
   <div class="flex categories-container gap-3" *ngIf="data.length > 0">
     <div
@@ -8,8 +8,12 @@
       *ngFor="let category of data"
       (click)="goToProductList(category.name)"
     >
-      <img [src]="category.image.smallBody" />
+      <img [src]="category.image.body" />
       <p>{{ category.name }}</p>
     </div>
   </div>
 </ng-container>
+<shop-product-sections
+  [sections]="[SectionType.New, SectionType.Favorite]"
+  [userId]="userId"
+></shop-product-sections>

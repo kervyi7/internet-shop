@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System;
 using Shop.Common.Constants;
 
-namespace Shop.Server.Controllers.Admin
+namespace Shop.Server.Controllers.Anonymous
 {
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
@@ -54,10 +54,18 @@ namespace Shop.Server.Controllers.Admin
 
             query = ApplyFilters(query, model);
 
+            query = model.SortBy?.ToLower() switch
+            {
+                "price_asc" => query.OrderBy(x => x.Price),
+                "price_desc" => query.OrderByDescending(x => x.Price),
+                "date_asc" => query.OrderBy(x => x.CreatedAt),
+                "date_desc" => query.OrderByDescending(x => x.CreatedAt),
+                _ => query.OrderByDescending(x => x.Id)
+            };
+
             var totalCount = await query.CountAsync();
 
             var products = await query
-                .OrderByDescending(x => x.Id)
                 .Skip(model.Skip)
                 .Take(model.Count)
                 .ToListAsync();
@@ -72,14 +80,35 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpGet("discounted")]
-        public async Task<ActionResult<ProductDto>> GetDiscounted()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetDiscounted()
         {
             var products = await _dataContext.Products
+                .Include(x => x.Brand)
+                .Include(x => x.Type)
                 .Include(x => x.Category)
                 .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
                 .ThenInclude(x => x.Image)
-                .Where(x => x.DiscountedPrice != 0 && x.DiscountedPrice != null)
+                .Where(x => x.DiscountedPrice != null && x.DiscountedPrice > 0 && x.DiscountedPrice < x.Price)
+                .OrderByDescending(x => x.UpdatedAt)
+                .Take(20)
                 .ToListAsync();
+
+            return Ok(products.ToViewModels());
+        }
+
+        [HttpGet("new")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetNewProducts()
+        {
+            var products = await _dataContext.Products
+                .Include(x => x.Brand)
+                .Include(x => x.Type)
+                .Include(x => x.Category)
+                .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
+                .ThenInclude(x => x.Image)
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(20)
+                .ToListAsync();
+
             return Ok(products.ToViewModels());
         }
 

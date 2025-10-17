@@ -1,0 +1,9 @@
+<div class="m-auto w-11">
+  <ng-container *ngFor="let section of sectionData">
+    <shop-product-widget
+      [header]="section.title"
+      [products]="section.products$"
+    >
+    </shop-product-widget>
+  </ng-container>
+</div>

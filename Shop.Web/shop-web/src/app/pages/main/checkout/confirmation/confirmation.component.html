@@ -1,6 +1,12 @@
-<h2 class="text-center">Success!</h2>
-<shop-order-details
-  [orders]="[order]"
-  [isExpanded]="true"
-  (productClick)="redirect($event)"
-></shop-order-details>
+<div class="mx-auto w-11 lg:w-9">
+  <h2 class="text-center">Success!</h2>
+  <shop-order-details
+    [orders]="[order]"
+    [isExpanded]="true"
+    (productClick)="redirect($event)"
+  ></shop-order-details>
+</div>
+<shop-product-sections
+  [sections]="[SectionType.New, SectionType.Discounted, SectionType.Favorite]"
+  [userId]="userId"
+></shop-product-sections>

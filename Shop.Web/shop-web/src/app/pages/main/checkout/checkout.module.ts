@@ -17,10 +17,10 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CartItemComponent } from 'src/app/components/cart-item/cart-item.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { OrderSummaryComponent } from 'src/app/components/order-summary/order-summary.component';
-import { DiscountedWidgetComponent } from 'src/app/components/discounted-widget/discounted-widget.component';
 import { AddressCardComponent } from 'src/app/components/address-card/address-card.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { OrderDetailsComponent } from 'src/app/components/order-details/order-details.component';
+import { ProductSectionsComponent } from 'src/app/components/product-sections/product-sections.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +44,7 @@ import { OrderDetailsComponent } from 'src/app/components/order-details/order-de
     CartItemComponent,
     OrderSummaryComponent,
     CheckboxModule,
-    DiscountedWidgetComponent,
+    ProductSectionsComponent,
     AddressCardComponent,
     RadioButtonModule,
     OrderDetailsComponent

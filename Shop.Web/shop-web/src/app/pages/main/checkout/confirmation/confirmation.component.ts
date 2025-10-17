@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImageMapper } from 'src/app/common/image-mapper';
 import { OrderStatuses } from 'src/app/models/enums/order-statuses';
+import { ProductSectionType } from 'src/app/models/enums/product-section';
 import { Order } from 'src/app/models/interfaces/order';
 import { IProduct } from 'src/app/models/interfaces/product';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,9 +14,10 @@ import { OrderDataService } from 'src/app/services/data/order-data.service';
   styleUrls: ['./confirmation.component.scss'],
 })
 export class ConfirmationComponent {
-  public order!: Order;
   private orderId!: number;
-  private userId!: string;
+  public userId!: string;
+  public SectionType = ProductSectionType;
+  public order!: Order;
 
   constructor(
     private route: ActivatedRoute,

@@ -36,6 +36,7 @@ namespace Shop.Server.Controllers.Admin
                     {
                         MimeType = x.Image.MimeType,
                         SmallBody = x.Image.SmallBody,
+                        Body = x.Image.Body,
                     }
                 }).ToListAsync();
             return Ok(categories);

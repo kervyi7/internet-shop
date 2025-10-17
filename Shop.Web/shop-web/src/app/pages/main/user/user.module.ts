@@ -10,6 +10,7 @@ import { SecurityModule } from './security/security.module';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OrdersModule } from './orders/orders.module';
+import { ProductSectionsComponent } from 'src/app/components/product-sections/product-sections.component';
 
 @NgModule({
   declarations: [UserComponent],
@@ -23,7 +24,8 @@ import { OrdersModule } from './orders/orders.module';
     SecurityModule,
     ButtonModule,
     ConfirmDialogModule,
-    OrdersModule
+    OrdersModule,
+    ProductSectionsComponent
   ],
   exports: [UserComponent],
 })

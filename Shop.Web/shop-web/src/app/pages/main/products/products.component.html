@@ -37,8 +37,9 @@
           id="sortBy"
           [options]="sortBy"
           optionLabel="label"
-          optionValue="label"
-          (onChange)="onCountChange()"
+          optionValue="value"
+          [(ngModel)]="pagination.sortBy"
+          (onChange)="onSortingChange()"
         ></p-dropdown>
         <label htmlFor="sortBy">
           <span>Sort by</span>

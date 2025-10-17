@@ -1,6 +1,5 @@
 :root {
-  font-family: "Google Sans", Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
-  --font-family: "Google Sans", Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  --font-family: "Montserrat", sans-serif;
   --surface-a:#ffffff;
   --surface-b:#fafafa;
   --surface-c:rgba(0,0,0,.04);

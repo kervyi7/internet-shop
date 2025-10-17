@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { ProductSectionType } from 'src/app/models/enums/product-section';
 import { Step } from 'src/app/models/interfaces/step';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthDataService } from 'src/app/services/data/auth-data.service';
@@ -12,6 +13,7 @@ import { AuthDataService } from 'src/app/services/data/auth-data.service';
   providers: [ConfirmationService],
 })
 export class UserComponent implements OnInit {
+  public SectionType = ProductSectionType;
   public activeTab: string = '';
   public steps: Step[] = [
     {

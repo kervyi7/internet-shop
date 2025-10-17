@@ -58,7 +58,11 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public isFiltersOpen = false;
   public breadcrumbItems: MenuItem[];
   public home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-  public pagination: IGetModelsRequest = { skip: 0, count: 10 };
+  public pagination: IGetModelsRequest = {
+    skip: 0,
+    count: 10,
+    sortBy: 'date_desc',
+  };
   public total = 0;
   public isRowsView: boolean = false;
   public countOptions = [
@@ -69,8 +73,10 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
     { label: 50, value: 50 },
   ];
   public sortBy = [
-    { label: 'price high to low' },
-    { label: 'price low to high' }, //TODO: fix sorting, it's not working
+    { label: 'Price: High to Low', value: 'price_desc' },
+    { label: 'Price: Low to High', value: 'price_asc' },
+    { label: 'Date: Oldest First', value: 'date_asc' },
+    { label: 'Date: Newest First', value: 'date_desc' },
   ];
 
   constructor(
@@ -116,6 +122,11 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
       skip: event.first,
       count: event.rows,
     };
+    this.loadProductList();
+  }
+
+  public onSortingChange(): void {
+    this.pagination.skip = 0;
     this.loadProductList();
   }
 

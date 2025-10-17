@@ -1,7 +1,7 @@
-<ng-container *ngIf="productsWithDiscountState$ | async as state">
+<ng-container *ngIf="state$ | async as state">
   <app-state-switcher [state]="state">
     <ng-container *appContentState>
-      <h1 class="text-center text-6xl">Why Wait? Your Discounts Are Here!</h1>
+      <h2 *ngIf="header" class="text-center text-6xl">{{ header }}</h2>
       <p-carousel
         *ngIf="state?.data.length > 1; else oneItem"
         [value]="state?.data"
@@ -20,6 +20,9 @@
       <ng-template #oneItem>
         <shop-product-card [product]="state?.data[0]"></shop-product-card>
       </ng-template>
+    </ng-container>
+    <ng-container *appEmptyState>
+      <div></div>
     </ng-container>
   </app-state-switcher>
 </ng-container>

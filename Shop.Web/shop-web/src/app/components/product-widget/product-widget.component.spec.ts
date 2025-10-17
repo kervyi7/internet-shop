@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DiscountedWidgetComponent } from './discounted-widget.component';
+import { DiscountedWidgetComponent } from './product-widget.component';
 
 describe('DiscountedWidgetComponent', () => {
   let component: DiscountedWidgetComponent;

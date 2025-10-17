@@ -53,7 +53,7 @@ namespace Shop.Server.Controllers.Anonymous
         }
 
         [HttpPut("contacts")]
-        public async Task<ActionResult> UpdateContacts([FromBody] ShopContactInfo dto)
+        public async Task<ActionResult> UpdateContacts([FromBody] ShopContactInfoDto dto)
         {
             var existing = await _dataContext.ShopContactInfos.FirstOrDefaultAsync();
             if (existing == null)

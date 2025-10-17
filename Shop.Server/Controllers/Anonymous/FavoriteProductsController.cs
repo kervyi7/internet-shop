@@ -38,6 +38,26 @@ namespace Shop.Server.Controllers.Anonymous
             return Ok(favorites.ToViewModels());
         }
 
+        [HttpGet("{userId}/top")]
+        public async Task<ActionResult<FavoriteProductDto[]>> GetTopFavorites(string userId)
+        {
+            var favorites = await _dataContext.FavoriteProducts
+                .Where(f => f.UserId == userId)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.Type)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(f => f.Product)
+                    .ThenInclude(p => p.ProductImages)
+                        .ThenInclude(pi => pi.Image)
+                .Take(20)
+                .ToListAsync();
+
+            return Ok(favorites.ToViewModels());
+        }
+
         [HttpPost]
         public async Task<ActionResult> Add([FromBody] ShortFavoriteProductDto model)
         {

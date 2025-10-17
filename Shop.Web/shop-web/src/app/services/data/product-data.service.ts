@@ -42,6 +42,13 @@ export class ProductDataService extends BaseDataService {
     );
   }
 
+  public getNewProducts(): Observable<IProduct[]> {
+    return this.http.get<IProduct[]>(
+      this.getUrl('new'),
+      this.defaultHttpOptions
+    );
+  }
+
   public getByCode(code: string): Observable<IProduct> {
     return this.http.get<IProductResponse>(
       this.getUrl(`product/${code}`),

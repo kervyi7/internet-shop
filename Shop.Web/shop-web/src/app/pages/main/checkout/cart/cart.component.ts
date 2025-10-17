@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ProductSectionType } from 'src/app/models/enums/product-section';
 import { CartItem } from 'src/app/models/interfaces/cart';
 import { CartService } from 'src/app/services/cart.service';
 
@@ -8,12 +9,13 @@ import { CartService } from 'src/app/services/cart.service';
   templateUrl: './cart.component.html',
 })
 export class CartComponent implements OnInit {
+  public SectionType = ProductSectionType;
   public cart$: Observable<CartItem[]> = this.cartService.cart$;
   public selectAll = false;
 
   constructor(private readonly cartService: CartService) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.cart$.subscribe((cart) => {
       const selectedCount = cart.filter((x) => x.isSelected).length;
       this.selectAll = cart.length > 0 && selectedCount === cart.length;
@@ -36,7 +38,7 @@ export class CartComponent implements OnInit {
     this.cartService.updateQuantity(item.productId, item.quantity);
   }
 
-  public toggleSelectAll(cart: CartItem[]): void {
+  public toggleSelectAll(): void {
     if (this.selectAll) {
       this.cartService.deselectAll();
     } else {
