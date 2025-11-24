@@ -53,8 +53,7 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost()]
         public async Task<ActionResult> Create(ImageDto model)
         {
-            var user = "my user";
-            var image = CreateImage(model, user);
+            var image = CreateImage(model);
             DataContext.Images.Add(image);
             await DataContext.SaveChangesAsync();
             return Ok();
@@ -63,7 +62,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPut()]
         public async Task<ActionResult> Edit(ImageDto model)
         {
-            var user = "my user";
             var item = await DataContext.Images.FirstOrDefaultAsync(x => x.Id == model.Id);
             if (item == null)
             {
@@ -74,13 +72,12 @@ namespace Shop.Server.Controllers.Admin
             item.MimeType = model.MimeType;
             item.Body = Convert.FromBase64String(model.Body);
             item.SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody);
-            item.UpdatedByUser = user;
             item.UpdatedAt = DateTime.UtcNow;
             await DataContext.SaveChangesAsync();
             return Ok();
         }
 
-        private Image CreateImage(ImageDto model, string user)
+        private Image CreateImage(ImageDto model)
         {
             return new Image
             {
@@ -91,8 +88,6 @@ namespace Shop.Server.Controllers.Admin
                 IsTitle = model.IsTitle,
                 Body = Convert.FromBase64String(model.Body),
                 SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody),
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
         }
     }

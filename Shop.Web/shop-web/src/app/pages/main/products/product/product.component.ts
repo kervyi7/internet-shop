@@ -4,21 +4,16 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductDataService } from '../../../../services/data/product-data.service';
-import { Converter } from '../../../../common/converter';
 import { IProduct } from '../../../../models/interfaces/product';
-import { IImage } from '../../../../models/interfaces/image';
 import { BaseCompleteComponent } from '../../../../components/base/base-complete.component';
 import { MenuItem } from 'primeng/api';
-import { takeUntil } from 'rxjs';
-import { GalleriaResponsiveOptions } from 'primeng/galleria';
-import {
-  IProperty,
-  IPropertyTemplate,
-} from '../../../../models/interfaces/property';
-import { CartService } from 'src/app/services/cart.service';
-import { FavoritesService } from 'src/app/services/favorites.service';
+import { Observable, takeUntil } from 'rxjs';
+import { IProperty } from '../../../../models/interfaces/property';
+import { ProductActionsService } from 'src/app/services/product-actions.service';
+import { ImageMapper } from 'src/app/common/image-mapper';
+import { IImage } from 'src/app/models/interfaces/image';
 
 @Component({
   selector: 'shop-product',
@@ -29,19 +24,16 @@ import { FavoritesService } from 'src/app/services/favorites.service';
 export class ProductComponent extends BaseCompleteComponent implements OnInit {
   private _code: string;
   public product: IProduct;
-  public items: MenuItem[];
-  public home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-  public responsiveOptions: GalleriaResponsiveOptions[];
-  public imagesBody: any[] = [];
-  public template: IPropertyTemplate;
-  public isFavorite = false;
+  public breadcrumbItems: MenuItem[];
+  public isFav$: Observable<boolean>;
+  public selectedImage: IImage;
 
   constructor(
     private _productDataService: ProductDataService,
     private _activatedRoute: ActivatedRoute,
-    private _cd: ChangeDetectorRef,
-    private _cartService: CartService,
-    private _favoritesService: FavoritesService
+    private _router: Router,
+    private _productActionsService: ProductActionsService,
+    private _cd: ChangeDetectorRef
   ) {
     super();
   }
@@ -49,30 +41,38 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public ngOnInit(): void {
     this._code = this._activatedRoute.snapshot.paramMap.get('code')!;
     if (!this._code) {
-      return;
+      this._router.navigate(['./not-found']);
     }
     this.loadProduct(this._code);
-    this.responsiveOptions = [
-      {
-        breakpoint: '1024px',
-        numVisible: 5,
-      },
-      {
-        breakpoint: '768px',
-        numVisible: 3,
-      },
-      {
-        breakpoint: '560px',
-        numVisible: 1,
-      },
-    ];
-    this._favoritesService.favorites$
+  }
+
+  public addToCart(): void {
+    this._productActionsService.addToCart(this.product);
+  }
+
+  public toggleFavorite(e: MouseEvent): void {
+    e.stopPropagation();
+    this._productActionsService.toggleFavorite(this.product);
+    this._cd.markForCheck();
+  }
+
+  public selectImage(image: IImage): void {
+    this.selectedImage = image;
+  }
+
+  private loadProduct(code: string): void {
+    this._productDataService
+      .getByCode(code)
       .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((favorites) => {
-        if (this.product) {
-          this.isFavorite = favorites.includes(this.product);
-          this._cd.markForCheck();
-        }
+      .subscribe((data: IProduct) => {
+        this.product = ImageMapper.mapProduct(data);
+        this.isFav$ = this._productActionsService.isFavorite(data.id);
+        this.selectImage(this.product.images[0]);
+        this.breadcrumbItems = [
+          { label: data.category.name, routerLink: `/${data.category.name}` },
+          { label: data.name },
+        ];
+        this._cd.detectChanges();
       });
   }
 
@@ -82,48 +82,5 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     properties.push(...product.decimalProperties);
     properties.push(...product.boolProperties);
     return properties;
-  }
-
-  public addToCart(): void {
-    this._cartService.add(this.product);
-  }
-
-  public toggleFavorite(): void {
-    if (this.isFavorite) {
-      this._favoritesService.removeFromFavorites(this.product.id);
-    } else {
-      this._favoritesService.addToFavorites(this.product);
-    }
-  }
-
-  private loadProduct(code: string): void {
-    this._productDataService
-      .getByCode(code)
-      .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: IProduct) => {
-        this.imagesBody = data.images.map((image: IImage) => {
-          image.smallBody = Converter.toFileSrc(
-            image.mimeType,
-            image.smallBody
-          );
-          image.body = Converter.toFileSrc(image.mimeType, image.body);
-          return {
-            itemImageSrc: image.body,
-            thumbnailImageSrc: image.smallBody,
-            alt: data.name,
-            title: data.name,
-          };
-        });
-        this.template = data.category.propertyTemplate;
-        this.product = data;
-        this.items = [
-          {
-            label: data.category.name,
-            routerLink: `/${data.category.name}`,
-          },
-          { label: data.name },
-        ];
-        this._cd.detectChanges();
-      });
   }
 }

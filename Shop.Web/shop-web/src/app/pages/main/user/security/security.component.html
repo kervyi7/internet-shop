@@ -3,25 +3,46 @@
   [formGroup]="passwordForm"
   class="flex flex-column gap-4 lg:w-4"
 >
-  <div class="flex flex-column gap-2">
-    <label>Current Password</label>
-    <input pInputText type="password" formControlName="currentPassword" placeholder="Current Password"/>
-    <small class="p-error">{{ getErrorMessage("currentPassword") }}</small>
-  </div>
+  <span class="p-float-label">
+    <input
+      class="input"
+      id="currentPassword"
+      type="password"
+      pInputText
+      placeholder="Current Password"
+      formControlName="currentPassword"
+    />
+    <label htmlFor="currentPassword">Current password</label>
+  </span>
+  <small class="p-error">{{ getErrorMessage("currentPassword") }}</small>
 
-  <div class="flex flex-column gap-2">
-    <label>New Password</label>
-    <input pInputText type="password" formControlName="newPassword" placeholder="New Password"/>
-    <small class="p-error">{{ getErrorMessage("newPassword") }}</small>
-  </div>
+  <span class="p-float-label">
+    <input
+      class="input"
+      id="newPassword"
+      type="password"
+      pInputText
+      placeholder="New Password"
+      formControlName="newPassword"
+    />
+    <label htmlFor="newPassword">New password</label>
+  </span>
+  <small class="p-error">{{ getErrorMessage("newPassword") }}</small>
 
-  <div class="flex flex-column gap-2">
-    <label>Confirm New Password</label>
-    <input pInputText type="password" formControlName="confirmPassword" placeholder="Confirm New Password"/>
-    <small class="p-error">
+  <span class="p-float-label">
+    <input
+      class="input"
+      id="confirmPassword"
+      type="password"
+      pInputText
+      placeholder="Confirm New Password"
+      formControlName="confirmPassword"
+    />
+    <label htmlFor="currentPassword">Confirm New Password</label>
+  </span>
+  <small class="p-error">
       {{ getErrorMessage('confirmPassword') || (passwordForm.errors?.['passwordMismatch'] ? 'Passwords do not match' : '') }}
     </small>
-  </div>
 
   <div class="p-field p-col-12">
     <button

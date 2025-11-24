@@ -35,7 +35,8 @@ export class OrderDetailsComponent {
     return OrderStatusesLabel[key] || '';
   }
 
-  public onPayClick(): void {
+  public onPayClick(e: MouseEvent): void {
+    e.stopPropagation();
     this.pay.emit();
   }
 

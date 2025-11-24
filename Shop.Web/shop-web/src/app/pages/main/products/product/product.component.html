@@ -1,14 +1,18 @@
 <div class="min-w-max max-w-full m-4">
-  <p-breadcrumb [model]="items" [home]="home" styleClass="border-none"></p-breadcrumb>
+  <p-breadcrumb
+    [model]="breadcrumbItems"
+    [home]="{ icon: 'pi pi-home', routerLink: '/' }"
+    styleClass="border-none"
+  ></p-breadcrumb>
 </div>
 <div *ngIf="product" class="product-wrapper">
   <div
     class="flex w-11 sm:w-9 mx-auto justify-content-between gap-6 md:gap-8 flex-column md:flex-row"
   >
     <!-- TODO: make own one -->
-    <div class="md:w-30rem">
+    <!-- <div class="md:w-30rem">
       <p-galleria
-        [value]="imagesBody"
+        [value]="product.images"
         [responsiveOptions]="responsiveOptions"
         [containerStyle]="{ 'max-width': '500px' }"
         [numVisible]="5"
@@ -22,6 +26,25 @@
           </div>
         </ng-template>
       </p-galleria>
+    </div> -->
+    <div class="md:w-30rem">
+      <div class="flex flex-column gap-2">
+        <div class="w-full lg:w-11">
+          <img [src]="selectedImage.body" class="w-full" />
+        </div>
+        <div
+          class="flex w-full lg:w-11 gap-2"
+          [class.justify-content-between]="product.images.length > 2"
+        >
+          <ng-container *ngFor="let image of product.images">
+            <img
+              [src]="image.smallBody"
+              (click)="selectImage(image)"
+              class="w-2 cursor-pointer"
+            />
+          </ng-container>
+        </div>
+      </div>
     </div>
     <div class="flex flex-column gap-4 flex-1 justify-content-center">
       <h1 class="m-0">{{ product.name }}</h1>
@@ -49,24 +72,19 @@
           {{ product.price }} {{ product.currency }}
         </span>
       </ng-template>
-      <div class="flex w-full">
+      <div class="flex w-full gap-2">
         <p-button
           label="Add to cart"
           styleClass="w-10rem md:w-15rem"
           (onClick)="addToCart()"
         >
         </p-button>
-        <!-- TODO: fix -->
-        <p-button [text]="true" class="button" (click)="toggleFavorite()">
-          <span *ngIf="isFavorite; else nonFavorite" class="material-icons-reg"
-            >favorite</span
-          >
-          <ng-template #nonFavorite>
-            <span class="material-icons-outline">favorite</span>
-          </ng-template>
-        </p-button>
+        <shop-favorites-button
+          [isFavorite]="isFav$ | async"
+          (click)="toggleFavorite($event)"
+        ></shop-favorites-button>
       </div>
-      <div class="bg-white">
+      <div>
         <p-accordion [activeIndex]="0">
           <p-accordionTab header="Description">
             <div *ngIf="product.description" class="description-container">
@@ -84,7 +102,7 @@
                 <span>{{ product.category.name }}</span>
               </div>
               <shop-properties-list
-                [template]="template"
+                [template]="product.category.propertyTemplate"
                 [properties]="getProperties(product)"
                 [isDeleteAllowed]="false"
                 [isEditable]="false"

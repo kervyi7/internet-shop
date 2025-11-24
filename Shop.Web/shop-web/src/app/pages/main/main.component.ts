@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../components/base/base-complete.component';
@@ -17,6 +22,7 @@ import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
 })
 export class MainComponent extends BaseCompleteComponent implements OnInit {
   public isAuthorized: boolean = false;
+  public isLightTheme:  boolean = false;
   public isAdmin: boolean = false;
   public isMobile: boolean = false;
   public isMenuOpen: boolean = false;
@@ -51,9 +57,9 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.isMobile = this.screenService.isMobile();
+    this.isMobile = this.screenService.isTablet();
     this.screenService.screenSize$.subscribe((size) => {
-      this.isMobile = size === ScreenSizes.Mobile;
+      this.isMobile = size !== ScreenSizes.Desktop;
       this.cd.detectChanges();
     });
     this.isAuthorized = this._authService.isLoggedIn();
@@ -89,6 +95,15 @@ export class MainComponent extends BaseCompleteComponent implements OnInit {
       return;
     }
     this._router.navigate(['/']);
+  }
+
+  public onThemeSwitchChange(): void {
+    this.isLightTheme = !this.isLightTheme;
+    document.body.setAttribute(
+      'data-theme',
+      this.isLightTheme ? 'light' : 'dark'
+    );
+    //this.toggleMenu();
   }
 
   private loadContacts(): void {

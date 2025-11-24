@@ -9,3 +9,9 @@
 .view-list-grid {
   grid-template-columns: repeat(2, minmax(100px, 400px));
 }
+
+:host {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

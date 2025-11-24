@@ -1,65 +1,104 @@
 <p-toast></p-toast>
-<p-button [text]="true" (click)="goToPreviousPage()">
-  <span class="material-icons-reg">{{mIcons.arrow_back}}</span>
-</p-button>
-<div *ngIf="id && (!category.propertyTemplate || !category.image)" class="flex">
-  <h2 class="danger">{{lang.warnings.categoryIsIncomplete}}</h2>
-  <shop-tooltip-icon text="{{lang.tooltips.categoryWarn}}"></shop-tooltip-icon>
+<div class="header-container">
+  <p-button [text]="true" (click)="goToPreviousPage()">
+    <span class="material-icons-reg">{{ mIcons.arrow_back }}</span>
+  </p-button>
+  <div
+    *ngIf="id && (!category.propertyTemplate || !category.image)"
+    class="flex"
+  >
+    <h2 class="danger">{{ lang.warnings.categoryIsIncomplete }}</h2>
+    <shop-tooltip-icon
+      text="{{ lang.tooltips.categoryWarn }}"
+    ></shop-tooltip-icon>
+  </div>
 </div>
 <div class="info-photo-container">
   <div>
-    <h2>{{lang.headers.categoryInformation}}</h2>
-    <form (ngSubmit)="submit()" [formGroup]="categoryForm" novalidate class="inputs-wrapper">
+    <h2>{{ lang.headers.categoryInformation }}</h2>
+    <form
+      (ngSubmit)="submit()"
+      [formGroup]="categoryForm"
+      novalidate
+      class="inputs-wrapper"
+    >
       <span class="p-float-label">
-        <input id="name" class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}"
-          [formControl]="categoryForm.controls.name" />
+        <input
+          id="name"
+          class="input"
+          type="text"
+          pInputText
+          placeholder="{{ lang.placeholders.name }}"
+          [formControl]="categoryForm.controls.name"
+        />
         <label htmlFor="name">
-          <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-            [ngTemplateOutletContext]="{placeholder:lang.placeholders.name}">
+          <ng-container
+            [ngTemplateOutlet]="requiredFieldLabel"
+            [ngTemplateOutletContext]="{ placeholder: lang.placeholders.name }"
+          >
           </ng-container>
         </label>
       </span>
       <span class="p-float-label">
-        <input id="code" class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}"
-          [formControl]="categoryForm.controls.code" />
+        <input
+          id="code"
+          class="input"
+          type="text"
+          pInputText
+          placeholder="{{ lang.placeholders.code }}"
+          [formControl]="categoryForm.controls.code"
+        />
         <label htmlFor="code">
-          <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-            [ngTemplateOutletContext]="{placeholder:lang.placeholders.code}">
+          <ng-container
+            [ngTemplateOutlet]="requiredFieldLabel"
+            [ngTemplateOutletContext]="{ placeholder: lang.placeholders.code }"
+          >
           </ng-container>
         </label>
       </span>
-      <p-button type="submit">{{lang.buttons.save}}</p-button>
+      <p-button type="submit">{{ lang.buttons.save }}</p-button>
     </form>
   </div>
   <div *ngIf="id">
-    <h2 [class.danger]="!category.image">{{lang.headers.image}}</h2>
+    <h2 [class.danger]="!category.image">{{ lang.headers.image }}</h2>
     <div *ngIf="!image" class="pic" (click)="showImageStorage()">
-      <span class="material-icons-reg">{{mIcons.add}}</span>
+      <span class="material-icons-reg">{{ mIcons.add }}</span>
     </div>
     <div *ngIf="image" class="uploaded-images-container">
       <div class="image-container">
-        <img [src]="image" class="image">
-        <span class="material-icons-reg delete-image" (click)="showImageStorage()">{{mIcons.edit}}</span>
+        <img [src]="image" class="image" />
+        <span
+          class="material-icons-reg delete-image"
+          (click)="showImageStorage()"
+          >{{ mIcons.edit }}</span
+        >
       </div>
     </div>
   </div>
 </div>
 <div *ngIf="id">
-  <h2 [class.danger]="!category.propertyTemplate">{{lang.headers.additionalValues}}</h2>
+  <h2 [class.danger]="!category.propertyTemplate">
+    {{ lang.headers.additionalValues }}
+  </h2>
   <div class="input-container">
     <div class="button-container" *ngIf="!template">
       <p-button [text]="true" (onClick)="addPropertyTemplate()">
-        <span class="material-icons-reg">{{mIcons.add}}</span>
-        <span>{{lang.buttons.createTemplate}}</span>
+        <span class="material-icons-reg">{{ mIcons.add }}</span>
+        <span>{{ lang.buttons.createTemplate }}</span>
       </p-button>
     </div>
     <div *ngIf="template">
-      <shop-properties-list [template]="template" [properties]="properties" [isDeleteAllowed]="true" [isEditable]="true"></shop-properties-list>
+      <shop-properties-list
+        [template]="template"
+        [properties]="properties"
+        [isDeleteAllowed]="true"
+        [isEditable]="true"
+      ></shop-properties-list>
     </div>
   </div>
 </div>
 
-<ng-template #requiredFieldLabel let-placeholder='placeholder'>
-  <span>{{placeholder}}</span>
+<ng-template #requiredFieldLabel let-placeholder="placeholder">
+  <span>{{ placeholder }}</span>
   <span class="asterisk">*</span>
 </ng-template>

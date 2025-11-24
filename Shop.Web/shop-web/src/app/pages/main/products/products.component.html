@@ -5,7 +5,7 @@
     <p-breadcrumb
       styleClass="max-w-18rem sm:max-w-full p-1 border-none sm:p-3 sm:border-1"
       [model]="breadcrumbItems"
-      [home]="home"
+      [home]="{ icon: 'pi pi-home', routerLink: '/' }"
     ></p-breadcrumb>
   </div>
   <div class="flex align-items-center gap-3 flex-wrap justify-content-center">
@@ -49,24 +49,26 @@
   </div>
 </div>
 <div class="filters-products-container my-4 flex justify-content-center">
-  <div [class.filters-layout]="isFiltersOpen">
-    <div
-      class="filters-container flex flex-column align-items-end absolute top-0 p-4"
-      [@openClose]="isFiltersOpen ? 'open' : 'closed'"
-    >
-      <p-button
-        icon="pi pi-times"
-        [text]="true"
-        (onClick)="changeFiltersMenuState()"
-        styleClass="text-white"
-      ></p-button>
-      <shop-filters-list
-        [categoryName]="category"
-        [hidden]="!isFiltersOpen"
-        (filterApplied)="updateFilters($event)"
-        class="w-full"
-      ></shop-filters-list>
-    </div>
+  <div
+    [class.filters-layout]="isFiltersOpen"
+    (click)="changeFiltersMenuState()"
+  ></div>
+  <div
+    class="filters-container flex flex-column align-items-end absolute top-0 p-4"
+    [@openClose]="isFiltersOpen ? 'open' : 'closed'"
+  >
+    <p-button
+      icon="pi pi-times"
+      [text]="true"
+      (onClick)="changeFiltersMenuState()"
+      styleClass="text-white"
+    ></p-button>
+    <shop-filters-list
+      [categoryName]="category"
+      [hidden]="!isFiltersOpen"
+      (filterApplied)="updateFilters($event)"
+      class="w-full"
+    ></shop-filters-list>
   </div>
   <div
     class="flex gap-4 flex-wrap justify-content-center"
@@ -89,8 +91,7 @@
     [totalRecords]="total"
     (onPageChange)="onPageChange($event)"
   ></p-paginator>
-  <!-- TODO: test -->
-  <div class="flex align-self-center" >
+  <div class="flex align-self-center">
     {{ pagination.skip + 1 }} - {{ pagination.skip + products.length }} of
     {{ total }}
   </div>

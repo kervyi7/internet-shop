@@ -5,14 +5,14 @@
 }
 
 .admin-menu {
-  background-color: #88C2CE;
+  background-color: var(--secondary-background);
   flex-shrink: 0;
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition-duration: 0.5s;
-  box-shadow: 0px 0px 5px 0.1px #b6b6b6;
+  box-shadow: 0px 0px 5px 0.1px var(--shadow);
 }
 
 .opened {
@@ -31,7 +31,7 @@
 
 .menu-header {
   font-size: 24px;
-  color: #10100F;
+  color: var(--main-text);
   text-align: center;
   margin-bottom: 20px;
 }
@@ -45,18 +45,19 @@
 .menu-list-item {
   width: 100%;
   height: 50px;
-  background-color: #F4F9FC;
+  background-color: #fff;
   border-radius: 3px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 10px 12px;
-  box-shadow: 0px 0px 5px 0.1px #fff;
+  box-shadow: 0px 0px 5px 0.1px var(--shadow);
   transition-duration: 0.2s;
+  color: var(--main-static-text);
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0px 0px 7px 1px #fff;
+    box-shadow: 0px 0px 7px 1px var(--shadow);
   }
 }
 
@@ -70,7 +71,7 @@
 .arrow-button {
   display: flex;
   justify-content: flex-end;
-  color: white;
+  color: #fff;
 
   span {
     font-size: 40px;

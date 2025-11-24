@@ -4,3 +4,15 @@
   grid-template-rows: 190px 1fr;
   gap: 20px;
 }
+
+.header-container {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}
+
+.button-container {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

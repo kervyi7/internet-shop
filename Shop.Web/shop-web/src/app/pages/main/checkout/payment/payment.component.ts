@@ -47,13 +47,6 @@ export class PaymentComponent implements OnInit {
   }
 
   public buy(): void {
-    const total = this.order.items.reduce(
-      (sum, item) =>
-        sum +
-        (item.product?.discountedPrice ?? item.product?.price ?? 0) *
-          (item.quantity || 1),
-      this.order.shippingOption?.cost ?? 0
-    );
-    this.paymentService.pay(total, 'Order Payment', this.order.id);
+    this.paymentService.pay(this.order.id);
   }
 }

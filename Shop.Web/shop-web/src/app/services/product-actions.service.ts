@@ -39,7 +39,7 @@ export class ProductActionsService {
       });
   }
 
-  public isFavorite$(id: number): Observable<boolean> {
+  public isFavorite(id: number): Observable<boolean> {
     return this.favoriteService.isFavorite$(id);
   }
 

@@ -40,8 +40,6 @@ namespace Shop.Server.Controllers.Admin
                     Position = x.Position,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt,
-                    CreatedByUser = x.CreatedByUser,
-                    UpdatedByUser = x.UpdatedByUser,
                     PropertyTemplate = x.PropertyTemplate,
                     Image = new Image
                     {
@@ -88,14 +86,11 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost()]
         public async Task<ActionResult> Create(CategoryDto model)
         {
-            var user = "my user";
             var item = new Category
             {
                 Position = model.Position,
                 Name = model.Name,
                 Code = model.Code,
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
             DataContext.Categories.Add(item);
             await DataContext.SaveChangesAsync();
@@ -108,7 +103,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost("edit-image/{id:int}")]
         public async Task<ActionResult> AddImage(int id, ImageDto model)
         {
-            var user = "my user";
             var isCategoryExist = await DataContext.Categories.AnyAsync(x => x.Id == model.ReferenceKey);
             if (!isCategoryExist)
             {
@@ -128,13 +122,10 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost("add-template")]
         public async Task<ActionResult> CreateTemplate(PropertyTemplateDto model)
         {
-            var user = "my user";
             var item = new PropertyTemplate
             {
                 Name = model.Name,
                 Code = model.Code,
-                CreatedByUser = user,
-                UpdatedByUser = user,
                 Extension = "",
                 CategoryId = model.CategoryId,
             };
@@ -149,7 +140,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPut("edit-template/{id:int}")]
         public async Task<ActionResult> EditTemplate(int id, PropertyTemplateDto model)
         {
-            var user = "my user";
             var item = await DataContext.PropertyTemplate.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
@@ -165,7 +155,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Edit(int id, CategoryDto model)
         {
-            var user = "my user";
             if (id != model.Id)
             {
                 return BadRequest();
@@ -181,7 +170,6 @@ namespace Shop.Server.Controllers.Admin
             item.Code = model.Code;
             item.Position = model.Position;
             item.UpdatedAt = DateTime.UtcNow;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
             return Ok();
         }
@@ -303,8 +291,6 @@ namespace Shop.Server.Controllers.Admin
                 Description = model.Description,
                 Suffix = model.Suffix,
                 Value = model.Value,
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
             DataContext.Set<Property<T>>().Add(newProperty);
             await DataContext.SaveChangesAsync();
@@ -322,7 +308,6 @@ namespace Shop.Server.Controllers.Admin
 
         private async Task EditProperty<T>(int id, PropertyDto<T> model)
         {
-            var user = "my user";
             var isTemplateExist = await DataContext.PropertyTemplate.AnyAsync(x => x.Id == model.PropertyTemplateId);
             if (!isTemplateExist)
             {
@@ -345,8 +330,6 @@ namespace Shop.Server.Controllers.Admin
             item.Description = model.Description;
             item.Suffix = model.Suffix;
             item.Value = model.Value;
-            item.CreatedByUser = user;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
         }
     }

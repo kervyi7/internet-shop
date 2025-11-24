@@ -31,7 +31,7 @@ export class ProductCardComponent {
 
   public ngOnInit(): void {
     this.product = this.productActions.convertImages(this.product);
-    this.isFav$ = this.productActions.isFavorite$(this.product.id);
+    this.isFav$ = this.productActions.isFavorite(this.product.id);
     this.discountedPercent = this.productActions.getDiscountPercentage(this.product)
     this.cd.markForCheck();
   }

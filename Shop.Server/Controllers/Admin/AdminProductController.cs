@@ -64,7 +64,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost()]
         public async Task<ActionResult> Create(ProductDto model)
         {
-            var user = "my user";
             var template = await DataContext.PropertyTemplate
                 .Include(x => x.StringProperties)
                 .Include(x => x.DecimalProperties)
@@ -86,15 +85,13 @@ namespace Shop.Server.Controllers.Admin
                 Count = model.Count,
                 Price = model.Price,
                 Currency = model.Currency,
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
             DataContext.Products.Add(item);
             var transaction = DataContext.Database.BeginTransaction();
             await DataContext.SaveChangesAsync();
-            AddPropertiesByTemplate(template.StringProperties, item, user);
-            AddPropertiesByTemplate(template.DecimalProperties, item, user);
-            AddPropertiesByTemplate(template.BoolProperties, item, user);
+            AddPropertiesByTemplate(template.StringProperties, item);
+            AddPropertiesByTemplate(template.DecimalProperties, item);
+            AddPropertiesByTemplate(template.BoolProperties, item);
             await DataContext.SaveChangesAsync();
             transaction.Commit();
 
@@ -108,7 +105,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost("add-image")]
         public async Task<ActionResult> AddImage(ImageDto model)
         {
-            var user = "my user";
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ReferenceKey);
             if (!isProductExist)
             {
@@ -149,7 +145,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Edit(int id, ProductDto model)
         {
-            var user = "my user";
             if (id != model.Id)
             {
                 return BadRequest();
@@ -169,7 +164,6 @@ namespace Shop.Server.Controllers.Admin
             item.Price = model.Price;
             item.Currency = model.Currency;
             item.UpdatedAt = DateTime.UtcNow;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
             return Ok();
         }
@@ -212,7 +206,6 @@ namespace Shop.Server.Controllers.Admin
 
         private async Task AddProperty<T>(Property<T> model, int productId)
         {
-            var user = "user";
             model.Id = 0;
             model.ProductId = productId;
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ProductId);
@@ -230,7 +223,7 @@ namespace Shop.Server.Controllers.Admin
             await DataContext.SaveChangesAsync();
         }
 
-        private void AddPropertiesByTemplate<T>(IEnumerable<Property<T>> models, Product product, string user)
+        private void AddPropertiesByTemplate<T>(IEnumerable<Property<T>> models, Product product)
         {
             foreach (var model in models)
             {
@@ -244,8 +237,6 @@ namespace Shop.Server.Controllers.Admin
                     Description = model.Description,
                     Suffix = model.Suffix,
                     Value = model.Value,
-                    CreatedByUser = user,
-                    UpdatedByUser = user
                 };
                 DataContext.Set<Property<T>>().Add(property);
             }
@@ -253,7 +244,6 @@ namespace Shop.Server.Controllers.Admin
 
         private async Task EditProperty<T>(int id, PropertyDto<T> model)
         {
-            var user = "my user";
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ProductId);
             if (!isProductExist)
             {
@@ -272,8 +262,6 @@ namespace Shop.Server.Controllers.Admin
             item.Description = model.Description;
             item.Suffix = model.Suffix;
             item.Value = model.Value;
-            item.CreatedByUser = user;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
         }
     }

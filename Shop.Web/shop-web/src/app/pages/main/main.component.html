@@ -1,5 +1,10 @@
 <header>
-  <img class="logo" src="assets/img/logo.svg" (click)="goToHome()" />
+  <img
+    class="logo"
+    src="assets/img/logo.svg"
+    (click)="goToHome()"
+    [class.inverted]="!isLightTheme"
+  />
 
   <p-button
     [text]="true"
@@ -13,18 +18,20 @@
   <nav [class.open]="isMenuOpen || !isMobile">
     <p-button
       [text]="true"
+      icon="pi pi-heart"
       class="button"
       *ngIf="isAuthorized"
       (click)="goToFavorites()"
     >
-      <span class="material-icons-outline">favorite</span>
       <span *ngIf="isMobile" class="ml-3">Favorites</span>
     </p-button>
 
-    <p-button [text]="true" class="button">
-      <span class="material-icons-outline" (click)="goToCart()"
-        >shopping_cart</span
-      >
+    <p-button
+      [text]="true"
+      icon="pi pi-shopping-cart"
+      class="button"
+      (click)="goToCart()"
+    >
       <span *ngIf="isMobile" class="ml-3">Cart</span>
       <span
         *ngIf="!isMobile && totalQuantity$ | async as quantity"
@@ -36,22 +43,33 @@
 
     <p-button
       [text]="true"
+      icon="pi pi-user"
       class="button"
       *ngIf="isAuthorized; else loginButton"
       (click)="goToUser()"
     >
-      <span class="material-icons-outline">account_circle</span>
       <span *ngIf="isMobile" class="ml-3">Account</span>
     </p-button>
 
     <p-button
       [text]="true"
       class="button"
+      icon="pi pi-cog"
       *ngIf="isAdmin"
       (click)="goToAdmin()"
     >
-      <span class="material-icons-outline">settings</span>
       <span *ngIf="isMobile" class="ml-3">Admin</span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      [icon]="isLightTheme ? 'pi pi-sun' : 'pi pi-moon'"
+      class="button"
+      (click)="onThemeSwitchChange()"
+    >
+      <span *ngIf="isMobile" class="ml-3">{{
+        isLightTheme ? "Light" : "Dark"
+      }}</span>
     </p-button>
 
     <ng-template #loginButton>

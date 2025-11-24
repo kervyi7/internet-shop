@@ -65,14 +65,17 @@
     <div class="mt-5" [formGroup]="extraForm">
       <h3 class="mb-3">Order notes</h3>
       <div>
-        <textarea
-          pInputTextarea
-          rows="4"
-          class="w-full"
-          placeholder="Order notes"
-          formControlName="notes"
-          maxlength="200"
-        ></textarea>
+        <span class="p-float-label product-description">
+          <textarea
+            id="orderNotes"
+            pInputTextarea
+            rows="4"
+            class="w-full"
+            formControlName="notes"
+            maxlength="200"
+          ></textarea>
+          <label htmlFor="orderNotes">Order notes</label>
+        </span>
         <div class="error" *ngIf="getErrorMessage('notes', extraForm) as error">
           {{ error }}
         </div>

@@ -19,17 +19,10 @@ export class PaymentService extends BaseDataService {
     super(_appConfigService);
   }
 
-  async pay(
-    amount: number,
-    productName: string,
-    orderId: number
-  ): Promise<void> {
+  public async pay(orderId: number): Promise<void> {
     try {
       const session = await firstValueFrom(
         this.http.post<{ id: string }>(this.getUrl('create-checkout-session'), {
-          //TODO: payment interface
-          amount,
-          productName,
           orderId,
         })
       );

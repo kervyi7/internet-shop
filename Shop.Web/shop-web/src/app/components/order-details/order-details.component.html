@@ -42,7 +42,7 @@
                 order.status === statuses.PaymentCancelled) &&
               showPayButton
             "
-            (click)="onPayClick()"
+            (click)="onPayClick($event)"
             label="Pay"
             icon="pi pi-credit-card"
           ></p-button>

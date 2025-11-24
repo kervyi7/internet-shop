@@ -3,7 +3,7 @@ header {
   width: 100vw;
   position: sticky;
   top: 0;
-  background-color: #ffffff50;
+  background-color: var(--header-background);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -11,8 +11,11 @@ header {
   z-index: 10;
   backdrop-filter: blur(12px);
 
+  .inverted {
+    filter: invert(1);
+  }
+
   .logo {
-    height: 45px;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -37,15 +40,15 @@ header {
 
   .button {
     span {
-      font-size: 40px;
+      font-size: 24px;
     }
   }
 
   ::ng-deep .p-button {
-    color: #000;
+    color: var(--main-text);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     justify-content: center;
 
     .menu-toggle {
@@ -57,7 +60,7 @@ header {
       top: 100%;
       left: 0;
       width: 100%;
-      background: rgba(255, 255, 255, 0.9);
+      background: var(--menu-background);
       flex-direction: column;
       align-items: center;
       padding: 15px 0;
@@ -74,8 +77,12 @@ header {
 }
 
 footer {
-  background-color: #000;
+  background-color: var(--secondary-background);
   color: #fff;
+
+  h2 {
+    color: #fff;
+  }
 
   .logo {
     cursor: pointer;
@@ -102,7 +109,7 @@ footer {
   top: 5%;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1200px) {
   .logo {
     width: 200px;
     right: 30px;
@@ -117,7 +124,7 @@ footer {
 
     .button {
       span {
-        font-size: 28px;
+        font-size: 20px;
       }
     }
   }

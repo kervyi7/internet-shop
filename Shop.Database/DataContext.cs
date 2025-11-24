@@ -116,11 +116,20 @@ namespace Shop.Database
                 .WithMany()
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracja relacji między OrderItem a Product
+            // Każda pozycja zamówienia odnosi się do jednego produktu
+            // DeleteBehavior.Restrict oznacza, że nie można usunąć produktu, jeśli istnieją pozycje zamówienia z tym produktem
             modelBuilder.Entity<OrderItem>()
                 .HasOne(i => i.Order)
                 .WithMany(o => o.Items)
                 .HasForeignKey(i => i.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Konfiguracja relacji między OrderItem a Order
+            // Każda pozycja zamówienia (OrderItem) należy do jednego zamówienia (Order)
+            // Kolekcja Items w Order przechowuje wszystkie powiązane pozycje
+            // DeleteBehavior.Cascade oznacza, że usunięcie zamówienia spowoduje automatyczne usunięcie jego pozycji
             modelBuilder.Entity<OrderItem>()
                 .HasOne(i => i.Product)
                 .WithMany()

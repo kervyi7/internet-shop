@@ -30,6 +30,21 @@ public class PaymentController : ControllerBase
     {
         StripeConfiguration.ApiKey = _appSettings.PaymentConfig.SecretKeyStripe;
 
+        var order = await _dataContext.Orders
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.Category)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.ProductImages)
+                            .ThenInclude(pi => pi.Image)
+                .Include(o => o.DeliveryAddress)
+                .Include(o => o.ShippingOption)
+                .FirstOrDefaultAsync(o => o.Id == request.OrderId);
+
+        if (order == null)
+            return NotFound();
+
         var options = new SessionCreateOptions
         {
             PaymentMethodTypes = new List<string> { "card" },
@@ -39,11 +54,11 @@ public class PaymentController : ControllerBase
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = (long)(request.Amount * 100),
+                        UnitAmount = (long)(order.TotalPrice * 100),
                         Currency = "usd",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = request.ProductName
+                            Name = "Order #" + order.Id
                         },
                     },
                     Quantity = 1,

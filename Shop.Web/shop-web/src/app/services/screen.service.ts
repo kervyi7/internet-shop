@@ -27,7 +27,7 @@ export class ScreenService {
     const width = window.innerWidth;
 
     switch (true) {
-      case width < 768:
+      case width < 769:
         return ScreenSizes.Mobile;
       case width < 1200:
         return ScreenSizes.Tablet;
@@ -37,6 +37,10 @@ export class ScreenService {
   }
 
   public isMobile(): boolean {
+    return this._screenSize$.value === ScreenSizes.Mobile;
+  }
+
+  public isTablet(): boolean {
     return this._screenSize$.value === ScreenSizes.Mobile;
   }
 }

@@ -47,7 +47,7 @@ export class ProductRowComponent implements OnInit {
     this.product = this.productActions.convertImages(this.product);
     this.properties = this.productActions.getProperties(this.product);
     this.template = this.productActions.getTemplate(this.product);
-    this.isFav$ = this.productActions.isFavorite$(this.product.id);
+    this.isFav$ = this.productActions.isFavorite(this.product.id);
     this.cd.markForCheck();
   }
 

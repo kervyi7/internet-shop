@@ -1,5 +1,5 @@
 //@import "primeng/resources/themes/lara-light-blue/theme.css";
-@import "./assets/themes/md-light-indigo/theme.css";
+@import "./assets/themes/theme.css";
 @import "primeng/resources/primeng.css";
 @import "~primeicons/primeicons.css";
 @import "/node_modules/primeflex/primeflex.css";
@@ -58,6 +58,8 @@ html,
 body {
   max-height: 100vh;
   overflow-x: hidden;
+  background-color: var(--main-background);
+  color: var(--main-text);
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
   padding: 0;
@@ -73,7 +75,7 @@ button {
 }
 
 .danger-background {
-  background-color: #fddfdf;
+  background-color: var(--danger-background);
 }
 
 .asterisk {
@@ -121,5 +123,6 @@ button {
 h1,
 h2,
 h3 {
-  font-family: "Cinzel", serif;
+  font-family: var(--header-font-family);
+  color: var(--main-text);
 }

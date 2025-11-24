@@ -48,12 +48,11 @@ export class OrdersComponent {
   public handleEdit(order: Order): void {
     this.formVisible = true;
     this.currentEditId = order.id;
-    debugger;
     this.statuses;
     this.initForm(order.status);
   }
 
-  //TODO:fix selected status
+  //TODO: fix selected status
   private initForm(status: number): void {
     this.orderForm = this.fb.group({
       status: [{ value: status }, [Validators.required]],
