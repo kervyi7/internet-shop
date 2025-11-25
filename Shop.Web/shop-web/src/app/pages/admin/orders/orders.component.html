@@ -1,42 +1,73 @@
-<shop-order-details
-  [orders]="orders"
-  [isExpanded]="false"
-  [isEditable]="true"
-  (edit)="handleEdit($event)"
-  [showPayButton]="false"
-></shop-order-details>
-<p-dialog
-  [(visible)]="formVisible"
-  [header]="'Edit order #' + currentEditId"
-  [modal]="true"
-  [style]="{ width: '500px', height: '400px' }"
->
-  <form *ngIf="orderForm" [formGroup]="orderForm" class="flex flex-column justify-content-between h-full">
-    <p-dropdown
-      formControlName="status"
-      [options]="statuses"
-      optionLabel="name"
-      filterBy="name"
-      placeholder="Select Status"
-      [style]="{ width: '100%' }"
-    ></p-dropdown>
+<ng-container *ngIf="state$ | async as state">
+  <app-state-switcher [state]="state">
+    <ng-container *appContentState>
+      <div class="flex gap-3 mb-3">
+        <shop-pagination-filters
+          [isSortingShow]="true"
+          [sortingConfig]="sortingConfig"
+          sortingHeader="Filter"
+          (onChange)="onPaginationFiltersChange($event)"
+        ></shop-pagination-filters>
+      </div>
+      <shop-order-details
+        [orders]="state.data"
+        [isExpanded]="false"
+        [isEditable]="true"
+        (edit)="handleEdit($event)"
+        [showPayButton]="false"
+      ></shop-order-details>
+      <div *ngIf="state" class="flex flex-column">
+        <p-paginator
+          [first]="pagination.skip"
+          [rows]="pagination.count"
+          [totalRecords]="total"
+          (onPageChange)="onPageChange($event)"
+        ></p-paginator>
+        <div class="flex align-self-center">
+          {{ pagination.skip + 1 }} -
+          {{ pagination.skip + state.data.length }} of
+          {{ total }}
+        </div>
+      </div>
+      <p-dialog
+        [(visible)]="formVisible"
+        [header]="'Edit order #' + currentEditId"
+        [modal]="true"
+        [style]="{ width: '500px', height: '400px' }"
+      >
+        <form
+          *ngIf="orderForm"
+          [formGroup]="orderForm"
+          class="flex flex-column justify-content-between h-full"
+        >
+          <p-dropdown
+            formControlName="status"
+            [options]="statuses"
+            optionLabel="name"
+            filterBy="name"
+            placeholder="Select Status"
+            [style]="{ width: '100%' }"
+          ></p-dropdown>
 
-    <div class="flex gap-2 justify-content-end mt-4">
-      <button
-        pButton
-        type="button"
-        label="Save"
-        icon="pi pi-check"
-        (click)="save()"
-        [disabled]="orderForm.invalid"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Cancel"
-        icon="pi pi-times"
-        (click)="formVisible = false"
-      ></button>
-    </div>
-  </form>
-</p-dialog>
+          <div class="flex gap-2 justify-content-end mt-4">
+            <button
+              pButton
+              type="button"
+              label="Save"
+              icon="pi pi-check"
+              (click)="save()"
+              [disabled]="orderForm.invalid"
+            ></button>
+            <button
+              pButton
+              type="button"
+              label="Cancel"
+              icon="pi pi-times"
+              (click)="formVisible = false"
+            ></button>
+          </div>
+        </form>
+      </p-dialog>
+    </ng-container>
+  </app-state-switcher>
+</ng-container>

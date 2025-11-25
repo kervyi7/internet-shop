@@ -14,6 +14,7 @@ import { ConfirmationService } from 'primeng/api';
 import { PaginatorState } from 'primeng/paginator';
 import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
 import { IPageData } from 'src/app/models/interfaces/page-data';
+import { LabelValueModel, sortByForProducts } from 'src/app/models/interfaces/filters';
 
 @Component({
   selector: 'shop-products',
@@ -24,9 +25,10 @@ import { IPageData } from 'src/app/models/interfaces/page-data';
 export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public products: IProduct[] = [];
   public total: number = 0;
+  public sortingConfig: LabelValueModel[] = sortByForProducts;
   public pagination: IGetModelsRequest = {
     skip: 0,
-    count: 10,
+    count: 5,
     sortBy: 'date_desc',
   };
 

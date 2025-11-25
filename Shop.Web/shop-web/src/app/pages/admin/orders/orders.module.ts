@@ -8,6 +8,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { OrderDetailsComponent } from 'src/app/components/order-details/order-details.component';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaginationFiltersComponent } from 'src/app/components/pagination-filters/pagination-filters.component';
+import { StateSwitcherModule } from 'src/app/components/state-switcher/state-switcher.module';
 
 @NgModule({
   declarations: [OrdersComponent],
@@ -20,7 +22,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     OrderDetailsComponent,
     DialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PaginatorModule,
+    PaginationFiltersComponent,
+    StateSwitcherModule
   ],
   exports: [OrdersComponent],
 })

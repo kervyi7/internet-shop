@@ -10,7 +10,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.5);
 
   &.is-overlay {
     position: absolute;
@@ -24,7 +23,7 @@
     width: 32px;
     height: 32px;
     vertical-align: text-bottom;
-    border: 3px solid black;
+    border: 3px solid var(--main-text);
     border-right-color: transparent;
     border-radius: 50%;
     -webkit-animation: spinner-border 0.75s linear infinite;

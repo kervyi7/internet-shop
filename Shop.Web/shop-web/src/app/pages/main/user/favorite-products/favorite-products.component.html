@@ -1,6 +1,12 @@
-<div class="flex w-full gap-4 justify-content-center flex-wrap products-container': isRowsView">
-  <ng-container *ngFor="let product of products">
-    <shop-product-container [product]="product" [isRow]="isRowsView">
-    </shop-product-container>
-  </ng-container>
-</div>
+<ng-container *ngIf="state$ | async as state">
+  <app-state-switcher [state]="state">
+    <ng-container *appContentState>
+      <div class="flex w-full gap-4 justify-content-center flex-wrap">
+        <ng-container *ngFor="let product of state.data">
+          <shop-product-container [product]="product" [isRow]="isRowsView">
+          </shop-product-container>
+        </ng-container>
+      </div>
+    </ng-container>
+  </app-state-switcher>
+</ng-container>

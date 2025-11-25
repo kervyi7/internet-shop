@@ -1,4 +1,4 @@
-<div class="controls flex flex-column align-items-center w-full">
+<div class="flex flex-column align-items-center w-full">
   <button
     pButton
     label="Add new address"
@@ -6,7 +6,7 @@
     (click)="showAddForm()"
     class="mt-3"
   ></button>
-  <div class="flex gap-4 pt-4 flex-wrap justify-content-center w-full">
+  <div class="controls flex gap-4 pt-4 flex-wrap justify-content-center w-full">
     <ng-container *ngFor="let address of addresses">
       <shop-address-card
         [address]="address"

@@ -22,7 +22,7 @@ import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
 })
 export class MainComponent extends BaseCompleteComponent implements OnInit {
   public isAuthorized: boolean = false;
-  public isLightTheme:  boolean = false;
+  public isLightTheme:  boolean = true;
   public isAdmin: boolean = false;
   public isMobile: boolean = false;
   public isMenuOpen: boolean = false;

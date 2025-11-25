@@ -3,7 +3,7 @@
     <span class="p-float-label">
       <p-dropdown
         id="count"
-        [options]="countOptions"
+        [options]="counterConfig"
         optionLabel="label"
         optionValue="value"
         [(ngModel)]="pagination.count"
@@ -18,14 +18,15 @@
     <span class="p-float-label">
       <p-dropdown
         id="sortBy"
-        [options]="sortBy"
+        [options]="sortingConfig"
         optionLabel="label"
         optionValue="value"
+        placeholder="Select a {{ sortingHeader }}"
         [(ngModel)]="pagination.sortBy"
         (onChange)="onPaginationFiltersChange()"
       ></p-dropdown>
       <label htmlFor="sortBy">
-        <span>Sort by</span>
+        <span>{{ sortingHeader }} by</span>
       </label>
     </span>
   </div>

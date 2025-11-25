@@ -5,6 +5,7 @@ using Shop.Database;
 using Shop.Server.Common;
 using Shop.Server.Models.DTO;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,9 +23,7 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPost("list")]
-        public async Task<ActionResult<OrderDto[]>> GetAll(
-            [FromQuery] OrderStatus? status,
-            [FromBody] PaginationDto pagination)
+        public async Task<ActionResult<PageDataDto<IEnumerable<OrderDto>>>> GetAll(OrderFilterRequest request)
         {
             var query = _dataContext.Orders
                 .Include(o => o.Items)
@@ -35,30 +34,38 @@ namespace Shop.Server.Controllers.Admin
                 .Include(o => o.ShippingOption)
                 .AsQueryable();
 
-            if (status.HasValue)
-                query = query.Where(o => o.Status == status.Value);
-
-            if (!string.IsNullOrWhiteSpace(pagination.SearchValue))
+            if (request.Status.HasValue)
             {
-                var term = pagination.SearchValue.ToLower();
-                query = query.Where(o =>
-                    o.Id.ToString().Contains(term) ||
-                    (o.User != null && o.User.Email.ToLower().Contains(term)) ||
-                    (o.DeliveryAddress != null &&
-                        (o.DeliveryAddress.City.ToLower().Contains(term) ||
-                         o.DeliveryAddress.Street.ToLower().Contains(term))));
+                switch (request.Status)
+                {
+                    case OrderStatus.Expired:
+                        var cutoff = DateTime.UtcNow.AddHours(-24);
+                        query = query.Where(o =>
+                    (o.Status == OrderStatus.Pending || o.Status == OrderStatus.PaymentCancelled)
+                    && o.CreatedAt < cutoff);
+                        break;
+                    default:
+                        query = query.Where(o => o.Status == request.Status);
+                        break;
+                }
             }
 
-            if (pagination.Skip < 0) pagination.Skip = 0;
-            if (pagination.Count <= 0) pagination.Count = 20;
-
+            if (request.Skip < 0) request.Skip = 0;
+            if (request.Count <= 0) request.Count = 20;
+            var totalCount = await query.CountAsync();
             var orders = await query
                 .OrderByDescending(o => o.CreatedAt)
-                .Skip(pagination.Skip)
-                .Take(pagination.Count)
+                .Skip(request.Skip)
+                .Take(request.Count)
                 .ToListAsync();
 
-            return Ok(orders.ToViewModels());
+            var response = new PageDataDto<IEnumerable<OrderDto>>
+            {
+                Data = orders.ToViewModels(),
+                Count = totalCount
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("expired")]

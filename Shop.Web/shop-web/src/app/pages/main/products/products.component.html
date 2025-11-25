@@ -18,6 +18,7 @@
     <p-button (onClick)="changeFiltersMenuState()" label="Filters"></p-button>
     <shop-pagination-filters
       [isSortingShow]="true"
+      [sortingConfig]="sortingConfig"
       (onChange)="onPaginationFiltersChange($event)"
     ></shop-pagination-filters>
   </div>

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { BehaviorSubject } from 'rxjs';
+import { LabelValueModel } from 'src/app/models/interfaces/filters';
 import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
 
 @Component({
@@ -14,23 +14,20 @@ import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request'
 })
 export class PaginationFiltersComponent {
   @Input() public isSortingShow: boolean = true;
-  public countOptions = [
-    { label: 10, value: 10 },
-    { label: 20, value: 20 },
-    { label: 30, value: 30 },
-    { label: 40, value: 40 },
-    { label: 50, value: 50 },
-  ];
-  public sortBy = [
-    { label: 'Price: High to Low', value: 'price_desc' },
-    { label: 'Price: Low to High', value: 'price_asc' },
-    { label: 'Date: Oldest First', value: 'date_asc' },
-    { label: 'Date: Newest First', value: 'date_desc' },
+  @Input() public sortingHeader: string = 'Sort';
+  @Input() public sortingConfig: LabelValueModel[] = [];
+  @Input() public counterConfig: LabelValueModel[] = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+    { label: '30', value: 30 },
+    { label: '40', value: 40 },
+    { label: '50', value: 50 },
   ];
   public pagination: IGetModelsRequest = {
     skip: 0,
-    count: 10,
-    sortBy: 'date_desc',
+    count: 5,
+    sortBy: 'Select sorting',
   };
   @Output() public onChange = new EventEmitter<IGetModelsRequest>();
 

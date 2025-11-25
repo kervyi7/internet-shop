@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrderStatuses } from 'src/app/models/enums/order-statuses';
-import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
 import { AppConfigService } from '../../app-config.service';
 import { BaseDataService } from '../base-data.service';
 import { Order } from 'src/app/models/interfaces/order';
+import { OrderRequest } from 'src/app/models/interfaces/filters';
+import { IPageData } from 'src/app/models/interfaces/page-data';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +20,8 @@ export class AdminOrderDataService extends BaseDataService {
     super(_appConfigService);
   }
 
-  public getAll(pagination: IGetModelsRequest, status?: OrderStatuses): Observable<Order[]> {
-    let url = this.getUrl('list');
-    if (status !== undefined && status !== null) {
-      url += `?status=${status}`;
-    }
-    return this.http.post<Order[]>(url, pagination, this.defaultHttpOptions);
+  public getAll(request: OrderRequest): Observable<IPageData<Order[]>> {
+    return this.http.post<IPageData<Order[]>>(this.getUrl('list'), request, this.defaultHttpOptions);
   }
 
   public getExpired(): Observable<Order[]> {

@@ -30,8 +30,7 @@ export class CategoriesComponent
   public total: number = 0;
   public pagination: IGetModelsRequest = {
     skip: 0,
-    count: 10,
-    sortBy: 'date_desc',
+    count: 5
   };
 
   constructor(

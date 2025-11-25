@@ -6,4 +6,5 @@ export enum OrderStatuses {
   Shipped = 4,
   Delivered = 5,
   Cancelled = 6,
+  Expired = 7
 }

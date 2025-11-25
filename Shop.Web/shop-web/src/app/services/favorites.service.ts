@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { FavoriteProductsDataService } from './data/favorite-product-data.service';
@@ -12,7 +12,8 @@ import { IProduct } from '../models/interfaces/product';
 })
 export class FavoritesService {
   private userId: string | null;
-  private _favorites$ = new BehaviorSubject<IProduct[]>([]);
+  private _favorites$ = new ReplaySubject<IProduct[]>(1);
+  private favoritesCache: IProduct[] = [];
 
   constructor(
     private _authService: AuthService,
@@ -20,6 +21,9 @@ export class FavoritesService {
     private _router: Router
   ) {
     this.userId = this._authService.getUserId();
+    this._favorites$.subscribe((list) => {
+      this.favoritesCache = list ?? [];
+    });
     if (this.userId) {
       this.loadFavorites(this.userId);
     }
@@ -39,9 +43,9 @@ export class FavoritesService {
       .add(this.createRequest(product.id, this.userId))
       .pipe(
         tap(() => {
-          const current = this._favorites$.value;
-          if (!current.find((p) => p.id === product.id)) {
-            this._favorites$.next([...current, product]);
+          if (!this.favoritesCache.find((p) => p.id === product.id)) {
+            this.favoritesCache = [...this.favoritesCache, product];
+            this._favorites$.next(this.favoritesCache);
           }
         })
       )
@@ -58,10 +62,10 @@ export class FavoritesService {
       .delete(this.createRequest(productId, this.userId))
       .pipe(
         tap(() => {
-          const updated = this._favorites$.value.filter(
+          this.favoritesCache = this.favoritesCache.filter(
             (p) => p.id !== productId
           );
-          this._favorites$.next(updated);
+          this._favorites$.next(this.favoritesCache);
         })
       )
       .subscribe();

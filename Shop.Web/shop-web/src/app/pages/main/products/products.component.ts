@@ -20,8 +20,10 @@ import {
   animate,
 } from '@angular/animations';
 import {
+  LabelValueModel,
   ProductFilters,
   ProductRequest,
+  sortByForProducts,
 } from 'src/app/models/interfaces/filters';
 import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
 import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
@@ -56,6 +58,7 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public isMobile: boolean = false;
   public category: string;
   public products: IProduct[];
+  public sortingConfig: LabelValueModel[] = sortByForProducts;
   public isFiltersOpen = false;
   public breadcrumbItems: MenuItem[];
   public pagination: IGetModelsRequest = {
