@@ -16,36 +16,10 @@
       [icon]="isRowsView ? 'pi pi-list' : 'pi pi-th-large'"
     ></p-button>
     <p-button (onClick)="changeFiltersMenuState()" label="Filters"></p-button>
-    <div>
-      <span class="p-float-label">
-        <p-dropdown
-          id="count"
-          [options]="countOptions"
-          optionLabel="label"
-          optionValue="value"
-          [(ngModel)]="pagination.count"
-          (onChange)="onCountChange()"
-        ></p-dropdown>
-        <label htmlFor="count">
-          <span>Show</span>
-        </label>
-      </span>
-    </div>
-    <div>
-      <span class="p-float-label">
-        <p-dropdown
-          id="sortBy"
-          [options]="sortBy"
-          optionLabel="label"
-          optionValue="value"
-          [(ngModel)]="pagination.sortBy"
-          (onChange)="onSortingChange()"
-        ></p-dropdown>
-        <label htmlFor="sortBy">
-          <span>Sort by</span>
-        </label>
-      </span>
-    </div>
+    <shop-pagination-filters
+      [isSortingShow]="true"
+      (onChange)="onPaginationFiltersChange($event)"
+    ></shop-pagination-filters>
   </div>
 </div>
 <div class="filters-products-container my-4 flex justify-content-center">

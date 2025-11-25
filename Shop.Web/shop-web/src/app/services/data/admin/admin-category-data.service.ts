@@ -1,80 +1,138 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BaseDataService } from "../base-data.service";
-import { AppConfigService } from "../../app-config.service";
-import { ICategory, ICategoryResponse } from "../../../models/interfaces/category";
-import { IImage } from "../../../models/interfaces/image";
-import { IProperty, IPropertyTemplate } from "../../../models/interfaces/property";
-import { IBaseModel } from "../../../models/interfaces/base/base-model";
-import { Converter } from "../../../common/converter";
+import { BaseDataService } from '../base-data.service';
+import { AppConfigService } from '../../app-config.service';
+import {
+  ICategory,
+  ICategoryResponse,
+} from '../../../models/interfaces/category';
+import { IImage } from '../../../models/interfaces/image';
+import {
+  IProperty,
+  IPropertyTemplate,
+} from '../../../models/interfaces/property';
+import { IBaseModel } from '../../../models/interfaces/base/base-model';
+import { Converter } from '../../../common/converter';
+import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
+import { IPageData } from 'src/app/models/interfaces/page-data';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminCategoryDataService extends BaseDataService {
   public baseUrl = 'adminCategory';
 
-  constructor(public readonly http: HttpClient,
-    private _appConfigService: AppConfigService) {
+  constructor(
+    public readonly http: HttpClient,
+    private _appConfigService: AppConfigService
+  ) {
     super(_appConfigService);
   }
 
-  public getAll(): Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(this.getUrl(), this.defaultHttpOptions);
+  public getAll(params: IGetModelsRequest): Observable<IPageData<ICategory[]>> {
+    return this.http.post<IPageData<ICategory[]>>(
+      this.getUrl('get'),
+      params,
+      this.defaultHttpOptions
+    );
   }
 
   public getAllMini(): Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(this.getUrl("mini"), this.defaultHttpOptions);
+    return this.http.get<ICategory[]>(
+      this.getUrl('mini'),
+      this.defaultHttpOptions
+    );
   }
 
   public getById(id: number): Observable<ICategory> {
     return new Observable<ICategory>((subscriber) => {
-      this.http.get<ICategoryResponse>(this.getUrlById(id), this.defaultHttpOptions).subscribe({
-        next: (response: ICategoryResponse) => {
-          if (!response.propertyTemplate) {
+      this.http
+        .get<ICategoryResponse>(this.getUrlById(id), this.defaultHttpOptions)
+        .subscribe({
+          next: (response: ICategoryResponse) => {
+            if (!response.propertyTemplate) {
+              subscriber.next(response);
+              return;
+            }
+            Converter.prepareProperties(response.propertyTemplate);
             subscriber.next(response);
-            return;
-          }
-          Converter.prepareProperties(response.propertyTemplate);
-          subscriber.next(response);
-        },
-        error: (errorResponse: HttpErrorResponse) => subscriber.error(errorResponse),
-        complete: () => subscriber.complete()
-      });
+          },
+          error: (errorResponse: HttpErrorResponse) =>
+            subscriber.error(errorResponse),
+          complete: () => subscriber.complete(),
+        });
     });
   }
 
   public create(category: ICategory): Observable<IBaseModel> {
-    return this.http.post<IBaseModel>(this.getUrl(), category, this.defaultHttpOptions);
+    return this.http.post<IBaseModel>(
+      this.getUrl(),
+      category,
+      this.defaultHttpOptions
+    );
   }
 
   public createTemplate(template: IPropertyTemplate): Observable<IBaseModel> {
-    return this.http.post<IBaseModel>(this.getUrl("add-template"), template, this.defaultHttpOptions);
+    return this.http.post<IBaseModel>(
+      this.getUrl('add-template'),
+      template,
+      this.defaultHttpOptions
+    );
   }
 
   public addProperty(property: IProperty): Observable<IBaseModel> {
-    return this.http.post<IBaseModel>(this.getUrl(`add-property/${property.type}`), property, this.defaultHttpOptions);
+    return this.http.post<IBaseModel>(
+      this.getUrl(`add-property/${property.type}`),
+      property,
+      this.defaultHttpOptions
+    );
   }
 
   public deleteProperty(id: number, property: IProperty): Observable<void> {
-    return this.http.delete<void>(this.getUrlById(`remove-property/${id}/property/${property.id}/type/${property.type}`), this.defaultHttpOptions);
+    return this.http.delete<void>(
+      this.getUrlById(
+        `remove-property/${id}/property/${property.id}/type/${property.type}`
+      ),
+      this.defaultHttpOptions
+    );
   }
 
   public editCategory(id: number, category: ICategory): Observable<ICategory> {
-    return this.http.put<ICategory>(this.getUrlById(id), category, this.defaultHttpOptions);
+    return this.http.put<ICategory>(
+      this.getUrlById(id),
+      category,
+      this.defaultHttpOptions
+    );
   }
 
-  public editTemplate(template: IPropertyTemplate): Observable<IPropertyTemplate> {
-    return this.http.put<IPropertyTemplate>(this.getUrlById(`edit-template/${template.id}`), template, this.defaultHttpOptions);
+  public editTemplate(
+    template: IPropertyTemplate
+  ): Observable<IPropertyTemplate> {
+    return this.http.put<IPropertyTemplate>(
+      this.getUrlById(`edit-template/${template.id}`),
+      template,
+      this.defaultHttpOptions
+    );
   }
 
-  public editProperty(id: number, property: IProperty): Observable<propertyValue> {
-    return this.http.put<propertyValue>(this.getUrl(`edit-property/${property.type}/${id}`), property, this.defaultHttpOptions);
+  public editProperty(
+    id: number,
+    property: IProperty
+  ): Observable<propertyValue> {
+    return this.http.put<propertyValue>(
+      this.getUrl(`edit-property/${property.type}/${id}`),
+      property,
+      this.defaultHttpOptions
+    );
   }
 
   public editImage(id: number, image: IImage): Observable<IImage> {
-    return this.http.post<IImage>(this.getUrlById(`edit-image/${id}`), image, this.defaultHttpOptions);
+    return this.http.post<IImage>(
+      this.getUrlById(`edit-image/${id}`),
+      image,
+      this.defaultHttpOptions
+    );
   }
 
   public delete(id: number): Observable<void> {

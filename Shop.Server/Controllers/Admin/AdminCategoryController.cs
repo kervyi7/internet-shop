@@ -13,6 +13,7 @@ using Shop.Server.Manager;
 using Shop.Server.Models;
 using Shop.Server.Models.DTO;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,10 +28,10 @@ namespace Shop.Server.Controllers.Admin
         {
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<Category[]>> GetAll()
+        [HttpPost("get")]
+        public async Task<ActionResult<PageDataDto<IEnumerable<Category>>>> GetAll(PaginationDto model)
         {
-            var categories = await DataContext.Categories
+            var query = DataContext.Categories
                 .Include(x => x.Image)
                 .Select(x => new Category
                 {
@@ -47,8 +48,22 @@ namespace Shop.Server.Controllers.Admin
                         MimeType = x.Image.MimeType,
                         SmallBody = x.Image.SmallBody
                     }
-                }).ToListAsync();
-            return Ok(categories);
+                }).AsQueryable();
+
+            var totalCount = await query.CountAsync();
+
+            var categories = await query
+                .Skip(model.Skip)
+                .Take(model.Count)
+                .ToListAsync();
+
+            var response = new PageDataDto<IEnumerable<Category>>
+            {
+                Data = categories,
+                Count = totalCount
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("mini")]

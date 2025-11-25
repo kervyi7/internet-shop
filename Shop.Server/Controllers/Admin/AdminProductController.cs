@@ -24,10 +24,10 @@ namespace Shop.Server.Controllers.Admin
         {
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<ProductDto[]>> GetAll()
+        [HttpPost("get")]
+        public async Task<ActionResult<PageDataDto<IEnumerable<ProductDto>>>> GetAll(PaginationDto model)
         {
-            var products = await DataContext.Products
+            var query = DataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
@@ -36,8 +36,31 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
                 .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
+                .AsQueryable();
+
+            query = model.SortBy?.ToLower() switch
+            {
+                "price_asc" => query.OrderBy(x => x.Price),
+                "price_desc" => query.OrderByDescending(x => x.Price),
+                "date_asc" => query.OrderBy(x => x.CreatedAt),
+                "date_desc" => query.OrderByDescending(x => x.CreatedAt),
+                _ => query.OrderByDescending(x => x.Id)
+            };
+
+            var totalCount = await query.CountAsync();
+
+            var products = await query
+                .Skip(model.Skip)
+                .Take(model.Count)
                 .ToListAsync();
-            return Ok(products.ToViewModels());
+
+            var response = new PageDataDto<IEnumerable<ProductDto>>
+            {
+                Data = products.ToViewModels(),
+                Count = totalCount
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id:int}")]

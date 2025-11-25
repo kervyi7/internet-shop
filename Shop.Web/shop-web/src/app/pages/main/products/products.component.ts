@@ -65,19 +65,6 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   };
   public total = 0;
   public isRowsView: boolean = false;
-  public countOptions = [
-    { label: 10, value: 10 },
-    { label: 20, value: 20 },
-    { label: 30, value: 30 },
-    { label: 40, value: 40 },
-    { label: 50, value: 50 },
-  ];
-  public sortBy = [
-    { label: 'Price: High to Low', value: 'price_desc' },
-    { label: 'Price: Low to High', value: 'price_asc' },
-    { label: 'Date: Oldest First', value: 'date_asc' },
-    { label: 'Date: Newest First', value: 'date_desc' },
-  ];
 
   constructor(
     private _productDataService: ProductDataService,
@@ -109,8 +96,8 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
     this.isRowsView = !this.isRowsView;
   }
 
-  public onCountChange(): void { // Zmiana liczby produktów wyświetlanych na stronie — resetuje paginację i ładuje dane od początku
-    this.pagination.skip = 0;
+  public onPaginationFiltersChange(event: IGetModelsRequest): void { // Zmiana liczby produktów wyświetlanych na stronie — resetuje paginację i ładuje dane od początku
+    this.pagination = event;
     this.loadProductList();
   }
 
@@ -123,11 +110,6 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
       skip: event.first,
       count: event.rows,
     };
-    this.loadProductList();
-  }
-
-  public onSortingChange(): void { // Zmiana sposobu sortowania — np. według ceny lub nazwy produktu
-    this.pagination.skip = 0;
     this.loadProductList();
   }
   

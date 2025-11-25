@@ -1,28 +1,59 @@
-<p-button (click)="create()">{{lang.buttons.newCategory}}</p-button>
-<p-table [value]="categories" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines">
+<div class="flex gap-3 mb-3">
+  <p-button (click)="create()">{{ lang.buttons.newCategory }}</p-button>
+  <shop-pagination-filters
+    [isSortingShow]="false"
+    (onChange)="onPaginationFiltersChange($event)"
+  ></shop-pagination-filters>
+</div>
+<p-table
+  [value]="categories"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  styleClass="p-datatable-gridlines"
+>
   <ng-template pTemplate="header">
     <tr>
-      <th>{{lang.headers.image}}</th>
-      <th>{{lang.placeholders.name}}</th>
-      <th>{{lang.placeholders.code}}</th>
-      <th>{{lang.placeholders.properties}}</th>
+      <th>{{ lang.headers.image }}</th>
+      <th>{{ lang.placeholders.name }}</th>
+      <th>{{ lang.placeholders.code }}</th>
+      <th>{{ lang.placeholders.properties }}</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-category>
-    <tr (click)="select(category)" [class.danger-background]="!category.image.smallBody || !category.propertyTemplate">
+    <tr
+      (click)="select(category)"
+      [class.danger-background]="
+        !category.image.smallBody || !category.propertyTemplate
+      "
+    >
       <td *ngIf="category.image.smallBody; else warnImage">
-        <img [src]="category.image.smallBody" class="image">
+        <img [src]="category.image.smallBody" class="image" />
       </td>
       <ng-template #warnImage>
-        <td class="danger">{{lang.warnings.imageIsMissing}}</td>
+        <td class="danger">{{ lang.warnings.imageIsMissing }}</td>
       </ng-template>
       <td>{{ category.name }}</td>
       <td>{{ category.code }}</td>
-      <td *ngIf="category.propertyTemplate; else warnTemplate">{{ category.propertyTemplate.name }}</td>
+      <td *ngIf="category.propertyTemplate; else warnTemplate">
+        {{ category.propertyTemplate.name }}
+      </td>
       <ng-template #warnTemplate>
-        <td class="danger">{{lang.warnings.templateIsMissing}}</td>
+        <td class="danger">{{ lang.warnings.templateIsMissing }}</td>
       </ng-template>
     </tr>
   </ng-template>
 </p-table>
-<div *ngIf="!categories.length" class="empty-label">{{lang.warnings.emptyCategoriesList}}</div>
+<div *ngIf="categories" class="flex flex-column">
+  <p-paginator
+    [first]="pagination.skip"
+    [rows]="pagination.count"
+    [totalRecords]="total"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
+  <div class="flex align-self-center">
+    {{ pagination.skip + 1 }} - {{ pagination.skip + categories.length }} of
+    {{ total }}
+  </div>
+</div>
+<div *ngIf="!categories.length" class="empty-label">
+  {{ lang.warnings.emptyCategoriesList }}
+</div>

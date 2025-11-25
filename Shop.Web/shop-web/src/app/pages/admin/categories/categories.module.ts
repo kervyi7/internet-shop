@@ -18,6 +18,8 @@ import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { TooltipIconModule } from '../../../components/tooltip-icon/tooltip-icon.module';
+import { PaginationFiltersComponent } from 'src/app/components/pagination-filters/pagination-filters.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { TooltipIconModule } from '../../../components/tooltip-icon/tooltip-icon
     ToastModule,
     TableModule,
     TooltipModule,
-    TooltipIconModule
+    TooltipIconModule,
+    PaginationFiltersComponent,
+    PaginatorModule
   ],
   providers: [DialogService],
   exports: [

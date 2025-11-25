@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseCompleteComponent } from '../../../components/base/base-complete.component';
 import { takeUntil } from 'rxjs';
@@ -6,26 +11,36 @@ import { AdminProductDataService } from '../../../services/data/admin/admin-prod
 import { IProduct } from '../../../models/interfaces/product';
 import { Converter } from '../../../common/converter';
 import { ConfirmationService } from 'primeng/api';
+import { PaginatorState } from 'primeng/paginator';
+import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
+import { IPageData } from 'src/app/models/interfaces/page-data';
 
 @Component({
   selector: 'shop-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public products: IProduct[] = [];
+  public total: number = 0;
+  public pagination: IGetModelsRequest = {
+    skip: 0,
+    count: 10,
+    sortBy: 'date_desc',
+  };
 
   constructor(
     private _adminProductDataService: AdminProductDataService,
     private _cd: ChangeDetectorRef,
     private _router: Router,
-    private _confirmationService: ConfirmationService) {
+    private _confirmationService: ConfirmationService
+  ) {
     super();
   }
 
   public ngOnInit(): void {
-    this.load();
+    this.loadProducts();
   }
 
   public edit(product: IProduct): void {
@@ -42,28 +57,48 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
       message: 'Are you sure that you want to proceed?',
       header: 'Confirmation',
       accept: () => {
-        this._adminProductDataService.delete(product.id)
+        this._adminProductDataService
+          .delete(product.id)
           .pipe(takeUntil(this.__unsubscribe$))
           .subscribe(() => {
-            this.load();
+            this.loadProducts();
             this._cd.detectChanges();
           });
       },
       reject: () => {
         return;
-      }
+      },
     });
   }
 
-  private load(): void {
+  public onPaginationFiltersChange(event: IGetModelsRequest): void {
+    this.pagination = event;
+    this.loadProducts();
+  }
+
+  public onPageChange(event: PaginatorState): void {
+    this.pagination = {
+      ...this.pagination,
+      skip: event.first,
+      count: event.rows,
+    };
+    this.loadProducts();
+  }
+
+  private loadProducts(): void {
     this.displayService.changeStateLoadBar(true);
-    this._adminProductDataService.getAll()
+    this._adminProductDataService
+      .getAll(this.pagination)
       .pipe(takeUntil(this.__unsubscribe$))
-      .subscribe((data: IProduct[]) => {
-        this.products = data;
+      .subscribe((data: IPageData<IProduct[]>) => {
+        this.products = data.data;
+        this.total = data.count;
         for (let product of this.products) {
           if (product.images[0]) {
-            product.images[0].smallBody = Converter.toFileSrc(product.images[0].mimeType, product.images[0].smallBody);
+            product.images[0].smallBody = Converter.toFileSrc(
+              product.images[0].mimeType,
+              product.images[0].smallBody
+            );
           }
         }
         this.displayService.changeStateLoadBar(false);

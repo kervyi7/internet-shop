@@ -14,5 +14,4 @@ import { ProductCardComponent } from './product-card/product-card.component';
 export class ProductContainerComponent {
   @Input() public isRow: boolean = false;
   @Input() public product: IProduct;
-
 }

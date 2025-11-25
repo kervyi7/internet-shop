@@ -22,6 +22,8 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { PaginationFiltersComponent } from 'src/app/components/pagination-filters/pagination-filters.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     PropertiesListModule,
     TableModule,
     TooltipModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    PaginatorModule,
+    PaginationFiltersComponent
   ],
   providers: [DialogService, ConfirmationService],
   exports: [
