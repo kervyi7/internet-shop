@@ -31,7 +31,7 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
-                .Include(x => x.ProductImages.Where(x => x.Image.IsTitle))
+                .Include(x => x.ProductImages.Where(x => x.IsTitle))
                 .ThenInclude(x => x.Image)
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
                 .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
@@ -134,11 +134,11 @@ namespace Shop.Server.Controllers.Admin
                 throw new NotFoundException(nameof(Product), nameof(Product.Id), model.ReferenceKey);
             }
             var image = await DataContext.Images.FirstOrDefaultAsync(x => x.Id == model.Id);
-            image.IsTitle = model.IsTitle;
             DataContext.ProductImages.Add(new ProductImage
             {
                 ProductId = model.ReferenceKey,
-                Image = image
+                Image = image,
+                IsTitle = model.IsTitle
             });
             await DataContext.SaveChangesAsync();
             return Ok();

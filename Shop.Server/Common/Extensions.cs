@@ -174,7 +174,9 @@ namespace Shop.Server.Common
 
         public static ProductDto ToViewModel(this Product source)
         {
-            var productDto = new ProductDto()
+            if (source == null) return null;
+
+            return new ProductDto
             {
                 Id = source.Id,
                 Name = source.Name,
@@ -190,15 +192,16 @@ namespace Shop.Server.Common
                 StringProperties = CreatePropertiesDto(source.StringProperties),
                 DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
-                Images = ToViewModels(source.ProductImages.Select(x => x.Image))
+                Images = source.ProductImages?
+                               .OrderByDescending(pi => pi.IsTitle)
+                               .ToViewModels()
+                               .ToList()
             };
-            return productDto;
         }
 
         public static ShortProductDto ToShortViewModel(this Product source)
         {
-            if (source == null)
-                return null;
+            if (source == null) return null;
 
             return new ShortProductDto
             {
@@ -206,7 +209,10 @@ namespace Shop.Server.Common
                 Code = source.Code,
                 Name = source.Name,
                 Category = source.Category?.Name,
-                Images = source.ProductImages?.Select(pi => pi.Image).Where(i => i.IsTitle).ToViewModels()
+                Images = source.ProductImages?
+                               .OrderByDescending(pi => pi.IsTitle)
+                               .ToViewModels()
+                               .ToList()
             };
         }
 
@@ -224,8 +230,9 @@ namespace Shop.Server.Common
             return categoryDto;
         }
 
-        public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<Image> sources)
+        public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<ProductImage> sources)
         {
+            if (sources == null) return Enumerable.Empty<ImageDto>();
             return sources.Select(ToViewModel);
         }
 
@@ -245,9 +252,28 @@ namespace Shop.Server.Common
                 FileSize = source.FileSize,
                 MimeType = source.MimeType,
                 IsBinding = source.ProductImages.Any() || source.Category != null,
-                IsTitle = source.IsTitle
             };
             return imageDto;
+        }
+
+        public static ImageDto ToViewModel(this ProductImage productImage)
+        {
+            if (productImage == null || productImage.Image == null)
+                return null;
+
+            var image = productImage.Image;
+            return new ImageDto
+            {
+                Id = image.Id,
+                Body = Convert.ToBase64String(image.Body),
+                SmallBody = image.SmallBody != null ? Convert.ToBase64String(image.SmallBody) : null,
+                Name = image.Name,
+                FileName = image.FileName,
+                FileSize = image.FileSize,
+                MimeType = image.MimeType,
+                IsBinding = image.ProductImages.Any() || image.Category != null,
+                IsTitle = productImage.IsTitle // ключевое изменение — теперь фронт видит, что это титульная
+            };
         }
 
         public static PropertyTemplateDto CreatePropertyTemplateDto(PropertyTemplate source)

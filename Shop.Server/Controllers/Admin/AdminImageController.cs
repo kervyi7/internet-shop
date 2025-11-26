@@ -85,7 +85,6 @@ namespace Shop.Server.Controllers.Admin
                 Name = model.Name,
                 FileSize = model.FileSize,
                 MimeType = model.MimeType,
-                IsTitle = model.IsTitle,
                 Body = Convert.FromBase64String(model.Body),
                 SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody),
             };

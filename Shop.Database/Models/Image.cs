@@ -12,8 +12,6 @@ namespace Shop.Database.Models
 
         public int FileSize { get; set; }
 
-        public bool IsTitle { get; set; }
-
         [Required]
         [MaxLength(250)]
         public string FileName { get; set; }

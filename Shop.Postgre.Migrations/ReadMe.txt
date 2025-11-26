@@ -37,4 +37,6 @@ PM> Add-Migration AddInfoPages -Project Shop.Postgre.Migrations
 PM> Add-Migration AddContactsInfo -Project Shop.Postgre.Migrations
 PM> Add-Migration RemovePinterest -Project Shop.Postgre.Migrations
 
+PM> Add-Migration FixImages -Project Shop.Postgre.Migrations
+
 PM> Update-Database 

@@ -118,14 +118,14 @@ namespace Shop.Database
             },
             new InfoPage
             {
-                Id = 3,
+                Id = 4,
                 Key = "refund",
                 Header = "Refund",
                 HtmlContent = "<p>Admin has to add this page</p>"
             },
             new InfoPage
             {
-                Id = 3,
+                Id = 5,
                 Key = "shipping",
                 Header = "Shipping",
                 HtmlContent = "<p>Admin has to add this page</p>"
