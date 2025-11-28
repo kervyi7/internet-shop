@@ -51,6 +51,7 @@ import { CategoryDataService } from 'src/app/services/data/category-data.service
 export class FiltersListComponent implements OnInit {
   @Input() public categoryName: string = '';
   @Output() public filterApplied = new EventEmitter<ProductFilters>();
+  @Output() public reset = new EventEmitter();
 
   public filters!: CategoryFiltersResponse;
 
@@ -205,6 +206,7 @@ export class FiltersListComponent implements OnInit {
       priceTo: this.filters.maxPrice,
       properties: [],
     });
+    this.reset.emit();
 
     this.cd.markForCheck();
   }

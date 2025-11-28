@@ -143,10 +143,10 @@ namespace Shop.Server.Controllers.Anonymous
                 query = query.Where(p => model.TypeIds.Contains(p.Type.Id));
 
             if (model.PriceFrom.HasValue)
-                query = query.Where(p => p.Price >= model.PriceFrom.Value);
+                query = query.Where(p => p.DiscountedPrice.HasValue ? p.DiscountedPrice >= model.PriceFrom.Value : p.Price >= model.PriceFrom.Value);
 
-            if (model.PriceTo.HasValue)
-                query = query.Where(p => p.Price <= model.PriceTo.Value);
+            if (model.PriceTo.HasValue) 
+                query = query.Where(p => p.DiscountedPrice.HasValue ? p.DiscountedPrice <= model.PriceFrom.Value : p.Price <= model.PriceFrom.Value);
 
             foreach (var filter in model.Properties)
                 query = ApplyPropertyFilter(query, filter);

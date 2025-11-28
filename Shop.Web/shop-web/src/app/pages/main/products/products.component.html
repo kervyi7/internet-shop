@@ -16,7 +16,7 @@
       [icon]="isRowsView ? 'pi pi-list' : 'pi pi-th-large'"
       class="change-products-view"
     ></p-button>
-    <p-button (onClick)="changeFiltersMenuState()" label="Filters"></p-button>
+    <p-button (onClick)="changeFiltersMenuState()" [label]="isFiltersApplied ? 'Filters | Applied' : 'Filters'"></p-button>
     <shop-pagination-filters
       [isSortingShow]="true"
       [sortingConfig]="sortingConfig"
@@ -43,6 +43,7 @@
       [categoryName]="category"
       [hidden]="!isFiltersOpen"
       (filterApplied)="updateFilters($event)"
+      (reset)="resetFilters()"
       class="w-full"
     ></shop-filters-list>
   </div>

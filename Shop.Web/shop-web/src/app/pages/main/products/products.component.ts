@@ -69,6 +69,10 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public total = 0;
   public isRowsView: boolean = false;
 
+  public get isFiltersApplied(): boolean {
+    return !!this._filters;
+  }
+
   constructor(
     private _productDataService: ProductDataService,
     private _activatedRoute: ActivatedRoute,
@@ -79,7 +83,8 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
     super();
   }
 
-  public ngOnInit(): void { //Inicjalizacja komponentu
+  public ngOnInit(): void {
+    //Inicjalizacja komponentu
     this.category = this._activatedRoute.snapshot.paramMap.get('category')!; // Pobranie kategorii z parametrów ścieżki
     if (!this.category) {
       this._router.navigate([Routes.notFound]); // Jeśli kategoria nie istnieje, przekierowanie na stronę błędu 404
@@ -89,41 +94,52 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
     ]; // Inicjalizacja ścieżki nawigacyjnej (breadcrumb)
     this.loadProductList(); // Wczytanie listy produktów dla danej kategorii
     this.isMobile = this._screenService.isMobile(); // Sprawdzenie, czy użytkownik korzysta z urządzenia mobilnego
-    this._screenService.screenSize$.subscribe((size) => {  // Subskrypcja zmian rozmiaru ekranu
+    this._screenService.screenSize$.subscribe((size) => {
+      // Subskrypcja zmian rozmiaru ekranu
       this.isMobile = size === ScreenSizes.Mobile;
       this._cd.detectChanges(); // Ręczne odświeżenie widoku (strategia OnPush)
     });
   }
 
-  public changeProductsView(): void { // Przełączenie sposobu prezentacji produktów (siatka ↔ lista)
+  public changeProductsView(): void {
+    // Przełączenie sposobu prezentacji produktów (siatka ↔ lista)
     this.isRowsView = !this.isRowsView;
   }
 
-  public onPaginationFiltersChange(event: IGetModelsRequest): void { // Zmiana liczby produktów wyświetlanych na stronie — resetuje paginację i ładuje dane od początku
+  public onPaginationFiltersChange(event: IGetModelsRequest): void {
+    // Zmiana liczby produktów wyświetlanych na stronie — resetuje paginację i ładuje dane od początku
     this.pagination = event;
     this.loadProductList();
   }
 
-  public changeFiltersMenuState(): void { // Otwieranie / zamykanie panelu filtrów produktów
+  public changeFiltersMenuState(): void {
+    // Otwieranie / zamykanie panelu filtrów produktów
     this.isFiltersOpen = !this.isFiltersOpen;
   }
 
-  public onPageChange(event: PaginatorState): void { // Obsługa zmiany strony w komponencie paginacji
+  public onPageChange(event: PaginatorState): void {
+    // Obsługa zmiany strony w komponencie paginacji
     this.pagination = {
       skip: event.first,
       count: event.rows,
     };
     this.loadProductList();
   }
-  
-  public updateFilters(filters: ProductFilters): void { // Aktualizacja zestawu filtrów i ponowne załadowanie danych
+
+  public updateFilters(filters: ProductFilters): void {
+    // Aktualizacja zestawu filtrów i ponowne załadowanie danych
     this._filters = filters;
     this.loadProductList();
     this.changeFiltersMenuState();
   }
-  
-  private loadProductList(): void { // Metoda prywatna odpowiedzialna za pobranie danych z serwisu API.
-    const params: ProductRequest = { ...this.pagination, ...this._filters, };
+
+  public resetFilters() {
+    this._filters = null;
+  }
+
+  private loadProductList(): void {
+    // Metoda prywatna odpowiedzialna za pobranie danych z serwisu API.
+    const params: ProductRequest = { ...this.pagination, ...this._filters };
     // Asynchroniczne pobranie listy produktów z API według kategorii
     this._productDataService
       .getByCategory(this.category, params)
