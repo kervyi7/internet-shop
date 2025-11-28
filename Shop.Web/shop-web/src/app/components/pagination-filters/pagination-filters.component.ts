@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { SortingType } from 'src/app/models/enums/sorting-types';
 import { LabelValueModel } from 'src/app/models/interfaces/filters';
 import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request';
 
@@ -27,7 +28,7 @@ export class PaginationFiltersComponent {
   public pagination: IGetModelsRequest = {
     skip: 0,
     count: 5,
-    sortBy: 'Select sorting',
+    sortBy: SortingType.all,
   };
   @Output() public onChange = new EventEmitter<IGetModelsRequest>();
 

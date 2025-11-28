@@ -1,5 +1,6 @@
 import { OrderStatuses } from '../enums/order-statuses';
 import { PropertyTypes } from '../enums/property-types';
+import { SortingType } from '../enums/sorting-types';
 import { IGetModelsRequest } from './get-models-request';
 
 export interface PropertyFilter {
@@ -40,10 +41,10 @@ export interface OrderFilters {
 export interface OrderRequest extends IGetModelsRequest, OrderFilters {}
 
 export const sortByForProducts: LabelValueModel[] = [
-  { label: 'Price: High to Low', value: 'price_desc' },
-  { label: 'Price: Low to High', value: 'price_asc' },
-  { label: 'Date: Oldest First', value: 'date_asc' },
-  { label: 'Date: Newest First', value: 'date_desc' },
+  { label: 'Price: High to Low', value: SortingType.price_desc },
+  { label: 'Price: Low to High', value: SortingType.price_asc },
+  { label: 'Date: Oldest First', value: SortingType.date_asc },
+  { label: 'Date: Newest First', value: SortingType.date_desc },
 ];
 
 export const sortByForOrders: LabelValueModel[] = [

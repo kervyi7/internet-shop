@@ -29,6 +29,7 @@ import { IGetModelsRequest } from 'src/app/models/interfaces/get-models-request'
 import { ScreenSizes } from 'src/app/models/enums/screen-sizes';
 import { ScreenService } from 'src/app/services/screen.service';
 import { Routes } from 'src/app/models/enums/routes';
+import { SortingType } from 'src/app/models/enums/sorting-types';
 
 @Component({
   selector: 'shop-products',
@@ -64,7 +65,7 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   public pagination: IGetModelsRequest = {
     skip: 0,
     count: 10,
-    sortBy: 'date_desc',
+    sortBy: SortingType.date_desc,
   };
   public total = 0;
   public isRowsView: boolean = false;

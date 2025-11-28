@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shop.Common.Constants;
+using Shop.Common.Enums;
 using Shop.Database;
 using Shop.Database.Models;
+using Shop.Server.Common;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
-using System.Threading.Tasks;
-using System.Linq;
-using Shop.Server.Common;
-using System.Collections.Generic;
 using System;
-using Shop.Common.Constants;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shop.Server.Controllers.Anonymous
 {
@@ -55,12 +56,12 @@ namespace Shop.Server.Controllers.Anonymous
 
             query = ApplyFilters(query, model);
 
-            query = model.SortBy?.ToLower() switch
+            query = model.SortBy switch
             {
-                "price_asc" => query.OrderBy(x => x.Price),
-                "price_desc" => query.OrderByDescending(x => x.Price),
-                "date_asc" => query.OrderBy(x => x.CreatedAt),
-                "date_desc" => query.OrderByDescending(x => x.CreatedAt),
+                SortingType.Price_asc => query.OrderBy(x => x.Price),
+                SortingType.Price_desc => query.OrderByDescending(x => x.Price),
+                SortingType.Date_asc => query.OrderBy(x => x.CreatedAt),
+                SortingType.Date_desc => query.OrderByDescending(x => x.CreatedAt),
                 _ => query.OrderByDescending(x => x.Id)
             };
 

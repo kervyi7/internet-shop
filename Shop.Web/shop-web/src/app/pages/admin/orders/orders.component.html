@@ -1,14 +1,14 @@
+<div class="flex gap-3 mb-3">
+  <shop-pagination-filters
+    [isSortingShow]="true"
+    [sortingConfig]="sortingConfig"
+    sortingHeader="Filter"
+    (onChange)="onPaginationFiltersChange($event)"
+  ></shop-pagination-filters>
+</div>
 <ng-container *ngIf="state$ | async as state">
   <app-state-switcher [state]="state">
     <ng-container *appContentState>
-      <div class="flex gap-3 mb-3">
-        <shop-pagination-filters
-          [isSortingShow]="true"
-          [sortingConfig]="sortingConfig"
-          sortingHeader="Filter"
-          (onChange)="onPaginationFiltersChange($event)"
-        ></shop-pagination-filters>
-      </div>
       <shop-order-details
         [orders]="state.data"
         [isExpanded]="false"

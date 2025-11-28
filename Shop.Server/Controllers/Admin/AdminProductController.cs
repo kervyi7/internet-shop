@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Common.Constants;
+using Shop.Common.Enums;
 using Shop.Database;
 using Shop.Database.Identity;
 using Shop.Database.Models;
@@ -38,12 +39,12 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
                 .AsQueryable();
 
-            query = model.SortBy?.ToLower() switch
+            query = model.SortBy switch
             {
-                "price_asc" => query.OrderBy(x => x.Price),
-                "price_desc" => query.OrderByDescending(x => x.Price),
-                "date_asc" => query.OrderBy(x => x.CreatedAt),
-                "date_desc" => query.OrderByDescending(x => x.CreatedAt),
+                SortingType.Price_asc => query.OrderBy(x => x.Price),
+                SortingType.Price_desc => query.OrderByDescending(x => x.Price),
+                SortingType.Date_asc => query.OrderBy(x => x.CreatedAt),
+                SortingType.Date_desc => query.OrderByDescending(x => x.CreatedAt),
                 _ => query.OrderByDescending(x => x.Id)
             };
 
