@@ -1,19 +1,35 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Type } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Type,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { IImage } from '../../../../models/interfaces/image';
 import { BaseCompleteComponent } from '../../../../components/base/base-complete.component';
-import { IProduct, IProductResponse } from '../../../../models/interfaces/product';
+import {
+  IProduct,
+  IProductResponse,
+} from '../../../../models/interfaces/product';
 import { AdminProductDataService } from '../../../../services/data/admin/admin-product-data.service';
 import { AdminCategoryDataService } from '../../../../services/data/admin/admin-category-data.service';
 import { ICategory } from '../../../../models/interfaces/category';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
-import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import {
+  DialogService,
+  DynamicDialogConfig,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 import { CreateItemDialogComponent } from '../../../../components/dialogs/create-item-dialog/create-item-dialog.component';
 import { MessageTypes } from '../../../../models/enums/message-types';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
 import { DialogOptions } from '../../../../models/enums/dialog-options';
-import { IProperty, IPropertyTemplate } from '../../../../models/interfaces/property';
+import {
+  IProperty,
+  IPropertyTemplate,
+} from '../../../../models/interfaces/property';
 import { BrandDataService } from '../../../../services/data/admin/admin-brand-data.service';
 import { TypeDataService } from '../../../../services/data/admin/admin-type-data.service';
 import { Util } from '../../../../common/util';
@@ -22,12 +38,16 @@ import { Location } from '@angular/common';
 import { IBaseModel } from '../../../../models/interfaces/base/base-model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProductForm } from '../../../../models/interfaces/forms/product-form';
+import Quill from 'quill';
 
 @Component({
   selector: 'shop-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss', '../../../../../assets/styles/category-product.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: [
+    './product.component.scss',
+    '../../../../../assets/styles/category-product.scss',
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductComponent extends BaseCompleteComponent implements OnInit {
   private _dialogRef: DynamicDialogRef;
@@ -55,7 +75,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     private _brandDataService: BrandDataService,
     private _typeDataService: TypeDataService,
     private _cd: ChangeDetectorRef,
-    private _location: Location) {
+    private _location: Location
+  ) {
     super();
     this.productForm = this.getProductForm();
   }
@@ -68,11 +89,15 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       this.displayService.changeStateLoadBar(false);
       return;
     }
-    this._adminProductDataService.getById(this.id)
+    this._adminProductDataService
+      .getById(this.id)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IProduct) => {
         this.images = data.images.map((image) => {
-          image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
+          image.smallBody = Converter.toFileSrc(
+            image.mimeType,
+            image.smallBody
+          );
           return image;
         });
         this.titleImage = data.images.find((image) => {
@@ -101,11 +126,14 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       return;
     }
     this.displayService.changeStateLoadBar(true);
-    this._typeDataService.getType()
+    this._typeDataService
+      .getType()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         if (this.types.length) {
-          const index = data.findIndex(item => item.code == this.types[0].code);
+          const index = data.findIndex(
+            (item) => item.code == this.types[0].code
+          );
           data.splice(index, 1);
         }
         this.types.push(...data);
@@ -119,11 +147,14 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       return;
     }
     this.displayService.changeStateLoadBar(true);
-    this._brandDataService.getBrand()
+    this._brandDataService
+      .getBrand()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         if (this.brands.length) {
-          const index = data.findIndex(item => item.code == this.brands[0].code);
+          const index = data.findIndex(
+            (item) => item.code == this.brands[0].code
+          );
           data.splice(index, 1);
         }
         this.brands.push(...data);
@@ -137,11 +168,14 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       return;
     }
     this.displayService.changeStateLoadBar(true);
-    this._adminCategoryDataService.getAllMini()
+    this._adminCategoryDataService
+      .getAllMini()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         if (this.categories.length) {
-          const index = data.findIndex(item => item.code == this.categories[0].code);
+          const index = data.findIndex(
+            (item) => item.code == this.categories[0].code
+          );
           data.splice(index, 1);
         }
         this.categories.push(...data);
@@ -151,9 +185,13 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public editImages(isTitle: boolean): void {
-    const config = { header: this.lang.headers.imageStorage, width: DialogOptions.standardWidth, maximizable: true };
+    const config = {
+      header: this.lang.headers.imageStorage,
+      width: DialogOptions.standardWidth,
+      maximizable: true,
+    };
     this.openDialog(ImageStorageDialogComponent, config);
-    this._dialogRef.onClose.subscribe(data => {
+    this._dialogRef.onClose.subscribe((data) => {
       if (!data) {
         return;
       }
@@ -161,16 +199,25 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
+  public onEditorChange(event: Quill) {
+    this.productForm.controls.description.setValue(event.root.innerHTML);
+  }
+
   public addType(): void {
-    const config = { header: this.lang.headers.types, width: DialogOptions.standardWidth, maximizable: true };
+    const config = {
+      header: this.lang.headers.types,
+      width: DialogOptions.standardWidth,
+      maximizable: true,
+    };
     this.openDialog(CreateItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((type: ICodeName) => {
       if (!type) {
         return;
       }
-      this._typeDataService.createType(type)
+      this._typeDataService
+        .createType(type)
         .pipe(takeUntil(this.__unsubscribe$))
-        .subscribe(data => {
+        .subscribe((data) => {
           type.id = data.id;
           this.types.unshift(type);
         });
@@ -178,13 +225,18 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public addBrand(): void {
-    const config = { header: this.lang.headers.brands, width: DialogOptions.standardWidth, maximizable: true };
+    const config = {
+      header: this.lang.headers.brands,
+      width: DialogOptions.standardWidth,
+      maximizable: true,
+    };
     this.openDialog(CreateItemDialogComponent, config);
     this._dialogRef.onClose.subscribe((brand: ICodeName) => {
       if (!brand) {
         return;
       }
-      this._brandDataService.createBrand(brand)
+      this._brandDataService
+        .createBrand(brand)
         .pipe(takeUntil(this.__unsubscribe$))
         .subscribe((data: IBaseModel) => {
           brand.id = data.id;
@@ -196,7 +248,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public deleteImage(image: IImage): void {
     this.displayService.changeStateLoadBar(true);
     image.referenceKey = this.id;
-    this._adminProductDataService.deleteImage(this.product.id, image)
+    this._adminProductDataService
+      .deleteImage(this.product.id, image)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe(() => {
         if (image.isTitle) {
@@ -204,7 +257,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         } else {
           this.images.splice(this.images.indexOf(image), 1);
         }
-        this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.success);
+        this.notificationService.showMessage(
+          MessageTypes.success,
+          this.lang.notifications.success,
+          this.lang.notifications.success
+        );
         this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
@@ -217,35 +274,53 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public submit(): void {
     if (this.productForm.invalid) {
       Util.markAllAsDirty(this.productForm);
-      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
+      this.notificationService.showMessage(
+        MessageTypes.error,
+        this.lang.notifications.error,
+        this.lang.notifications.invalidData
+      );
       this._cd.detectChanges();
       return;
     }
     const product: IProduct = { ...this.productForm.getRawValue(), images: [] };
     if (product.discountedPrice >= product.price) {
-      this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
-      this.productForm.controls.discountedPrice.setErrors({'incorrect': true});
-      this.productForm.controls.price.setErrors({'incorrect': true});
+      this.notificationService.showMessage(
+        MessageTypes.error,
+        this.lang.notifications.error,
+        this.lang.notifications.invalidData
+      );
+      this.productForm.controls.discountedPrice.setErrors({ incorrect: true });
+      this.productForm.controls.price.setErrors({ incorrect: true });
       this._cd.detectChanges();
       return;
     }
     this.displayService.changeStateLoadBar(true);
     if (this.id) {
       product.id = this.id;
-      this._adminProductDataService.edit(this.id, product)
+      this._adminProductDataService
+        .edit(this.id, product)
         .pipe(takeUntil(this.__unsubscribe$))
         .subscribe({
-          error: err => {
-            this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
+          error: (err) => {
+            this.notificationService.showMessage(
+              MessageTypes.error,
+              this.lang.notifications.error,
+              this.lang.notifications.notChanged
+            );
             this.displayService.changeStateLoadBar(false);
           },
           complete: () => {
-            this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
+            this.notificationService.showMessage(
+              MessageTypes.success,
+              this.lang.notifications.success,
+              this.lang.notifications.changesSaved
+            );
             this.displayService.changeStateLoadBar(false);
-          }
+          },
         });
     } else {
-      this._adminProductDataService.create(product)
+      this._adminProductDataService
+        .create(product)
         .pipe(takeUntil(this.__unsubscribe$))
         .subscribe((data: IProductResponse) => {
           this._location.replaceState(`admin/products/edit/${data.id}`);
@@ -264,7 +339,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     this.displayService.changeStateLoadBar(true);
     image.referenceKey = this.id;
     image.isTitle = isTitle;
-    this._adminProductDataService.addImage(image)
+    this._adminProductDataService
+      .addImage(image)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe(() => {
         if (image.isTitle) {
@@ -272,28 +348,32 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         } else {
           this.images.push(image);
         }
-        this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.success);
+        this.notificationService.showMessage(
+          MessageTypes.success,
+          this.lang.notifications.success,
+          this.lang.notifications.success
+        );
         this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
 
   private openDialog<T>(component: Type<T>, config: DynamicDialogConfig): void {
-    this._dialogRef = Util.openDialog(this._dialogService, component, config)
+    this._dialogRef = Util.openDialog(this._dialogService, component, config);
   }
 
   private getProductForm(): FormGroup<IProductForm> {
     return new FormGroup<IProductForm>({
-      name: new FormControl("", Validators.required),
-      code: new FormControl("", Validators.required),
+      name: new FormControl('', Validators.required),
+      code: new FormControl('', Validators.required),
       category: new FormControl<ICategory | null>(null, Validators.required),
       type: new FormControl<ICodeName | null>(null, Validators.required),
       brand: new FormControl<ICodeName | null>(null, Validators.required),
       price: new FormControl(null, Validators.required),
       discountedPrice: new FormControl(null),
       count: new FormControl(null, Validators.required),
-      description: new FormControl(""),
-      currency: new FormControl("", Validators.required),
+      description: new FormControl(''),
+      currency: new FormControl('', Validators.required),
     });
   }
 

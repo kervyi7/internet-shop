@@ -3,14 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Editor } from 'primeng/editor';
+import Quill from 'quill';
 import { Util } from 'src/app/common/util';
-import {
-  InfoPage
-} from 'src/app/models/interfaces/info-pages';
+import { InfoPage } from 'src/app/models/interfaces/info-pages';
 import { InfoPageDataService } from 'src/app/services/data/info-pages-data.service';
 
 @Component({
@@ -20,7 +17,6 @@ import { InfoPageDataService } from 'src/app/services/data/info-pages-data.servi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoConfigComponent implements OnInit {
-  @ViewChild('editorRef') editorRef!: Editor;
   private editorInstance: any;
 
   public pages: InfoPage[] = [];
@@ -41,24 +37,13 @@ export class InfoConfigComponent implements OnInit {
     this.loadContacts();
   }
 
-  public onEditorInit(event: any) {
-    this.editorInstance = event?.editor;
-    if (this.editedHtml) {
-      this.editorInstance.root.innerHTML = this.editedHtml;
-    }
+  public onEditorChange(event: Quill) {
+    this.editorInstance = event.root.innerHTML;
   }
 
   public edit(page: InfoPage): void {
     this.selectedPage = page;
     this.editMode = true;
-
-    setTimeout(() => {
-      this.editedHtml = page.htmlContent || '';
-      if (this.editorInstance) {
-        this.editorInstance.clipboard.dangerouslyPasteHTML(this.editedHtml);
-      }
-      this.cd.detectChanges();
-    }, 100);
   }
 
   public cancelEditPage(): void {

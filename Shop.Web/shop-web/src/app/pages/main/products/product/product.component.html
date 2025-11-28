@@ -57,7 +57,7 @@
         <p-accordion [activeIndex]="0">
           <p-accordionTab header="Description">
             <div *ngIf="product.description" class="description-container">
-              <p>{{ product.description }}</p>
+              <div [innerHTML]="product.description"></div>
             </div>
           </p-accordionTab>
           <p-accordionTab header="Properties">

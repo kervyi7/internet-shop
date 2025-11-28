@@ -24,12 +24,10 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { PaginationFiltersComponent } from 'src/app/components/pagination-filters/pagination-filters.component';
+import { HtmlEditorComponent } from 'src/app/components/html-editor/html-editor.component';
 
 @NgModule({
-  declarations: [
-    ProductsComponent,
-    ProductComponent
-  ],
+  declarations: [ProductsComponent, ProductComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -53,11 +51,10 @@ import { PaginationFiltersComponent } from 'src/app/components/pagination-filter
     TooltipModule,
     ConfirmDialogModule,
     PaginatorModule,
-    PaginationFiltersComponent
+    PaginationFiltersComponent,
+    HtmlEditorComponent,
   ],
   providers: [DialogService, ConfirmationService],
-  exports: [
-    ProductsComponent
-  ]
+  exports: [ProductsComponent],
 })
-export class ProductsModule { }
+export class ProductsModule {}

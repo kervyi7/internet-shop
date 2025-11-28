@@ -1,43 +1,74 @@
 <div class="header-container">
   <p-button [text]="true" (onClick)="goToPreviousPage()">
-    <span class="material-icons-reg">{{mIcons.arrow_back}}</span>
+    <span class="material-icons-reg">{{ mIcons.arrow_back }}</span>
   </p-button>
-  <h1 *ngIf="product">{{lang.headers.product}}: {{product.name}}</h1>
+  <h1 *ngIf="product">{{ lang.headers.product }}: {{ product.name }}</h1>
 </div>
 <p-toast></p-toast>
-<h2>{{lang.headers.defaultValues}}</h2>
+<h2>{{ lang.headers.defaultValues }}</h2>
 <form (ngSubmit)="submit()" [formGroup]="productForm" novalidate class="form">
   <div class="inputs-wrapper">
     <div class="input-column">
       <div class="input-container">
         <span class="p-float-label">
-          <input class="input" id="name" type="text" pInputText placeholder="{{lang.placeholders.name}}*"
-            [formControl]="productForm.controls.name" />
+          <input
+            class="input"
+            id="name"
+            type="text"
+            pInputText
+            placeholder="{{ lang.placeholders.name }}*"
+            [formControl]="productForm.controls.name"
+          />
           <label htmlFor="name">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.name}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.name
+              }"
+            >
             </ng-container>
           </label>
         </span>
       </div>
       <div class="input-container">
         <span class="p-float-label">
-          <input class="input" id="code" type="text" pInputText placeholder="{{lang.placeholders.code}}*"
-            [formControl]="productForm.controls.code" />
+          <input
+            class="input"
+            id="code"
+            type="text"
+            pInputText
+            placeholder="{{ lang.placeholders.code }}*"
+            [formControl]="productForm.controls.code"
+          />
           <label htmlFor="code">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.code}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.code
+              }"
+            >
             </ng-container>
           </label>
         </span>
       </div>
       <div class="input-container">
         <span class="p-float-label">
-          <input class="input" id="count" type="number" step="1" pInputText
-            placeholder="{{lang.placeholders.productCount}}*" [formControl]="productForm.controls.count" />
+          <input
+            class="input"
+            id="count"
+            type="number"
+            step="1"
+            pInputText
+            placeholder="{{ lang.placeholders.productCount }}*"
+            [formControl]="productForm.controls.count"
+          />
           <label htmlFor="count">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.productCount}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.productCount
+              }"
+            >
             </ng-container>
           </label>
         </span>
@@ -46,29 +77,55 @@
     <div class="input-column">
       <div class="input-container">
         <span class="p-float-label">
-          <input class="input" id="price" type="number" pInputText placeholder="{{lang.placeholders.productPrice}}*"
-            [formControl]="productForm.controls.price" />
+          <input
+            class="input"
+            id="price"
+            type="number"
+            pInputText
+            placeholder="{{ lang.placeholders.productPrice }}*"
+            [formControl]="productForm.controls.price"
+          />
           <label htmlFor="price">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.productPrice}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.productPrice
+              }"
+            >
             </ng-container>
           </label>
         </span>
       </div>
       <div class="input-container">
         <span class="p-float-label">
-          <input class="input" id="discountedPrice" type="number" pInputText
-            placeholder="Discount price" [formControl]="productForm.controls.discountedPrice" />
+          <input
+            class="input"
+            id="discountedPrice"
+            type="number"
+            pInputText
+            placeholder="Discount price"
+            [formControl]="productForm.controls.discountedPrice"
+          />
           <label htmlFor="discountedPrice">Discount price</label>
         </span>
       </div>
       <div class="input-container">
         <span class="p-float-label">
-          <input class="input" id="currency" type="text" pInputText placeholder="{{lang.placeholders.currency}}*"
-            [formControl]="productForm.controls.currency" />
+          <input
+            class="input"
+            id="currency"
+            type="text"
+            pInputText
+            placeholder="{{ lang.placeholders.currency }}*"
+            [formControl]="productForm.controls.currency"
+          />
           <label htmlFor="currency">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.currency}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.currency
+              }"
+            >
             </ng-container>
           </label>
         </span>
@@ -77,96 +134,150 @@
     <div class="input-column">
       <div class="input-container">
         <span class="p-float-label dropdown">
-          <p-dropdown id="category" [options]="categories" [formControl]="productForm.controls.category"
-            [filter]="!selectedCategory" filterBy="name" optionLabel="name"
-            placeholder="{{lang.placeholders.category}}*" (onClick)="getCategories()"
-            [style]="{'width':'100%'}"></p-dropdown>
+          <p-dropdown
+            id="category"
+            [options]="categories"
+            [formControl]="productForm.controls.category"
+            [filter]="!selectedCategory"
+            filterBy="name"
+            optionLabel="name"
+            placeholder="{{ lang.placeholders.category }}*"
+            (onClick)="getCategories()"
+            [style]="{ width: '100%' }"
+          ></p-dropdown>
           <label htmlFor="category">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.category}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.category
+              }"
+            >
             </ng-container>
           </label>
         </span>
       </div>
       <div class="input-container">
         <span class="p-float-label dropdown">
-          <p-dropdown id="type" [options]="types" [formControl]="productForm.controls.type" [filter]="!selectedType"
-            filterBy="name" optionLabel="name" placeholder="{{lang.placeholders.type}}*" (onClick)="getTypes()"
-            [style]="{'width':'100%'}"></p-dropdown>
+          <p-dropdown
+            id="type"
+            [options]="types"
+            [formControl]="productForm.controls.type"
+            [filter]="!selectedType"
+            filterBy="name"
+            optionLabel="name"
+            placeholder="{{ lang.placeholders.type }}*"
+            (onClick)="getTypes()"
+            [style]="{ width: '100%' }"
+          ></p-dropdown>
           <label htmlFor="type">
-            <ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.type}">
+            <ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.type
+              }"
+            >
             </ng-container>
           </label>
         </span>
         <div class="button-container">
           <p-button [text]="true" (onClick)="addType()">
-            <span class="material-icons-reg">{{mIcons.add}}</span>
+            <span class="material-icons-reg">{{ mIcons.add }}</span>
           </p-button>
         </div>
       </div>
       <div class="input-container">
         <span class="p-float-label dropdown">
-          <p-dropdown id="brand" [options]="brands" [formControl]="productForm.controls.brand" [filter]="!selectedBrand"
-            filterBy="name" optionLabel="name" placeholder="{{lang.placeholders.brand}}*" (onClick)="getBrands()"
-            [style]="{'width':'100%'}"></p-dropdown>
-          <label htmlFor="brand"><ng-container [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{placeholder:lang.placeholders.brand}">
+          <p-dropdown
+            id="brand"
+            [options]="brands"
+            [formControl]="productForm.controls.brand"
+            [filter]="!selectedBrand"
+            filterBy="name"
+            optionLabel="name"
+            placeholder="{{ lang.placeholders.brand }}*"
+            (onClick)="getBrands()"
+            [style]="{ width: '100%' }"
+          ></p-dropdown>
+          <label htmlFor="brand"
+            ><ng-container
+              [ngTemplateOutlet]="requiredFieldLabel"
+              [ngTemplateOutletContext]="{
+                placeholder: lang.placeholders.brand
+              }"
+            >
             </ng-container>
           </label>
         </span>
         <div class="button-container">
           <p-button [text]="true" (onClick)="addBrand()">
-            <span class="material-icons-reg">{{mIcons.add}}</span>
+            <span class="material-icons-reg">{{ mIcons.add }}</span>
           </p-button>
         </div>
       </div>
     </div>
-    <span class="p-float-label product-description">
-      <textarea id="productDescription" pInputTextarea [formControl]="productForm.controls.description"
-        placeholder="{{lang.placeholders.productDescription}}"></textarea>
-      <label htmlFor="productDescription">{{lang.placeholders.productDescription}}</label>
+    <span class="product-description">
+      <label htmlFor="productDescription">
+        {{ lang.placeholders.productDescription }}
+      </label>
+      <shop-html-editor
+        (change)="onEditorChange($event)"
+        [htmlContent]="productForm.controls.description.getRawValue()"
+      ></shop-html-editor>
     </span>
   </div>
   <p-button type="submit">
-    <span class="material-icons-reg">{{mIcons.done}}</span><span>{{lang.buttons.save}}</span>
+    <span class="material-icons-reg">{{ mIcons.done }}</span
+    ><span>{{ lang.buttons.save }}</span>
   </p-button>
 </form>
 <div *ngIf="id">
-  <h2>{{lang.headers.image}}</h2>
+  <h2>{{ lang.headers.image }}</h2>
   <div class="images-wrapper">
     <div>
-      <h3>{{lang.headers.mainImage}}</h3>
+      <h3>{{ lang.headers.mainImage }}</h3>
       <div *ngIf="titleImage" class="image-container">
-        <img [src]="titleImage.smallBody" class="image">
-        <span class="material-icons-reg delete-image" (click)="deleteImage(titleImage)">{{mIcons.close}}</span>
+        <img [src]="titleImage.smallBody" class="image" />
+        <span
+          class="material-icons-reg delete-image"
+          (click)="deleteImage(titleImage)"
+          >{{ mIcons.close }}</span
+        >
       </div>
       <div *ngIf="!titleImage" class="pic" (click)="editImages(true)">
-        <span class="material-icons-reg">{{mIcons.add}}</span>
+        <span class="material-icons-reg">{{ mIcons.add }}</span>
       </div>
     </div>
     <div>
-      <h3>{{lang.headers.secondaryImages}}</h3>
+      <h3>{{ lang.headers.secondaryImages }}</h3>
       <div class="uploaded-images-container">
         <div *ngFor="let image of images">
           <div class="image-container">
-            <img [src]="image.smallBody" class="image">
-            <span class="material-icons-reg delete-image" (click)="deleteImage(image)">{{mIcons.close}}</span>
+            <img [src]="image.smallBody" class="image" />
+            <span
+              class="material-icons-reg delete-image"
+              (click)="deleteImage(image)"
+              >{{ mIcons.close }}</span
+            >
           </div>
         </div>
         <div *ngIf="images.length < 4" class="pic" (click)="editImages(false)">
-          <span class="material-icons-reg">{{mIcons.add}}</span>
+          <span class="material-icons-reg">{{ mIcons.add }}</span>
         </div>
       </div>
     </div>
   </div>
-  <h2>{{lang.headers.additionalValues}}</h2>
+  <h2>{{ lang.headers.additionalValues }}</h2>
   <div class="property-section">
-    <shop-properties-list [template]="template" [properties]="properties" [isDeleteAllowed]="false" [isEditable]="true"></shop-properties-list>
+    <shop-properties-list
+      [template]="template"
+      [properties]="properties"
+      [isDeleteAllowed]="false"
+      [isEditable]="true"
+    ></shop-properties-list>
   </div>
 </div>
 
-<ng-template #requiredFieldLabel let-placeholder='placeholder'>
-  <span>{{placeholder}}</span>
+<ng-template #requiredFieldLabel let-placeholder="placeholder">
+  <span>{{ placeholder }}</span>
   <span class="asterisk">*</span>
 </ng-template>
