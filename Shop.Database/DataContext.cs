@@ -36,6 +36,7 @@ namespace Shop.Database
         public DbSet<InfoPage> InfoPages { get; set; }
         public DbSet<ShopContactInfo> ShopContactInfos { get; set; }
         public DbSet<Banner> Banners { get; set; }
+        public DbSet<PaymentSession> PaymentSessions { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {
