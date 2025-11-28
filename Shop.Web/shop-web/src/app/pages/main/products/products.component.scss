@@ -26,3 +26,9 @@
 .products-container {
   max-width: 1000px;
 }
+
+.change-products-view {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}
