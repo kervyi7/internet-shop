@@ -1,0 +1,6 @@
+.inputs-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 190px 1fr;
+  gap: 20px;
+}

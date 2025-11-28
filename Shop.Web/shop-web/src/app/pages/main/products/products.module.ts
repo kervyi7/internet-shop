@@ -19,6 +19,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { FavoritesButtonComponent } from 'src/app/components/favorites-button/favorites-button.component';
 import { FavoriteProductsModule } from "../user/favorite-products/favorite-products.module";
 import { PaginationFiltersComponent } from 'src/app/components/pagination-filters/pagination-filters.component';
+import { GalleryComponent } from 'src/app/components/gallery/gallery.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { PaginationFiltersComponent } from 'src/app/components/pagination-filter
     AccordionModule,
     FavoritesButtonComponent,
     FavoriteProductsModule,
-    PaginationFiltersComponent
+    PaginationFiltersComponent,
+    GalleryComponent
 ],
   providers: [DialogService],
   exports: [

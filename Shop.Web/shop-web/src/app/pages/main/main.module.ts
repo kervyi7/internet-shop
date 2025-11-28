@@ -12,6 +12,8 @@ import { StateSwitcherModule } from 'src/app/components/state-switcher/state-swi
 import { ProductWidgetComponent } from 'src/app/components/product-widget/product-widget.component';
 import { InfoModule } from './info/info.module';
 import { ProductSectionsComponent } from 'src/app/components/product-sections/product-sections.component';
+import { GalleryComponent } from 'src/app/components/gallery/gallery.component';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { ProductSectionsComponent } from 'src/app/components/product-sections/pr
     StateSwitcherModule,
     ProductWidgetComponent,
     ProductSectionsComponent,
-    InfoModule
+    InfoModule,
+    GalleryComponent,
+    DialogModule
   ],
   providers: [DialogService],
   exports: [

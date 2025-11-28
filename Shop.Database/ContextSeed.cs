@@ -14,6 +14,7 @@ namespace Shop.Database
             SeedRoles(context);
             SeedAdminIdentity(context);
             SeedInfoPages(context);
+            SeedBanners(context);
         }
 
         private void SeedRoles(DataContext context)
@@ -90,47 +91,94 @@ namespace Shop.Database
 
         private void SeedInfoPages(DataContext context)
         {
+            if (context.Set<Banner>().Any())
+                return;
+
+            var banners = new List<Banner>
+            {
+                new Banner
+                {
+                    Id = 1,
+                    Type = BannerType.Promo,
+                    Header = "Header",
+                    Text = "Admin has to add this text",
+                    IsActive = false,
+                    Images = []
+                },
+                new Banner
+                {
+                    Id = 2,
+                    Type = BannerType.AdGallery,
+                    Header = "Header",
+                    Text = "Admin has to add this text",
+                    IsActive = false,
+                    Images = []
+                },
+                new Banner
+                {
+                    Id = 3,
+                    Type = BannerType.Modal,
+                    Header = "Header",
+                    Text = "Admin has to add this text",
+                    IsActive = false,
+                    Images = []
+                }
+            };
+
+            context.Set<Banner>().AddRange(banners);
+            context.SaveChanges();
+        }
+
+        private void SeedBanners(DataContext context)
+        {
             if (context.Set<InfoPage>().Any())
                 return;
 
             var infoPages = new List<InfoPage>
-        {
-            new InfoPage
             {
-                Id = 1,
-                Key = "privacy",
-                Header = "Privacy",
-                HtmlContent = "<p>Admin has to add this page</p>"
-            },
-            new InfoPage
-            {
-                Id = 2,
-                Key = "terms",
-                Header = "Terms",
-                HtmlContent = "<p>Admin has to add this page</p>"
-            },
-            new InfoPage
-            {
-                Id = 3,
-                Key = "legal",
-                Header = "Legal",
-                HtmlContent = "<p>Admin has to add this page</p>"
-            },
-            new InfoPage
-            {
-                Id = 4,
-                Key = "refund",
-                Header = "Refund",
-                HtmlContent = "<p>Admin has to add this page</p>"
-            },
-            new InfoPage
-            {
-                Id = 5,
-                Key = "shipping",
-                Header = "Shipping",
-                HtmlContent = "<p>Admin has to add this page</p>"
-            }
-        };
+                new InfoPage
+                {
+                    Id = 1,
+                    Key = "privacy",
+                    Header = "Privacy",
+                    HtmlContent = "<p>Admin has to add this page</p>"
+                },
+                new InfoPage
+                {
+                    Id = 2,
+                    Key = "terms",
+                    Header = "Terms",
+                    HtmlContent = "<p>Admin has to add this page</p>"
+                },
+                new InfoPage
+                {
+                    Id = 3,
+                    Key = "legal",
+                    Header = "Legal",
+                    HtmlContent = "<p>Admin has to add this page</p>"
+                },
+                new InfoPage
+                {
+                    Id = 4,
+                    Key = "refund",
+                    Header = "Refund",
+                    HtmlContent = "<p>Admin has to add this page</p>"
+                },
+                new InfoPage
+                {
+                    Id = 5,
+                    Key = "shipping",
+                    Header = "Shipping",
+                    HtmlContent = "<p>Admin has to add this page</p>"
+                },
+                new InfoPage
+                {
+                    Id = 6,
+                    Key = "about",
+                    Header = "About",
+                    HtmlContent = "<p>Admin has to add this section</p>"
+                }
+            };
 
             context.Set<InfoPage>().AddRange(infoPages);
             context.SaveChanges();

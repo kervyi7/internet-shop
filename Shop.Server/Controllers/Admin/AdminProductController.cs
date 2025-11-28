@@ -199,16 +199,16 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("not reference");
             }
-            var isReference = await DataContext.ProductImages.AnyAsync(x => x.ImageId == imageId && x.Id != item.Id);
-            if (!isReference)
-            {
-                await DataContext.Images.Where(x => x.Id == imageId).ExecuteDeleteAsync();
-            }
-            else
-            {
-                DataContext.ProductImages.Remove(item);
-                await DataContext.SaveChangesAsync();
-            }
+            //var isReference = await DataContext.ProductImages.AnyAsync(x => x.ImageId == imageId && x.Id != item.Id);
+            //if (!isReference)
+            //{
+            await DataContext.Images.Where(x => x.Id == imageId).ExecuteDeleteAsync();
+            //}
+            //else
+            //{
+            //DataContext.ProductImages.Remove(item);
+            await DataContext.SaveChangesAsync();
+            //}
             return Ok();
         }
 

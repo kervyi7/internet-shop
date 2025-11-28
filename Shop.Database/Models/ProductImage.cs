@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Shop.Database.Models
 {
     [Index(nameof(ProductId), nameof(ImageId), IsUnique = true)]
-    [Index(nameof(ProductId), nameof(IsTitle), IsUnique = true)]
     public class ProductImage : BaseModel
     {
         public int ProductId { get; set; }

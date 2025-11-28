@@ -18,3 +18,9 @@
 .cart-count {
   width: 75px;
 }
+
+.cart-item {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

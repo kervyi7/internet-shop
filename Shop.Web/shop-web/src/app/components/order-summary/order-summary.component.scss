@@ -19,3 +19,9 @@
 .p-button {
   width: 100%;
 }
+
+.continue-button {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

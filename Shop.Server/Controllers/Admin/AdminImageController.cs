@@ -25,13 +25,13 @@ namespace Shop.Server.Controllers.Admin
         [HttpPost("get-all")]
         public async Task<ActionResult<PageDataDto<ImageDto[]>>> GetAll(PaginationDto model)
         {
-            var allImages = DataContext.Images.Include(x => x.ProductImages).Include(x => x.Category).Select(x => new ImageDto
+            var allImages = DataContext.Images.Include(x => x.ProductImages).Select(x => new ImageDto
             {
                 Id = x.Id,
                 SmallBody = Convert.ToBase64String(x.SmallBody),
                 Name = x.Name,
                 MimeType = x.MimeType,
-                IsBinding = x.ProductImages.Any() || x.Category != null
+                IsBinding = x.ProductImages.Any()
             });
             if (!string.IsNullOrEmpty(model.SearchValue))
             {

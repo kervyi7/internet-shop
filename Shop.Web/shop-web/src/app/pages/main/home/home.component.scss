@@ -37,3 +37,13 @@
     }
   }
 }
+
+.promo-container {
+  background-color: var(--primary-background);
+  color: var(--secondary-text);
+
+  .promo-header {
+    background-color: #ffffff;
+    color: var(--main-static-text);
+  }
+}

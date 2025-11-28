@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shop.Database.Models
 {
@@ -24,7 +25,10 @@ namespace Shop.Database.Models
         [MaxLength(30)]
         public string MimeType { get; set; }
 
-        public Category Category { get; set; }
+        public int? BannerId { get; set; }
+
+        [ForeignKey(nameof(BannerId))]
+        public Banner Banner { get; set; }
 
         public ICollection<ProductImage> ProductImages { get; } = new List<ProductImage>();
     }

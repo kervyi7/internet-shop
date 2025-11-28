@@ -1,0 +1,90 @@
+<div class="w-full p-3 mx-auto">
+  <p-accordion>
+    <p-accordionTab header="Promo Banner" *ngIf="promoForm">
+      <form [formGroup]="promoForm" class="flex flex-column gap-3">
+        <div class="flex gap-2">
+          <p-checkbox
+            [binary]="true"
+            formControlName="isActive"
+            inputId="isActive"
+          ></p-checkbox>
+          <label for="isActive" class="label">Active </label>
+        </div>
+        <input pInputText formControlName="header" />
+        <textarea pTextarea formControlName="text"></textarea>
+        <p-button (onClick)="savePromo()" label="Save"></p-button>
+      </form>
+    </p-accordionTab>
+    <p-accordionTab header="Ad Gallery" *ngIf="adGalleryForm">
+      <form [formGroup]="adGalleryForm" class="flex flex-column gap-3">
+        <div class="flex gap-2">
+          <p-checkbox
+            [binary]="true"
+            formControlName="isActive"
+            inputId="isActive"
+          ></p-checkbox>
+          <label for="isActive" class="label">Active </label>
+        </div>
+        <input pInputText formControlName="header" />
+        <div class="images-wrapper">
+          <div class="uploaded-images-container">
+            <div *ngFor="let image of adGallery.images">
+              <div class="image-container">
+                <img [src]="image.smallBody" class="image" />
+                <span
+                  class="material-icons-reg delete-image"
+                  (click)="deleteImage(image, false)"
+                  >{{ mIcons.close }}</span
+                >
+              </div>
+            </div>
+            <div
+              *ngIf="adGallery.images.length < 4"
+              class="pic"
+              (click)="editImages(false)"
+            >
+              <span class="material-icons-reg">add</span>
+            </div>
+          </div>
+        </div>
+        <p-button (onClick)="saveAdGallery()" label="Save"></p-button>
+      </form>
+    </p-accordionTab>
+    <p-accordionTab header="Modal Banner" *ngIf="modalForm">
+      <form [formGroup]="modalForm" class="flex flex-column gap-3">
+        <div class="flex gap-2">
+          <p-checkbox
+            [binary]="true"
+            formControlName="isActive"
+            inputId="isActive"
+          ></p-checkbox>
+          <label for="isActive" class="label">Active </label>
+        </div>
+        <input pInputText formControlName="header" />
+        <textarea pTextarea formControlName="text"></textarea>
+        <div class="images-wrapper">
+          <div class="uploaded-images-container">
+            <div *ngIf="modalBanner.images.length">
+              <div class="image-container">
+                <img [src]="modalBanner.images[0].smallBody" class="image" />
+                <span
+                  class="material-icons-reg delete-image"
+                  (click)="deleteImage(modalBanner.images[0], true)"
+                  >{{ mIcons.close }}</span
+                >
+              </div>
+            </div>
+            <div
+              *ngIf="!modalBanner.images.length"
+              class="pic"
+              (click)="editImages(true)"
+            >
+              <span class="material-icons-reg">add</span>
+            </div>
+          </div>
+        </div>
+        <p-button (onClick)="saveModal()" label="Save"></p-button>
+      </form>
+    </p-accordionTab>
+  </p-accordion>
+</div>

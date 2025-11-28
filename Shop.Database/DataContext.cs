@@ -35,6 +35,7 @@ namespace Shop.Database
         public DbSet<ShippingOption> ShippingOptions { get; set; }
         public DbSet<InfoPage> InfoPages { get; set; }
         public DbSet<ShopContactInfo> ShopContactInfos { get; set; }
+        public DbSet<Banner> Banners { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {
@@ -76,8 +77,10 @@ namespace Shop.Database
             modelBuilder.Entity<ApplicationUser>().ToTable("IdentityUser");
             modelBuilder.Entity<PropertyTemplate>().ToTable("PropertyTemplate");
             modelBuilder.Entity<Category>()
-                .HasOne(x => x.Image)
-                .WithOne(x => x.Category)
+                .HasOne(c => c.Image)
+                .WithOne()
+                .HasForeignKey<Category>(c => c.ImageId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<bool>>()
                 .HasOne(x => x.Product)
@@ -107,6 +110,10 @@ namespace Shop.Database
                 .HasOne(x => x.Image)
                 .WithMany(x => x.ProductImages)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ProductImage>()
+                .HasIndex(p => new { p.ProductId, p.IsTitle })
+                .IsUnique()
+                .HasFilter("\"IsTitle\" = TRUE");
             modelBuilder.Entity<Category>()
                 .HasOne(x => x.PropertyTemplate)
                 .WithOne(x => x.Category)

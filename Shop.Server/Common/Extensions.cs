@@ -236,6 +236,12 @@ namespace Shop.Server.Common
             return sources.Select(ToViewModel);
         }
 
+        public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<Image> sources)
+        {
+            if (sources == null) return Enumerable.Empty<ImageDto>();
+            return sources.Select(ToViewModel);
+        }
+
         public static ImageDto ToViewModel(this Image source)
         {
             if (source == null)
@@ -251,7 +257,7 @@ namespace Shop.Server.Common
                 FileName = source.FileName,
                 FileSize = source.FileSize,
                 MimeType = source.MimeType,
-                IsBinding = source.ProductImages.Any() || source.Category != null,
+                IsBinding = source.ProductImages.Any(),
             };
             return imageDto;
         }
@@ -271,7 +277,7 @@ namespace Shop.Server.Common
                 FileName = image.FileName,
                 FileSize = image.FileSize,
                 MimeType = image.MimeType,
-                IsBinding = image.ProductImages.Any() || image.Category != null,
+                IsBinding = image.ProductImages.Any(),
                 IsTitle = productImage.IsTitle // ключевое изменение — теперь фронт видит, что это титульная
             };
         }

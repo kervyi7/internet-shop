@@ -1,0 +1,19 @@
+<div class="flex gap-2 justify-content-center" [class.flex-column]="isVertical">
+  <div [ngClass]="isVertical ? 'w-full lg:w-11' : 'w-7'">
+    <img [src]="selectedImage.body" class="w-full h-full" />
+  </div>
+  <div
+    class="flex gap-2"
+    [ngClass]="isVertical ? 'w-full lg:w-11' : 'w-10rem flex-column'"
+    [class.justify-content-between]="images.length > 2"
+  >
+    <ng-container *ngFor="let image of images">
+      <img
+        [src]="image.smallBody"
+        (click)="selectImage(image)"
+        class="cursor-pointer"
+        [ngClass]="isVertical ? 'w-2' : 'w-10rem'"
+      />
+    </ng-container>
+  </div>
+</div>

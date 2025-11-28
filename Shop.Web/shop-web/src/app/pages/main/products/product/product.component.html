@@ -1,4 +1,4 @@
-<div class="min-w-max max-w-full m-4">
+<div class="min-w-max max-w-full md:m-4 header">
   <p-breadcrumb
     [model]="breadcrumbItems"
     [home]="{ icon: 'pi pi-home', routerLink: '/' }"
@@ -9,42 +9,11 @@
   <div
     class="flex w-11 sm:w-9 mx-auto justify-content-between gap-6 md:gap-8 flex-column md:flex-row"
   >
-    <!-- TODO: make own one -->
-    <!-- <div class="md:w-30rem">
-      <p-galleria
-        [value]="product.images"
-        [responsiveOptions]="responsiveOptions"
-        [containerStyle]="{ 'max-width': '500px' }"
-        [numVisible]="5"
-      >
-        <ng-template pTemplate="item" let-item>
-          <img [src]="item.itemImageSrc" style="width: 100%" />
-        </ng-template>
-        <ng-template pTemplate="thumbnail" let-item>
-          <div class="grid grid-nogutter justify-content-center">
-            <img [src]="item.thumbnailImageSrc" style="height: 50px" />
-          </div>
-        </ng-template>
-      </p-galleria>
-    </div> -->
     <div class="md:w-30rem">
-      <div class="flex flex-column gap-2">
-        <div class="w-full lg:w-11">
-          <img [src]="selectedImage.body" class="w-full" />
-        </div>
-        <div
-          class="flex w-full lg:w-11 gap-2"
-          [class.justify-content-between]="product.images.length > 2"
-        >
-          <ng-container *ngFor="let image of product.images">
-            <img
-              [src]="image.smallBody"
-              (click)="selectImage(image)"
-              class="w-2 cursor-pointer"
-            />
-          </ng-container>
-        </div>
-      </div>
+      <shop-gallery
+        [images]="product.images"
+        [selectedImage]="product.images[0]"
+      ></shop-gallery>
     </div>
     <div class="flex flex-column gap-4 flex-1 justify-content-center">
       <h1 class="m-0">{{ product.name }}</h1>
