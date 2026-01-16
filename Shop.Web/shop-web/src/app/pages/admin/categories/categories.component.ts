@@ -25,7 +25,7 @@ export class CategoriesComponent extends BaseCompleteComponent implements OnInit
     this.get();
   }
 
-  public get() {
+  public get(): void {
     this._adminCategoryDataService.getAll().pipe(
       takeUntil(this.__unsubscribe$)).subscribe((data: ICategory[]) => {
         this.categories = data;
@@ -41,9 +41,9 @@ export class CategoriesComponent extends BaseCompleteComponent implements OnInit
     this._router.navigate(['admin/categories/create']);
   }
 
-  public delete(e: Event, category: ICategory) {
+  public delete(e: Event, category: ICategory): void {
     e.stopPropagation();
-    this._adminCategoryDataService.delete(category.id).subscribe(()=> {
+    this._adminCategoryDataService.delete(category.id).subscribe(() => {
       this.get();
     });
   }

@@ -1,9 +1,10 @@
-<input type="file" id="input-file" class="input-file" (change)="fileChangeEvent($event)" (onClick)="clearInput($event)"
+<input type="file" id="input-file" class="input-file" (change)="fileChangeEvent($event)" (click)="clearInput($event)"
   accept="image/png, image/jpeg" />
 <div class="image-uploader-container">
   <label for="input-file">
     <div class="new-image-label">
-      <span class="material-icons-reg">{{mIcons.add}}</span><span>{{lang.buttons.newImage}}</span>
+      <span class="material-icons-reg">{{mIcons.add}}</span>
+      <span>{{lang.buttons.newImage}}</span>
     </div>
   </label>
 </div>

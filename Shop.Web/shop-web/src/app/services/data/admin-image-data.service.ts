@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { BaseDataService } from "./base-data.service";
 import { AppConfigService } from "../app-config.service";
 import { IImage } from "../../models/interfaces/image";
+import { IGetModelsRequest } from "../../models/interfaces/get-models-request";
+import { IPageData } from "../../models/interfaces/page-data";
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +14,16 @@ export class AdminImageDataService extends BaseDataService {
   public baseUrl = 'adminImage';
 
   constructor(public readonly http: HttpClient,
-    appConfigService: AppConfigService) {
-    super(appConfigService);
+    private _appConfigService: AppConfigService) {
+    super(_appConfigService);
   }
 
-  public getAll(): Observable<IImage[]> {
-    return this.http.get<IImage[]>(this.getUrl(), this.defaultHttpOptions);
+  public getAll(params: IGetModelsRequest): Observable<IPageData<IImage[]>> {
+    return this.http.post<IPageData<IImage[]>>(this.getUrl('get-all'), params, this.defaultHttpOptions);
   }
 
-  public create(category: IImage): Observable<void> {
-    return this.http.post<void>(this.getUrl(), category, this.defaultHttpOptions);
+  public create(image: IImage): Observable<void> {
+    return this.http.post<void>(this.getUrl(), image, this.defaultHttpOptions);
   }
 
   public edit(image: IImage): Observable<IImage> {

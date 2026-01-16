@@ -12,8 +12,8 @@ using Shop.Database;
 namespace Shop.Postgre.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240501103853_AddImageName")]
-    partial class AddImageName
+    [Migration("20240610190138_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -374,9 +374,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("FileSize")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsTitle")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("MimeType")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -422,6 +419,9 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<decimal>("Count")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -431,10 +431,14 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("Currency")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<bool>("IsExist")
-                        .HasColumnType("boolean");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -442,6 +446,9 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("SalePrice")
                         .HasColumnType("numeric");
 
                     b.Property<int>("TypeId")

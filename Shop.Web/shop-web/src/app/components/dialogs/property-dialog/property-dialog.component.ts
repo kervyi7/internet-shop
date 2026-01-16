@@ -8,6 +8,7 @@ import { NotificationService } from '../../../services/notification.service';
 import { IDialogData } from '../../../models/interfaces/dialog-data';
 import { Util } from '../../../common/util';
 import { BaseCompleteComponent } from '../../base/base-complete.component';
+import { Property } from '../../../models/classes/property';
 
 @Component({
   selector: 'shop-property-dialog',
@@ -19,7 +20,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
   public selectedType = PropertyTypes.string;
   public propertyTypes = PropertyTypes;
   public property: IProperty;
-  public editedProperty: IProperty;
+  public editedProperty: Property = new Property();
   public isDisabled = false;
 
   constructor(private _adminProductService: AdminProductDataService,
@@ -36,19 +37,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       this.property = this._refConfig.data.items;
       this.editedProperty = structuredClone(this.property);
       this.selectedType = Util.getPropertyType(this.editedProperty);
-    } else {
-      this.editedProperty = {//create class
-        id: 0,
-        productId: 0,
-        isPrimary: false,
-        isTitle: false,
-        description: '',
-        value: '',
-        code: '',
-        name: '',
-        suffix: ''
-      }
-    }
+    };
   }
 
   public save(): void {
@@ -67,7 +56,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       if (this.isBoolProperty() && this.isValueEmpty(property.value)) {
         property.value = false;
       } else {
-        this._notificationService.showMessage(MessageTypes.error, "Error", "Invalid data");
+        this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
         return;
       }
     }
@@ -77,17 +66,17 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
         return;
       }
       this._adminProductService.editProperty(property.id, property).subscribe({
-        error: err => this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected"),//todo create message enum
+        error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
         complete: () => {
-          this._notificationService.showMessage(MessageTypes.success, "Success", "Changes were saved")
+          this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
           this._ref.close();
         }
       });
     } else {
       this._adminProductService.addProperty(property).subscribe({
-        error: err => this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected"),
+        error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
         complete: () => {
-          this._notificationService.showMessage(MessageTypes.success, "Success", "Changes were saved")
+          this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
           this._ref.close();
         }
       });

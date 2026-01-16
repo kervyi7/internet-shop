@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Shop.Database.Models;
-using Shop.Database;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Common.Localization;
 using Shop.Common.Constants;
 

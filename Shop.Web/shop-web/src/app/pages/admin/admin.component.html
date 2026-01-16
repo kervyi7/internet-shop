@@ -11,6 +11,13 @@
         <span class="menu-list-item-name">{{lang.buttons.productManagement}}</span>
       </div>
     </div>
+    <div class="menu-header">Settings</div>
+    <div class="menu-list">
+      <div class="menu-list-item" (click)="openSettings()">
+        <span class="material-icons-outline menu-list-item-icon">{{mIcons.settings}}</span>
+        <span class="menu-list-item-name">Settings</span>
+      </div>
+    </div>
   </div>
   <div class="admin-content">
     <router-outlet></router-outlet>

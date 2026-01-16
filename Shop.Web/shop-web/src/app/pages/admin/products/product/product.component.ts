@@ -8,7 +8,6 @@ import { AdminProductDataService } from '../../../../services/data/admin-product
 import { AdminCategoryDataService } from '../../../../services/data/admin-category-data.service';
 import { ICategory } from '../../../../models/interfaces/category';
 import { ICodeName } from '../../../../models/interfaces/base/code-name';
-import { UtilityDataService } from '../../../../services/data/utility-data.service';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PropertyDialogComponent } from '../../../../components/dialogs/property-dialog/property-dialog.component';
 import { SelectItemDialogComponent } from '../../../../components/dialogs/select-item-dialog/select-item-dialog.component';
@@ -19,6 +18,9 @@ import { DialogOptions } from '../../../../models/enums/dialog-options';
 import { ProductItems } from '../../../../models/enums/product-items';
 import { CreateProduct } from '../../../../models/classes/create-product';
 import { IProperty } from '../../../../models/interfaces/property';
+import { BrandDataService } from '../../../../services/data/admin-brand-data.service';
+import { TypeDataService } from '../../../../services/data/admin-type-data.service';
+import { Util } from '../../../../common/util';
 
 @Component({
   selector: 'shop-product',
@@ -37,6 +39,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   public selectedBrand: ICodeName;
   public selectedCategory: ICodeName;
   public images: IImage[] = [];
+  public titleImage: IImage;
   public product: IProduct;
   public editedProduct: CreateProduct = new CreateProduct();
 
@@ -47,7 +50,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     private _router: Router,
     private _adminProductDataService: AdminProductDataService,
     private _adminCategoryDataService: AdminCategoryDataService,
-    private _utilityDataService: UtilityDataService,
+    private _brandDataService: BrandDataService,
+    private _typeDataService: TypeDataService,
     private _cd: ChangeDetectorRef) {
     super();
   }
@@ -61,8 +65,10 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: IProduct) => {
         this.product = data;
-        this.editedProduct = this.createEditedProduct(data);
+        this.editedProduct = this.createProduct(data);
         this.images = data.images;
+        this.titleImage = data.images.find((image) => { return image.isTitle });
+        this.removeTitleImage();
         this.categories.push(data.category);
         this.types.push(data.type);
         this.brands.push(data.brand);
@@ -77,7 +83,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.types.length) {
       return;
     }
-    this._utilityDataService.getType()
+    this._typeDataService.getType()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         this.types = data;
@@ -89,7 +95,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.brands.length) {
       return;
     }
-    this._utilityDataService.getBrand()
+    this._brandDataService.getBrand()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         this.brands = data;
@@ -109,15 +115,27 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       });
   }
 
+  public handleClearTypes(): void {
+    this.types = [];
+  }
+
+  public handleClearCategories(): void {
+    this.categories = [];
+  }
+
+  public handleClearBrands(): void {
+    this.brands = [];
+  }
+
   public isInputEmpty(input: string | number | ICodeName): boolean {
     return !Boolean(input);
   }
 
   public deleteProperty(property: IProperty): void {
     this._adminProductDataService.deleteProperty(this.product.id, property).subscribe({
-      error: err => this._notificationService.showMessage(MessageTypes.error, "Error", err),
+      error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, err),
       complete: () => {
-        this._notificationService.showMessage(MessageTypes.success, "Success", "Property has deleted");
+        this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.deletedProperty);
         this.updateProperties();
       }
     });
@@ -141,14 +159,14 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public editImages() {
+  public editImages(isTitle: boolean) {
     const config = { header: this.lang.headers.imageStorage, width: DialogOptions.standardWidth, maximizable: true };
     this.openDialog(ImageStorageDialogComponent, config);
     this._dialogRef.onClose.subscribe(data => {
       if (!data) {
         return;
       }
-      this.saveImage(data);
+      this.saveImage(data, isTitle);
     });
   }
 
@@ -176,8 +194,9 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public saveImage(image: IImage): void {
+  public saveImage(image: IImage, isTitle: boolean): void {
     image.referenceKey = this.product.id;
+    image.isTitle = isTitle;
     this._adminProductDataService.addImage(image).subscribe(() => {
       this.updateImages();
     });
@@ -198,11 +217,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.id) {
       const isValid = !this.validateData();
       if (!isValid) {
-        this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected");
+        this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
       } else {
         this._adminProductDataService.edit(this.id, this.editedProduct).subscribe({
-          error: err => this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected"),
-          complete: () => this._notificationService.showMessage(MessageTypes.success, "Success", "Changes were saved")
+          error: err => this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+          complete: () => this._notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved)
         });
         return;
       }
@@ -216,20 +235,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private validateData(): boolean {
-    const product: ICreateProduct = {
-      id: this.product.id,
-      name: this.product.name,
-      code: this.product.code,
-      categoryId: this.product.category.id,
-      typeId: this.product.type.id,
-      brandId: this.product.brand.id,
-      price: this.product.price,
-      currency: this.product.currency,
-      isExist: this.product.isExist
-    }
-    const productString = JSON.stringify(product);
-    const editProductString = JSON.stringify(this.editedProduct);
-    return productString === editProductString;
+    const product = this.createProduct(this.product);
+    return Util.isDataEqual(product, this.editedProduct);
   }
 
   private openDialog<T>(component: Type<T>, config: DynamicDialogConfig): void {
@@ -237,12 +244,13 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       data: config.data,
       header: config.header,
       width: config.width,
-      maximizable: config.maximizable
+      maximizable: config.maximizable,
+      contentStyle: { overflow: 'visible' }
     });
   }
 
-  private createEditedProduct(data: IProduct): ICreateProduct {
-    const editedProduct: ICreateProduct = {
+  private createProduct(data: IProduct): ICreateProduct {
+    const product: ICreateProduct = {
       id: data.id,
       name: data.name,
       code: data.code,
@@ -252,8 +260,11 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       price: data.price,
       currency: data.currency,
       isExist: data.isExist,
+      salePrice: data.salePrice,
+      count: data.count,
+      description: data.description
     }
-    return editedProduct;
+    return product;
   }
 
   private updateProperties(): void {
@@ -266,11 +277,21 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       })
   }
 
+  private removeTitleImage(): void {
+    const index = this.images.indexOf(this.titleImage);
+    if (index > -1) {
+      this.images.splice(index, 1);
+    }
+  }
+
   private updateImages(): void {
     this._adminProductDataService.getById(this.id).pipe(
       takeUntil(this.__unsubscribe$)).subscribe((data: IProduct) => {
         this.product.images = data.images;
+        this.titleImage = data.images.find((image) => { return image.isTitle });
         this.images = data.images;
+        this.removeTitleImage();
+        debugger;
         this._cd.detectChanges();
       })
   }

@@ -7,6 +7,10 @@ import { ICategory } from '../../../../models/interfaces/category';
 import { IImage } from '../../../../models/interfaces/image';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ImageStorageDialogComponent } from '../../../../components/dialogs/image-storage-dialog/image-storage-dialog.component';
+import { MessageTypes } from '../../../../models/enums/message-types';
+import { NotificationService } from '../../../../services/notification.service';
+import { DialogOptions } from '../../../../models/enums/dialog-options';
+import { Converter } from '../../../../common/converter';
 
 @Component({
   selector: 'shop-category',
@@ -18,7 +22,7 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   private _dialogRef: DynamicDialogRef
   private _id: number;
   public imageChangedFile: File;
-  public image: IImage;
+  public image: string;
   public category: ICategory;
   public categoryName: string;
   public categoryCode: string;
@@ -28,26 +32,32 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     private _router: Router,
     private _adminCategoryDataService: AdminCategoryDataService,
     private _cd: ChangeDetectorRef,
-    private _dialogService: DialogService) {
+    private _dialogService: DialogService,
+    private _notificationService: NotificationService) {
     super();
   }
 
   public ngOnInit(): void {
     this._id = +this._activatedRoute.snapshot.paramMap.get('id')!;
-    console.log(this._id);
     if (this._id) {
       this._adminCategoryDataService.getById(this._id).pipe(
         takeUntil(this.__unsubscribe$)).subscribe((data: ICategory) => {
           this.category = data;
-          this.image = this.category.image;
+          this.image = Converter.toFileSrc(this.category.image.mimeType, this.category.image.smallBody);
           this.categoryName = this.category.name;
           this.categoryCode = this.category.code;
           this._cd.detectChanges();
         });
+    } else {
+      this.category = {
+        image: null,
+        code: null,
+        name: null,
+      }
     }
   }
 
-  public submit() {
+  public submit(): void {
     if (this._id) {
       this.edit();
     } else {
@@ -55,27 +65,27 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     }
   }
 
-  private edit() {
+  private edit(): void {
     const category: ICategory = {
       id: this._id,
-      image: this.image,
+      image: this.category.image,
       name: this.categoryName,
       code: this.categoryCode,
       position: null
     }
     if (this.validate(category)) {
-      throw new Error("nothing changed");
+      this._notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged);
     }
     this._adminCategoryDataService.editCategory(this._id, category).subscribe();
   }
 
-  private validate(category: ICategory) {
+  private validate(category: ICategory): boolean {
     return category == this.category;
   }
 
-  private create() {
+  private create(): void {
     const category: ICategory = {
-      image: this.image,
+      image: this.category.image,
       name: this.categoryName,
       code: this.categoryCode
     };
@@ -84,10 +94,10 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     });
   }
 
-  public showImageStorage() {
+  public showImageStorage(): void {
     this._dialogRef = this._dialogService.open(ImageStorageDialogComponent, {
       header: this.lang.headers.imageStorage,
-      width: '1100px',
+      width: DialogOptions.standardWidth,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 4,
       maximizable: true
@@ -96,12 +106,13 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       if (!data) {
         return;
       }
-      this.image = data;
+      this.category.image = data;
+      this.image = data.smallBody;
       this._cd.detectChanges();
     });
   }
 
-  public goToPreviousPage() {
+  public goToPreviousPage(): void {
     this._router.navigate(['/admin/categories']);
   }
 }

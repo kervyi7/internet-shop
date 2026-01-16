@@ -1,14 +1,13 @@
 <p-button [text]="true" (click)="goToPreviousPage()"><span
     class="material-icons-reg">{{mIcons.arrow_back}}</span></p-button>
 <p *ngIf="category" class="admin-section-title">{{category.name}} {{category.code}}</p>
-
 <p class="admin-section-header">{{lang.headers.photo}}</p>
-<div *ngIf="!image" class="pic" (click)="showImageStorage()">
+<div *ngIf="!category.image" class="pic" (click)="showImageStorage()">
   <span class="material-icons-reg">{{mIcons.add}}</span>
 </div>
-<div *ngIf="image" class="uploaded-images-container">
+<div *ngIf="category.image" class="uploaded-images-container">
   <div class="image-container">
-    <img [src]="image| toBase64" class="image">
+    <img [src]="image" class="image">
     <span class="material-icons-reg delete-image" (click)="showImageStorage()">{{mIcons.edit}}</span>
   </div>
 </div>

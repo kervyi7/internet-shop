@@ -7,7 +7,8 @@ using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System;
 using System.Threading.Tasks;
-using Shop.Server.Common;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Shop.Server.Controllers.Admin
 {
@@ -18,11 +19,32 @@ namespace Shop.Server.Controllers.Admin
         {
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<ImageDto[]>> GetAll()
+        [HttpPost("get-all")]
+        public async Task<ActionResult<PageDataDto<ImageDto[]>>> GetAll(PaginationDto model)
         {
-            var images = await DataContext.Images.Include(x => x.Category).Include(x => x.ProductImages).ToListAsync();
-            return Ok(images.ToViewModels());
+            var allImages = DataContext.Images.Include(x => x.ProductImages).Include(x => x.Category).Select(x => new ImageDto
+            {
+                Id = x.Id,
+                SmallBody = Convert.ToBase64String(x.SmallBody),
+                Name = x.Name,
+                MimeType = x.MimeType,
+                IsBinding = x.ProductImages.Any() || x.Category != null
+            });
+            if (!string.IsNullOrEmpty(model.SearchValue))
+            {
+                allImages = allImages.Where(x => x.Name.Contains(model.SearchValue));
+            }
+            var images = await allImages.OrderByDescending(x => x.Id)
+            .Skip(model.Skip)
+            .Take(model.Count)
+            .ToListAsync();
+            var count = allImages.Count();
+            var response = new PageDataDto<List<ImageDto>>
+            {
+                Data = images,
+                Count = count
+            };
+            return Ok(response);
         }
 
         [HttpPost()]
@@ -63,6 +85,7 @@ namespace Shop.Server.Controllers.Admin
                 Name = model.Name,
                 FileSize = model.FileSize,
                 MimeType = model.MimeType,
+                IsTitle = model.IsTitle,
                 Body = Convert.FromBase64String(model.Body),
                 SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody),
                 CreatedByUser = user,

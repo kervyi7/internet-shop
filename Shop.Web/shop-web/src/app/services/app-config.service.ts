@@ -11,7 +11,7 @@ export class AppConfigService {
   private _config: IAppConfig;
   private _apiUrl: string;
   private _appHost: string;
-  private static _localization: ILocalization;
+  private _localization: ILocalization;
 
   get apiUrl(): string {
     return this._apiUrl;
@@ -25,11 +25,11 @@ export class AppConfigService {
     return this._config;
   }
 
-  static get localization(): ILocalization {
+  get localization(): ILocalization {
     return this._localization;
   }
 
-  static set localization(value: ILocalization) {
+  set localization(value: ILocalization) {
     this._localization = value;
   }
 
@@ -46,11 +46,11 @@ export class AppConfigService {
   public async loadLocalization(): Promise<void> {
     const type = this.getLocalizationType();
     const result = await firstValueFrom<ILocalization>(this._http.get<ILocalization>(`${this._apiUrl}/appSettings/localization/${type}`));
-    AppConfigService.localization = result;
+    this.localization = result;
   }
 
   private getLocalizationType(): string {
-    return 'en';//todo local storage
+    return localStorage.getItem('language');
   }
 
   private init(): void {

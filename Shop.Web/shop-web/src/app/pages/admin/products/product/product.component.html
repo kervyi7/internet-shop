@@ -28,10 +28,28 @@
     </div>
   </div>
   <div class="input-container">
-    <input class="input" type="text" pInputText placeholder="{{lang.placeholders.productPrice}}"
+    <input class="input" type="number" pInputText placeholder="{{lang.placeholders.productPrice}}"
       [(ngModel)]="editedProduct.price" />
     <div class="button-container" *ngIf="!isInputEmpty(editedProduct.price)">
       <p-button [text]="true" (onClick)="editedProduct.price = null">
+        <span class="material-icons-reg">{{mIcons.close}}</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <input class="input" type="number" pInputText placeholder="{{lang.placeholders.productSalePrice}}"
+      [(ngModel)]="editedProduct.salePrice" />
+    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.salePrice)">
+      <p-button [text]="true" (onClick)="editedProduct.salePrice = null">
+        <span class="material-icons-reg">{{mIcons.close}}</span>
+      </p-button>
+    </div>
+  </div>
+  <div class="input-container">
+    <input class="input" type="number" step="1" pInputText placeholder="{{lang.placeholders.productCount}}"
+      [(ngModel)]="editedProduct.count" />
+    <div class="button-container" *ngIf="!isInputEmpty(editedProduct.count)">
+      <p-button [text]="true" (onClick)="editedProduct.count = null">
         <span class="material-icons-reg">{{mIcons.close}}</span>
       </p-button>
     </div>
@@ -46,14 +64,14 @@
     </div>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="true" filterBy="name"
-      optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.category}}" (onClick)="getCategories()"
-      [style]="{'width':'100%'}"></p-dropdown>
+    <p-dropdown class="dropdown" [options]="categories" [(ngModel)]="selectedCategory" [filter]="!selectedCategory"
+      filterBy="name" optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.category}}"
+      (onClick)="getCategories()" [style]="{'width':'100%'}" (onClear)="handleClearCategories()"></p-dropdown>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="true" filterBy="name"
+    <p-dropdown class="dropdown" [options]="types" [(ngModel)]="selectedType" [filter]="!selectedType" filterBy="name"
       optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.type}}" (onClick)="getTypes()"
-      [style]="{'width':'100%'}"></p-dropdown>
+      [style]="{'width':'100%'}" (onClear)="handleClearTypes()"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editTypes()">
         <span class="material-icons-reg">{{mIcons.edit}}</span>
@@ -61,21 +79,32 @@
     </div>
   </div>
   <div class="input-container">
-    <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="true" filterBy="name"
-      optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.brand}}" (onClick)="getBrands()"
-      [style]="{'width':'100%'}"></p-dropdown>
+    <p-dropdown class="dropdown" [options]="brands" [(ngModel)]="selectedBrand" [filter]="!selectedBrand"
+      filterBy="name" optionLabel="name" [showClear]="true" placeholder="{{lang.placeholders.brand}}"
+      (onClick)="getBrands()" [style]="{'width':'100%'}" (onClear)="handleClearBrands()"></p-dropdown>
     <div class="button-container">
       <p-button [text]="true" (onClick)="editBrands()">
         <span class="material-icons-reg">{{mIcons.edit}}</span>
       </p-button>
     </div>
   </div>
+  <textarea rows="5" cols="30" pInputTextarea [(ngModel)]="editedProduct.description"
+    placeholder="{{lang.placeholders.productDescription}}"></textarea>
 </div>
 <p-button (onClick)="saveProduct()">
   <span class="material-icons-reg">{{mIcons.done}}</span><span>{{lang.buttons.save}}</span>
 </p-button>
 <div *ngIf="id">
   <p class="admin-section-header">{{lang.headers.photo}}</p>
+  <p class="admin-section-subheader">Main image</p>
+  <div *ngIf="titleImage" class="image-container">
+    <img [src]="titleImage | toBase64" class="image">
+    <span class="material-icons-reg delete-image" (click)="deleteImage(titleImage)">close</span>
+  </div>
+  <div *ngIf="!titleImage" class="pic" (click)="editImages(true)">
+    <span class="material-icons-reg">{{mIcons.add}}</span>
+  </div>
+  <p class="admin-section-subheader">Secondary images</p>
   <div class="uploaded-images-container">
     <div *ngFor="let image of images">
       <div class="image-container">
@@ -83,7 +112,7 @@
         <span class="material-icons-reg delete-image" (click)="deleteImage(image)">close</span>
       </div>
     </div>
-    <div *ngIf="images.length < 6" class="pic" (click)="editImages()">
+    <div *ngIf="images.length < 6" class="pic" (click)="editImages(false)">
       <span class="material-icons-reg">{{mIcons.add}}</span>
     </div>
   </div>
@@ -152,7 +181,8 @@
         <input class="input" type="text" pInputText [placeholder]="property.code" [disabled]="true" />
       </div>
       <div class="property-item">
-        <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}" [disabled]="true"></p-calendar>
+        <p-calendar class="input" placeholder="{{property.value.toString() | date:'MM/dd/yyyy'}}"
+          [disabled]="true"></p-calendar>
       </div>
       <p-button [text]="true" (onClick)="editProperty(property)">
         <span class="material-icons-reg">{{mIcons.edit}}</span>

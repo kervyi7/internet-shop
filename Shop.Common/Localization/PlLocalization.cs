@@ -15,6 +15,8 @@ namespace Shop.Common.Localization
         public ITooltipsLocalization Tooltips => new PlLocalizationTooltips();
 
         public IPopupsLocalization Popups => new PlLocalizationPopups();
+
+        public INotificationsLocalization Notifications => new PlLocalizatioNotifications();
     }
 
     public class PlLocalizationButtons : IButtonsLocalization
@@ -22,8 +24,8 @@ namespace Shop.Common.Localization
         public string Save => "Save";
         public string NewProduct => "New product";
         public string NewCategory => "New category";
-        public string CategoryManagement => "Category management";
-        public string ProductManagement => "Product management";
+        public string CategoryManagement => "Category management pl";
+        public string ProductManagement => "Product management pl";
         public string AddProperty => "Add property";
         public string NewImage => "New image";
         public string NewItem => "New item";
@@ -43,6 +45,7 @@ namespace Shop.Common.Localization
         public string Types => "Edit list of types";
         public string ImageStorage => "Image Storage";
         public string Property => "Property settings";
+        public string ImageEditor => "Image Editor";
     }
 
     public class PlLocalizationPlaceholders : IPlaceholdersLocalization
@@ -63,6 +66,9 @@ namespace Shop.Common.Localization
         public string Code => "Code";
         public string Login => "Login";
         public string Password => "Password";
+        public string ProductCount => "Count of products";
+        public string ProductSalePrice => "Sale price";
+        public string ProductDescription => "Description";
     }
 
     public class PlLocalizationPropertyTypes : IPropertyTypesLocalization
@@ -83,5 +89,17 @@ namespace Shop.Common.Localization
     {
         public string ImageDelete => "Image is not linked. Are you sure that you want to proceed?";
         public string ImageBoundDelete => "Image is linked with product(s). Are you sure that you want to proceed?";
+    }
+
+    public class PlLocalizatioNotifications : INotificationsLocalization
+    {
+        public string Error => "Error";
+        public string Success => "Success";
+        public string Warn => "Warn";
+        public string NotChanged => "Changes were not detected";
+        public string InvalidData => "Invalid data";
+        public string ChangesSaved => "Changes were saved";
+        public string DeletedProperty => "Property has deleted";
+        public string FailedToLoadImage => "Failed to load image";
     }
 }
