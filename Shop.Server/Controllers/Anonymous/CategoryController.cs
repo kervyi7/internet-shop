@@ -25,7 +25,7 @@ namespace Shop.Server.Controllers.Admin
                 .Include(x => x.Image)
                 .Include(x => x.Products)
                 .Include(x => x.PropertyTemplate)
-                .Where(x => x.Image != null && x.PropertyTemplate != null)//&& x.Products.Any()
+                .Where(x => x.Image != null && x.PropertyTemplate != null && x.Products.Any())
                 .Select(x => new Category
                 {
                     Id = x.Id,
