@@ -109,27 +109,6 @@
           <label htmlFor="discountedPrice">Discount price</label>
         </span>
       </div>
-      <div class="input-container">
-        <span class="p-float-label">
-          <input
-            class="input"
-            id="currency"
-            type="text"
-            pInputText
-            placeholder="{{ lang.placeholders.currency }}*"
-            [formControl]="productForm.controls.currency"
-          />
-          <label htmlFor="currency">
-            <ng-container
-              [ngTemplateOutlet]="requiredFieldLabel"
-              [ngTemplateOutletContext]="{
-                placeholder: lang.placeholders.currency
-              }"
-            >
-            </ng-container>
-          </label>
-        </span>
-      </div>
     </div>
     <div class="input-column">
       <div class="input-container">

@@ -188,7 +188,6 @@ namespace Shop.Server.Common
                 DiscountedPrice = source.DiscountedPrice,
                 Count = source.Count,
                 Description = source.Description,
-                Currency = source.Currency,
                 StringProperties = CreatePropertiesDto(source.StringProperties),
                 DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
@@ -297,6 +296,7 @@ namespace Shop.Server.Common
                 StringProperties = CreatePropertiesDto(source.StringProperties),
                 DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
+                
             };
             return propertyTemplateDto;
         }

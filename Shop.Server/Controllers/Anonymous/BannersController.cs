@@ -28,9 +28,6 @@ namespace Shop.Server.Controllers.Anonymous
                 .Where(x => x.IsActive)
                 .ToListAsync();
 
-            if (banners == null || banners.Count == 0)
-                return NotFound();
-
             var bannersDto = banners.Select(b => new BannerDto
             {
                 Id = b.Id,
@@ -40,9 +37,6 @@ namespace Shop.Server.Controllers.Anonymous
                 IsActive = b.IsActive,
                 Images = b.Images.ToViewModels()
             }).ToList();
-
-            if (!bannersDto.Any())
-                return NotFound();
 
             return Ok(bannersDto);
         }

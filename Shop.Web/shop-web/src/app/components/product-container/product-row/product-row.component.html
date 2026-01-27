@@ -1,5 +1,5 @@
 <div (click)="redirect()" class="product flex text-overflow-ellipsis mx-2">
-  <img [src]="product.images[0].smallBody" />
+  <img [src]="product.images[0].body" />
   <div class="w-full overflow-hidden">
     <h2 class="white-space-nowrap overflow-hidden text-overflow-ellipsis">
       {{ product.name }}
@@ -17,15 +17,15 @@
       class="flex flex-column align-items-center"
     >
       <span class="discount text-xl">{{
-        product.discountedPrice | currency : product.currency
+        product.discountedPrice | currency : 'USD'
       }}</span>
       <span class="text-xs"
-        >Usual price: {{ product.price | currency : product.currency }}</span
+        >Usual price: {{ product.price | currency : 'USD' }}</span
       >
     </div>
     <ng-template #price>
       <span class="text-xl">
-        {{ product.price | currency : product.currency }}
+        {{ product.price | currency : 'USD' }}
       </span>
     </ng-template>
     <div class="flex gap-2">

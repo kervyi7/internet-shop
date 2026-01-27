@@ -25,7 +25,7 @@ export class AdminProductDataService extends BaseDataService {
 
   public getAll(params: IGetModelsRequest): Observable<IPageData<IProduct[]>> {
     return this.http.post<IPageData<IProduct[]>>(
-      this.getUrl("get"),
+      this.getUrl('get'),
       params,
       this.defaultHttpOptions
     );
@@ -48,11 +48,20 @@ export class AdminProductDataService extends BaseDataService {
   }
 
   public create(product: IProduct): Observable<IProductResponse> {
-    return this.http.post<IProductResponse>(
-      this.getUrl(),
-      product,
-      this.defaultHttpOptions
-    );
+    return new Observable<IProductResponse>((subscriber) => {
+      this.http
+        .post<IProductResponse>(this.getUrl(), product, this.defaultHttpOptions)
+        .subscribe({
+          next: (response: IProductResponse) => {
+            debugger
+            Converter.prepareProperties(response);
+            subscriber.next(response);
+          },
+          error: (errorResponse: HttpErrorResponse) =>
+            subscriber.error(errorResponse),
+          complete: () => subscriber.complete(),
+        });
+    });
   }
 
   public edit(id: number, product: IProduct): Observable<IProduct> {

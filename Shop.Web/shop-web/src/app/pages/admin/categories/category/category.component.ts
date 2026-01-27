@@ -99,7 +99,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       if (!template) {
         return;
       }
-      this.displayService.changeStateLoadBar(true);
       const newTemplate: IPropertyTemplate = {
         categoryId: this.id,
         name: template.name,
@@ -117,7 +116,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
         .subscribe((data: IBaseModel) => {
           this.template = newTemplate;
           this.template.id = data.id;
-          this.displayService.changeStateLoadBar(false);
           this._cd.detectChanges();
         });
     });
@@ -133,7 +131,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private edit(): void {
-    this.displayService.changeStateLoadBar(true);
     const category: ICategory = {
       id: this.id,
       image: this.category.image,
@@ -147,7 +144,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
     this._adminCategoryDataService.editCategory(this.id, category)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe(() => {
-        this.displayService.changeStateLoadBar(false);
       });
   }
 
@@ -156,7 +152,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private create(): void {
-    this.displayService.changeStateLoadBar(true);
     const category: ICategory = {
       image: this.category.image,
       name: this.categoryForm.controls.name.getRawValue(),
@@ -167,7 +162,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
       .subscribe((data: IBaseModel) => {
         this._location.replaceState(`admin/categories/edit/${data.id}`)
         this.id = data.id;
-        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
@@ -180,7 +174,6 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private loadCategory(): void {
-    this.displayService.changeStateLoadBar(true);
     this._adminCategoryDataService.getById(this.id)
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICategory) => {
@@ -191,14 +184,12 @@ export class CategoryComponent extends BaseCompleteComponent implements OnInit {
         }
         this.template = data.propertyTemplate;
         if (!this.template) {
-          this.displayService.changeStateLoadBar(false);
           this._cd.detectChanges();
           return;
         }
         this.properties.push(...this.template.stringProperties);
         this.properties.push(...this.template.decimalProperties);
         this.properties.push(...this.template.boolProperties);
-        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }

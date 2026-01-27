@@ -105,7 +105,6 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
   }
 
   private loadImages(): void {
-    this.displayService.changeStateLoadBar(true);
     const params: IGetModelsRequest = {
       skip: this.skip,
       count: this.countPerPage,
@@ -119,7 +118,6 @@ export class ImageStorageDialogComponent extends BaseCompleteComponent implement
           image.smallBody = Converter.toFileSrc(image.mimeType, image.smallBody);
         });
         this.count = data.count;
-        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }

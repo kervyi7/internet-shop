@@ -7,6 +7,7 @@
   ></shop-pagination-filters>
 </div>
 <p-table
+  *ngIf="products.length"
   [value]="products"
   [tableStyle]="{ 'min-width': '50rem' }"
   styleClass="p-datatable-gridlines"
@@ -21,7 +22,7 @@
       <th>{{ lang.placeholders.brand }}</th>
       <th>{{ lang.placeholders.productCount }}</th>
       <th>{{ lang.placeholders.productPrice }}</th>
-      <th>{{ lang.placeholders.productdiscountedPrice }}</th>
+      <th>Discounted price</th>
       <th></th>
     </tr>
   </ng-template>
@@ -59,7 +60,7 @@
     </tr>
   </ng-template>
 </p-table>
-<div *ngIf="products" class="flex flex-column">
+<div *ngIf="products.length" class="flex flex-column">
   <p-paginator
     [first]="pagination.skip"
     [rows]="pagination.count"

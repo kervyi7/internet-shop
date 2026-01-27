@@ -89,7 +89,6 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
   }
 
   private loadProducts(): void {
-    this.displayService.changeStateLoadBar(true);
     this._adminProductDataService
       .getAll(this.pagination)
       .pipe(takeUntil(this.__unsubscribe$))
@@ -104,7 +103,6 @@ export class ProductsComponent extends BaseCompleteComponent implements OnInit {
             );
           }
         }
-        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }

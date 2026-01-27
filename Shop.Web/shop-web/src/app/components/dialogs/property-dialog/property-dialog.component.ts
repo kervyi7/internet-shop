@@ -33,6 +33,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
   }
 
   public ngOnInit(): void {
+    debugger
     this._data = this._refConfig.data;
     if (this._data.items) {
       this.isDisabled = true;

@@ -41,5 +41,6 @@ PM> Add-Migration FixImages -Project Shop.Postgre.Migrations
 PM> Add-Migration AddBanner -Project Shop.Postgre.Migrations
 PM> Add-Migration FixImages2 -Project Shop.Postgre.Migrations
 PM> Add-Migration StripePaymentSessions -Project Shop.Postgre.Migrations
+PM> Add-Migration RemoveCurrency -Project Shop.Postgre.Migrations
 
 PM> Update-Database 

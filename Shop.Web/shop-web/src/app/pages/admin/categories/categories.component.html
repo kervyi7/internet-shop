@@ -6,6 +6,7 @@
   ></shop-pagination-filters>
 </div>
 <p-table
+  *ngIf="categories.length"
   [value]="categories"
   [tableStyle]="{ 'min-width': '50rem' }"
   styleClass="p-datatable-gridlines"
@@ -42,7 +43,7 @@
     </tr>
   </ng-template>
 </p-table>
-<div *ngIf="categories" class="flex flex-column">
+<div *ngIf="categories.length" class="flex flex-column">
   <p-paginator
     [first]="pagination.skip"
     [rows]="pagination.count"

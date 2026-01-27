@@ -51,6 +51,7 @@ import Quill from 'quill';
 })
 export class ProductComponent extends BaseCompleteComponent implements OnInit {
   private _dialogRef: DynamicDialogRef;
+  private _description: string;
   public id: number;
   public imageChangedFile: File;
   public categories: ICodeName[] = [];
@@ -75,18 +76,17 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     private _brandDataService: BrandDataService,
     private _typeDataService: TypeDataService,
     private _cd: ChangeDetectorRef,
-    private _location: Location
+    private _location: Location,
   ) {
     super();
     this.productForm = this.getProductForm();
   }
 
   public ngOnInit(): void {
-    this.displayService.changeStateLoadBar(true);
     this.id = +this._activatedRoute.snapshot.paramMap.get('id')!;
     if (!this.id) {
       this.productForm = this.getProductForm();
-      this.displayService.changeStateLoadBar(false);
+
       return;
     }
     this._adminProductDataService
@@ -96,7 +96,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.images = data.images.map((image) => {
           image.smallBody = Converter.toFileSrc(
             image.mimeType,
-            image.smallBody
+            image.smallBody,
           );
           return image;
         });
@@ -112,11 +112,12 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.selectedCategory = data.category;
         this.selectedType = data.type;
         this.selectedBrand = data.brand;
+        this._description = data.description;
         this.properties.push(...this.product.stringProperties);
         this.properties.push(...this.product.decimalProperties);
         this.properties.push(...this.product.boolProperties);
         this.template = data.category.propertyTemplate;
-        this.displayService.changeStateLoadBar(false);
+
         this._cd.detectChanges();
       });
   }
@@ -125,19 +126,19 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.types.length > 1) {
       return;
     }
-    this.displayService.changeStateLoadBar(true);
+
     this._typeDataService
       .getType()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         if (this.types.length) {
           const index = data.findIndex(
-            (item) => item.code == this.types[0].code
+            (item) => item.code == this.types[0].code,
           );
           data.splice(index, 1);
         }
         this.types.push(...data);
-        this.displayService.changeStateLoadBar(false);
+
         this._cd.detectChanges();
       });
   }
@@ -146,19 +147,19 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.brands.length > 1) {
       return;
     }
-    this.displayService.changeStateLoadBar(true);
+
     this._brandDataService
       .getBrand()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         if (this.brands.length) {
           const index = data.findIndex(
-            (item) => item.code == this.brands[0].code
+            (item) => item.code == this.brands[0].code,
           );
           data.splice(index, 1);
         }
         this.brands.push(...data);
-        this.displayService.changeStateLoadBar(false);
+
         this._cd.detectChanges();
       });
   }
@@ -167,19 +168,19 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
     if (this.categories.length > 1) {
       return;
     }
-    this.displayService.changeStateLoadBar(true);
+
     this._adminCategoryDataService
       .getAllMini()
       .pipe(takeUntil(this.__unsubscribe$))
       .subscribe((data: ICodeName[]) => {
         if (this.categories.length) {
           const index = data.findIndex(
-            (item) => item.code == this.categories[0].code
+            (item) => item.code == this.categories[0].code,
           );
           data.splice(index, 1);
         }
         this.categories.push(...data);
-        this.displayService.changeStateLoadBar(false);
+
         this._cd.detectChanges();
       });
   }
@@ -200,7 +201,7 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public onEditorChange(event: Quill) {
-    this.productForm.controls.description.setValue(event.root.innerHTML);
+    this._description = event.root.innerHTML;
   }
 
   public addType(): void {
@@ -246,7 +247,6 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
   }
 
   public deleteImage(image: IImage): void {
-    this.displayService.changeStateLoadBar(true);
     image.referenceKey = this.id;
     this._adminProductDataService
       .deleteImage(this.product.id, image)
@@ -260,9 +260,9 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.notificationService.showMessage(
           MessageTypes.success,
           this.lang.notifications.success,
-          this.lang.notifications.success
+          this.lang.notifications.success,
         );
-        this.displayService.changeStateLoadBar(false);
+
         this._cd.detectChanges();
       });
   }
@@ -277,24 +277,28 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       this.notificationService.showMessage(
         MessageTypes.error,
         this.lang.notifications.error,
-        this.lang.notifications.invalidData
+        this.lang.notifications.invalidData,
       );
       this._cd.detectChanges();
       return;
     }
-    const product: IProduct = { ...this.productForm.getRawValue(), images: [] };
+    const product: IProduct = {
+      ...this.productForm.getRawValue(),
+      description: this._description,
+      images: [],
+    };
     if (product.discountedPrice >= product.price) {
       this.notificationService.showMessage(
         MessageTypes.error,
         this.lang.notifications.error,
-        this.lang.notifications.invalidData
+        this.lang.notifications.invalidData,
       );
       this.productForm.controls.discountedPrice.setErrors({ incorrect: true });
       this.productForm.controls.price.setErrors({ incorrect: true });
       this._cd.detectChanges();
       return;
     }
-    this.displayService.changeStateLoadBar(true);
+
     if (this.id) {
       product.id = this.id;
       this._adminProductDataService
@@ -305,17 +309,15 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
             this.notificationService.showMessage(
               MessageTypes.error,
               this.lang.notifications.error,
-              this.lang.notifications.notChanged
+              this.lang.notifications.notChanged,
             );
-            this.displayService.changeStateLoadBar(false);
           },
           complete: () => {
             this.notificationService.showMessage(
               MessageTypes.success,
               this.lang.notifications.success,
-              this.lang.notifications.changesSaved
+              this.lang.notifications.changesSaved,
             );
-            this.displayService.changeStateLoadBar(false);
           },
         });
     } else {
@@ -329,14 +331,13 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
           this.properties.push(...this.template.stringProperties);
           this.properties.push(...this.template.decimalProperties);
           this.properties.push(...this.template.boolProperties);
-          this.displayService.changeStateLoadBar(false);
+
           this._cd.detectChanges();
         });
     }
   }
 
   private saveImage(image: IImage, isTitle: boolean): void {
-    this.displayService.changeStateLoadBar(true);
     image.referenceKey = this.id;
     image.isTitle = isTitle;
     this._adminProductDataService
@@ -351,9 +352,8 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
         this.notificationService.showMessage(
           MessageTypes.success,
           this.lang.notifications.success,
-          this.lang.notifications.success
+          this.lang.notifications.success,
         );
-        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }
@@ -373,7 +373,6 @@ export class ProductComponent extends BaseCompleteComponent implements OnInit {
       discountedPrice: new FormControl(null),
       count: new FormControl(null, Validators.required),
       description: new FormControl(''),
-      currency: new FormControl('', Validators.required),
     });
   }
 

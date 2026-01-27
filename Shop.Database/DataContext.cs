@@ -81,7 +81,6 @@ namespace Shop.Database
                 .HasOne(c => c.Image)
                 .WithOne()
                 .HasForeignKey<Category>(c => c.ImageId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<bool>>()
                 .HasOne(x => x.Product)

@@ -30,15 +30,15 @@
         class="flex flex-column gap-1"
       >
         <span class="discount text-4xl">{{
-          product.discountedPrice | currency : product.currency
+          product.discountedPrice | currency : 'USD'
         }}</span>
         <span class="text-xs">
-          Usual price: {{ product.price | currency : product.currency }}
+          Usual price: {{ product.price | currency : 'USD' }}
         </span>
       </div>
       <ng-template #price>
         <span class="text-4xl">
-          {{ product.price }} {{ product.currency }}
+          {{ product.price | currency : 'USD' }}
         </span>
       </ng-template>
       <div class="flex w-full gap-2">

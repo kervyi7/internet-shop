@@ -60,7 +60,6 @@ export class CategoriesComponent
   }
 
   public loadCategories(): void {
-    this.displayService.changeStateLoadBar(true);
     this._adminCategoryDataService
       .getAll(this.pagination)
       .pipe(takeUntil(this.__unsubscribe$))
@@ -74,7 +73,6 @@ export class CategoriesComponent
               item.image.smallBody
             ))
         );
-        this.displayService.changeStateLoadBar(false);
         this._cd.detectChanges();
       });
   }

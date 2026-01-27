@@ -108,7 +108,6 @@ namespace Shop.Server.Controllers.Admin
                 Description = model.Description,
                 Count = model.Count,
                 Price = model.Price,
-                Currency = model.Currency,
             };
             DataContext.Products.Add(item);
             var transaction = DataContext.Database.BeginTransaction();
@@ -186,7 +185,6 @@ namespace Shop.Server.Controllers.Admin
             item.Description = model.Description;
             item.Count = model.Count;
             item.Price = model.Price;
-            item.Currency = model.Currency;
             item.UpdatedAt = DateTime.UtcNow;
             await DataContext.SaveChangesAsync();
             return Ok();

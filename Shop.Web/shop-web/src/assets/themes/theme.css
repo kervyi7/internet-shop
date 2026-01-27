@@ -2,13 +2,13 @@
   --main-text: #161616;
   --secondary-text: #ffffff;
   --primary-color: #571604;
-  --main-background: #ffffff;
-  --header-background: #ffffff50;
+  --main-background: #f1f1f1;
+  --header-background: #f1f1f150;
   --secondary-background: #3B160E;
   --danger-background: #fddfdf;
   --third-background: #ffffff;
   --primary-background: var(--primary-color);
-  --menu-background: rgba(255, 255, 255, 0.9);
+  --menu-background: rgba(241, 241, 241, 0.9);
   /* --theme-changer-background: url(assets/img/light_theme.svg); */
   --shadow: rgba(0, 0, 0, 0.25);
 }

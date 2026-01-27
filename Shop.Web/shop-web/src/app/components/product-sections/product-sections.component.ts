@@ -40,7 +40,7 @@ export class ProductSectionsComponent implements OnInit {
     if (this.sections.includes(ProductSectionType.Discounted)) {
       this.sectionData.push({
         key: 'discounted',
-        title: 'Sale',
+        title: 'Top offers',
         products$: this.productService.getWithDiscount(),
       });
     }

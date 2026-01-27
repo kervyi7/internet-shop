@@ -11,7 +11,6 @@ namespace Shop.Server.Models.DTO
         public decimal Price { get; set; }
         public decimal? DiscountedPrice { get; set; }
         public decimal Count { get; set; }
-        public string Currency { get; set; }
         public string Description { get; set; }
         public IEnumerable<ImageDto> Images { get; set; }
         public IEnumerable<PropertyDto<string>> StringProperties { get; set; }

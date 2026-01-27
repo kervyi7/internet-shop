@@ -14,7 +14,6 @@ export interface IProduct extends ICodeName, IPropertyAll {
   discountedPrice?: number;  // Cena promocyjna (pole opcjonalne, może być pominięte, jeśli brak zniżki).
   count: number; // Ilość dostępnych sztuk produktu w magazynie.
   description: string; // Opis tekstowy produktu – może zawierać szczegóły techniczne lub marketingowe.
-  currency: string;
   images: IImage[]; // Tablica obiektów typu IImage, zawierająca dane zdjęć produktu.
 }
 

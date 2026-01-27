@@ -45,7 +45,7 @@
         <div class="w-9rem text-xs">
           {{
             (item.product.discountedPrice || item.product.price) * item.quantity
-              | currency : item.product.currency
+              | currency : 'usd'
           }}
         </div>
 
@@ -125,7 +125,7 @@
       <div class="text-lg w-9rem text-right">
         {{
           (item.product.discountedPrice || item.product.price) * item.quantity
-            | currency : item.product.currency
+            | currency : 'usd'
         }}
       </div>
     </div>

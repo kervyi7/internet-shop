@@ -4,14 +4,12 @@ import { ILocalization } from '../../models/interfaces/localization/localization
 import { AppConfigService } from '../../services/app-config.service';
 import { MatIcons } from '../../models/enums/mat-icons';
 import { NotificationService } from '../../services/notification.service';
-import { DisplayService } from '../../services/display.service';
 
 @Directive()
 export abstract class BaseCompleteComponent implements OnDestroy {
   protected __unsubscribe$ = new Subject<void>();
   protected appConfig = inject(AppConfigService);
   protected notificationService = inject(NotificationService);
-  protected displayService = inject(DisplayService);
   public lang: ILocalization = this.appConfig.localization;
   public mIcons = MatIcons;
 

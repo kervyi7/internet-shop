@@ -1,13 +1,12 @@
 <p class="w-full text-sm">
   <ng-container *ngFor="let group of groups; let lastGroup = last">
-    <span class="group-name mr-1">{{ group.name }}</span>
+    <span class="group-name">{{ group.name }}: </span>
     <ng-container
       *ngFor="let property of group.properties; let last = last"
-      class="flex view-list-grid"
+      class="flex"
     >
-      <span class="mr-1">{{ property.name }}:</span>
+      <span>{{ property.name }}: </span>
       <span
-        class="mr-1"
         *ngIf="
           property.value === true || property.value === false;
           else defaultValue
@@ -16,8 +15,8 @@
         {{ property.value ? "Yes" : "No" }}
       </span>
       <ng-template #defaultValue>
-        <span class="mr-1">{{ property.value }}</span>
-        <span *ngIf="!(last && lastGroup)" class="mr-1">&#183;</span>
+        <span>{{ property.value }} </span>
+        <span *ngIf="!(last && lastGroup)">&#183; </span>
       </ng-template>
     </ng-container>
   </ng-container>

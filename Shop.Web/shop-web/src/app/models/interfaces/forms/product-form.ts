@@ -11,5 +11,4 @@ export interface IProductForm extends ICodeNameForm {
   discountedPrice: FormControl<number>;
   count: FormControl<number>;
   description: FormControl<string>;
-  currency: FormControl<string>;
 }

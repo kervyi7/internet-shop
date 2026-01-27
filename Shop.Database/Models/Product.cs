@@ -28,8 +28,6 @@ namespace Shop.Database.Models
         public decimal? DiscountedPrice { get; set; }  // Cena po rabacie, opcjonalna, musi być >= 0
         [Required, Range(0, double.MaxValue)]
         public decimal Count { get; set; } // Ilość produktu w magazynie, wymagana, musi być >= 0
-        [Required, MaxLength(20)]
-        public string Currency { get; set; }
         public ICollection<Property<string>> StringProperties { get; set; } = new List<Property<string>>();  // Właściwości tekstowe produktu (np. kolor, rozmiar)
         public ICollection<Property<decimal>> DecimalProperties { get; set; } = new List<Property<decimal>>();  // Właściwości numeryczne produktu (np. waga, pojemność)
         public ICollection<Property<bool>> BoolProperties { get; set; } = new List<Property<bool>>(); 
