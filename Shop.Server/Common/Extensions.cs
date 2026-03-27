@@ -8,9 +8,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using Shop.Common;
 using Shop.Database.Models;
+using Shop.Database.Models.Jsons;
+using Shop.Server.Manager;
+using Shop.Server.Models;
 using Shop.Server.Models.DTO;
 
 namespace Shop.Server.Common
@@ -61,39 +63,190 @@ namespace Shop.Server.Common
             }
         }
 
+        public static string GetErrorDtoJson(this Exception exception)
+        {
+            var exceptionMessage = GetErrorMessage(exception);
+            var errorResponse = new ErrorResponseDto
+            {
+                ErrorDescription = exceptionMessage
+            };
+            return JsonManager.Serialize(errorResponse);
+        }
+
         public static IEnumerable<ProductDto> ToViewModels(this IEnumerable<Product> sources)
         {
             return sources.Select(ToViewModel);
         }
 
+        public static IEnumerable<FavoriteProductDto> ToViewModels(this IEnumerable<FavoriteProduct> sources)
+        {
+            return sources.Select(ToViewModel);
+        }
+
+        public static FavoriteProductDto ToViewModel(this FavoriteProduct source)
+        {
+            var dto = new FavoriteProductDto()
+            {
+                ProductId = source.ProductId,
+                Product = source.Product.ToViewModel()
+
+            };
+            return dto;
+        }
+
+        public static IEnumerable<OrderDto> ToViewModels(this IEnumerable<Order> sources)
+        {
+            return sources.Select(ToViewModel);
+        }
+
+        public static OrderDto ToViewModel(this Order source)
+        {
+            if (source == null)
+                return null;
+
+            return new OrderDto
+            {
+                Id = source.Id,
+                UserId = source.UserId,
+                DeliveryAddressId = source.DeliveryAddressId,
+                ShippingOptionId = source.ShippingOptionId,
+                Status = source.Status,
+                Notes = source.Notes,
+                Date = source.CreatedAt,
+                TotalPrice = source.TotalPrice,
+                DeliveryAddress = source.DeliveryAddress?.ToViewModel(),
+                ShippingOption = source.ShippingOption?.ToViewModel(),
+                Items = source.Items?.Select(i => i.ToViewModel()).ToList()
+            };
+        }
+
+
+        public static DeliveryAddressDto ToViewModel(this DeliveryAddress source)
+        {
+            if (source == null)
+                return null;
+
+            return new DeliveryAddressDto
+            {
+                FirstName = source.FirstName,
+                LastName = source.LastName,
+                Phone = source.Phone,
+                Email = source.Email,
+                Country = source.Country,
+                City = source.City,
+                Street = source.Street,
+                HouseNumber = source.HouseNumber,
+                Apartment = source.Apartment,
+                Postcode = source.Postcode,
+                Notes = source.Notes,
+                IsDefault = source.IsDefault
+            };
+        }
+
+        public static ShippingOptionDto ToViewModel(this ShippingOption source)
+        {
+            if (source == null)
+                return null;
+
+            return new ShippingOptionDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Cost = source.Cost,
+                Description = source.Description
+            };
+        }
+
+        public static OrderItemDto ToViewModel(this OrderItem source)
+        {
+            if (source == null)
+                return null;
+
+            return new OrderItemDto
+            {
+                ProductId = source.ProductId,
+                Quantity = source.Quantity,
+                PriceAtPurchase = source.PriceAtPurchase,
+                Product = source.Product?.ToShortViewModel()
+            };
+        }
+
+
         public static ProductDto ToViewModel(this Product source)
         {
-            var productDto = new ProductDto()
+            if (source == null) return null;
+
+            return new ProductDto
             {
                 Id = source.Id,
                 Name = source.Name,
                 Code = source.Code,
                 Type = CreateCodeNameDto(source.Type),
                 Brand = CreateCodeNameDto(source.Brand),
-                Category = CreateCodeNameDto(source.Category),
+                Category = ToViewModel(source.Category),
                 Price = source.Price,
-                Currency = source.Currency,
+                DiscountedPrice = source.DiscountedPrice,
+                Count = source.Count,
+                Description = source.Description,
                 StringProperties = CreatePropertiesDto(source.StringProperties),
-                IntProperties = CreatePropertiesDto(source.IntProperties),
+                DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
                 BoolProperties = CreatePropertiesDto(source.BoolProperties),
-                DateProperties = CreatePropertiesDto(source.DateProperties),
-                Images = ToViewModels(source.ProductImages.Select(x => x.Image))
+                Images = source.ProductImages?
+                               .OrderByDescending(pi => pi.IsTitle)
+                               .ToViewModels()
+                               .ToList()
             };
-            return productDto;
+        }
+
+        public static ShortProductDto ToShortViewModel(this Product source)
+        {
+            if (source == null) return null;
+
+            return new ShortProductDto
+            {
+                Id = source.Id,
+                Code = source.Code,
+                Name = source.Name,
+                Category = source.Category?.Name,
+                Images = source.ProductImages?
+                               .OrderByDescending(pi => pi.IsTitle)
+                               .ToViewModels()
+                               .ToList()
+            };
+        }
+
+
+        public static CategoryDto ToViewModel(this Category source)
+        {
+            var categoryDto = new CategoryDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+                Image = source.Image.ToViewModel(),
+                PropertyTemplate = CreatePropertyTemplateDto(source.PropertyTemplate),
+            };
+            return categoryDto;
+        }
+
+        public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<ProductImage> sources)
+        {
+            if (sources == null) return Enumerable.Empty<ImageDto>();
+            return sources.Select(ToViewModel);
         }
 
         public static IEnumerable<ImageDto> ToViewModels(this IEnumerable<Image> sources)
         {
+            if (sources == null) return Enumerable.Empty<ImageDto>();
             return sources.Select(ToViewModel);
         }
 
-        private static ImageDto ToViewModel(Image source)
+        public static ImageDto ToViewModel(this Image source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             var imageDto = new ImageDto
             {
                 Id = source.Id,
@@ -103,13 +256,57 @@ namespace Shop.Server.Common
                 FileName = source.FileName,
                 FileSize = source.FileSize,
                 MimeType = source.MimeType,
-                IsBinding = source.ProductImages.Any() || source.Category != null
+                IsBinding = source.ProductImages.Any(),
             };
             return imageDto;
         }
 
+        public static ImageDto ToViewModel(this ProductImage productImage)
+        {
+            if (productImage == null || productImage.Image == null)
+                return null;
+
+            var image = productImage.Image;
+            return new ImageDto
+            {
+                Id = image.Id,
+                Body = Convert.ToBase64String(image.Body),
+                SmallBody = image.SmallBody != null ? Convert.ToBase64String(image.SmallBody) : null,
+                Name = image.Name,
+                FileName = image.FileName,
+                FileSize = image.FileSize,
+                MimeType = image.MimeType,
+                IsBinding = image.ProductImages.Any(),
+                IsTitle = productImage.IsTitle // ключевое изменение — теперь фронт видит, что это титульная
+            };
+        }
+
+        public static PropertyTemplateDto CreatePropertyTemplateDto(PropertyTemplate source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+            var propertyTemplateDto = new PropertyTemplateDto
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Code = source.Code,
+                Extension = JsonManager.Deserialize<TemplateExtension>(source.Extension),
+                StringProperties = CreatePropertiesDto(source.StringProperties),
+                DecimalProperties = CreatePropertiesDto(source.DecimalProperties),
+                BoolProperties = CreatePropertiesDto(source.BoolProperties),
+                
+            };
+            return propertyTemplateDto;
+        }
+
         private static CodeNameDto CreateCodeNameDto(BaseCodeName source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             var codeNameDto = new CodeNameDto
             {
                 Id = source.Id,
@@ -121,15 +318,10 @@ namespace Shop.Server.Common
 
         private static IEnumerable<PropertyDto<T>> CreatePropertiesDto<T>(IEnumerable<Property<T>> sources)
         {
-            var propertiesDto = new List<PropertyDto<T>>();
-            foreach (var property in sources)
-            {
-                propertiesDto.Add(CreatePropertyDto(property));
-            }
-            return propertiesDto;
+            return sources.Select(CreatePropertyDto);
         }
 
-        private static PropertyDto<T> CreatePropertyDto<T>(Property<T> source)
+        private static PropertyDto<T> CreatePropertyDto<T>(this Property<T> source)
         {
             var propertyDto = new PropertyDto<T>
             {
@@ -142,6 +334,7 @@ namespace Shop.Server.Common
                 Suffix = source.Suffix,
                 Value = source.Value,
                 ProductId = source.ProductId,
+                PropertyTemplateId = source.PropertyTemplateId,
             };
             return propertyDto;
         }
@@ -178,6 +371,16 @@ namespace Shop.Server.Common
         {
             var claimsIdentity = (ClaimsIdentity)principal?.Identity;
             return claimsIdentity?.FindFirst(type)?.Value;
+        }
+
+        private static string GetErrorMessage(Exception exception)
+        {
+            var innerException = exception.InnerException;
+            if (innerException != null)
+            {
+                return GetErrorMessage(innerException);
+            }
+            return exception.Message;
         }
     }
 }

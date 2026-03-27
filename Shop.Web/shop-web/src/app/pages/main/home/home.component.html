@@ -1,0 +1,56 @@
+<section *ngIf="promoBanner" class="w-screen p-3 promo-container">
+  <p class="flex gap-4 m-0 align-items-center">
+    <span class="promo-header border-round-sm p-3 font-medium">
+      {{ promoBanner.header }}
+    </span>
+    {{ promoBanner.text }}
+  </p>
+</section>
+<shop-product-sections
+  [sections]="[SectionType.Discounted]"
+></shop-product-sections>
+<ng-container *ngIf="(categoriesState$ | async)?.data as data">
+  <div class="flex categories-container gap-3" *ngIf="data.length > 0">
+    <div
+      class="category-wrapper"
+      *ngFor="let category of data"
+      (click)="goToProductList(category.name)"
+    >
+      <img [src]="category.image.body" />
+      <p>{{ category.name }}</p>
+    </div>
+  </div>
+</ng-container>
+<shop-product-sections
+  [sections]="[SectionType.New, SectionType.Favorite]"
+  [userId]="userId"
+></shop-product-sections>
+<section *ngIf="adGallery" class="w-full p-3 sm:w-9 mx-auto">
+  <h1 class="text-center">{{ adGallery.header }}</h1>
+  <shop-gallery
+    [images]="adGallery.images"
+    [selectedImage]="adGallery.images[0]"
+    [isVertical]="isMobile"
+    [showAnimation]="true"
+  ></shop-gallery>
+</section>
+<section *ngIf="aboutSection" class="w-full p-3 sm:w-9 mx-auto">
+  <h1 class="text-center">{{ aboutSection.header }}</h1>
+  <div [innerHTML]="aboutSection.htmlContent"></div>
+</section>
+<p-dialog
+  *ngIf="modalBanner"
+  [(visible)]="showModalBanner"
+  [header]="modalBanner.header"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+>
+  <div class="flex justify-content-between">
+    <p>{{ modalBanner.text }}</p>
+    <img
+      [src]="modalBanner.images[0]"
+      class="w-6"
+      *ngIf="modalBanner.images[0]"
+    />
+  </div>
+</p-dialog>

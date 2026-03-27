@@ -1,0 +1,8 @@
+<div class="state h-full w-full flex justify-content-center empty-state__container">
+  <div class="flex flex-column align-items-center justify-content-{{ justifyContent }} py-{{ paddingY }}">
+    <img width="114" height="114" [src]="image" (load)="onImageLoaded()" class="mb-4" alt="no data image" />
+    <div [hidden]="!isShowContent" class="title">{{ title }}</div>
+    <div [hidden]="!isShowContent || !subTitle" class="mt-2 subtitle text-gray-800">{{ subTitle }}</div>
+    <ng-content></ng-content>
+  </div>
+</div>

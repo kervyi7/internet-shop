@@ -1,0 +1,93 @@
+<div class="w-full p-3 mx-auto">
+  <p-accordion *ngIf="!editMode">
+    <p-accordionTab header="Contact Information">
+      <form [formGroup]="contactForm" class="p-fluid">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <label>Email</label>
+            <input pInputText formControlName="email" />
+          </div>
+
+          <div class="col-12 md:col-6">
+            <label>Phone</label>
+            <input pInputText formControlName="phone" />
+          </div>
+
+          <div class="col-12">
+            <label>Address</label>
+            <input pInputText formControlName="address" />
+          </div>
+        </div>
+
+        <h3 class="mt-4">Social Networks</h3>
+
+        <div class="grid">
+          <div
+            class="col-12 md:col-4"
+            *ngFor="
+              let field of [
+                'instagram',
+                'facebook',
+                'twitter',
+                'telegram',
+                'linkedin',
+                'youtube',
+                'discord',
+                'github',
+                'reddit',
+                'twitch'
+              ]
+            "
+          >
+            <label class="capitalize">{{ field }}</label>
+            <input
+              pInputText
+              [formControlName]="field"
+              placeholder="Link to {{ field }}"
+            />
+          </div>
+        </div>
+
+        <div class="flex justify-content-end mt-3">
+          <button
+            pButton
+            type="button"
+            label="Save"
+            icon="pi pi-check"
+            (click)="saveContacts()"
+            [disabled]="contactForm.invalid"
+          ></button>
+        </div>
+      </form>
+    </p-accordionTab>
+    <p-accordionTab header="Banners">
+      <shop-banners></shop-banners>
+    </p-accordionTab>
+    <p-accordionTab *ngFor="let page of pages" [selected]="false">
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center w-full">
+          <p-button
+            icon="pi pi-pencil"
+            size="small"
+            (click)="edit(page); $event.stopPropagation()"
+          ></p-button>
+          <span class="ml-3">{{ page.header }}</span>
+        </div>
+      </ng-template>
+
+      <div class="p-3 border-round surface-50">
+        <div [innerHTML]="page.htmlContent"></div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+
+  <div *ngIf="editMode && selectedPage">
+    <h2 class="text-xl font-semibold mb-2">Edit: {{ selectedPage.header }}</h2>
+    <shop-html-editor (change)="onEditorChange($event)" [htmlContent]="selectedPage.htmlContent"></shop-html-editor>
+
+    <div class="mt-3 flex gap-2">
+      <p-button label="Save" (click)="savePage()"></p-button>
+      <p-button label="Cancel" (click)="cancelEditPage()"></p-button>
+    </div>
+  </div>
+</div>

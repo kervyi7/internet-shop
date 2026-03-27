@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shop.Common.Settings;
 using Shop.Database.Identity;
 using Shop.Database.Models;
@@ -20,12 +21,22 @@ namespace Shop.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Property<string>> StringProperties { get; set; }
-        public DbSet<Property<int>> IntProperties { get; set; }
+        public DbSet<Property<decimal>> DecimalProperties { get; set; }
         public DbSet<Property<bool>> BoolProperties { get; set; }
         public DbSet<Property<DateTime>> DateProperties { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
-
+        public DbSet<PropertyTemplate> PropertyTemplate { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
+        public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<ShippingOption> ShippingOptions { get; set; }
+        public DbSet<InfoPage> InfoPages { get; set; }
+        public DbSet<ShopContactInfo> ShopContactInfos { get; set; }
+        public DbSet<Banner> Banners { get; set; }
+        public DbSet<PaymentSession> PaymentSessions { get; set; }
 
         public static void UseServer(DbContextOptionsBuilder optionsBuilder, IAppSettings appSettings)
         {
@@ -51,6 +62,13 @@ namespace Shop.Database
             }
         }
 
+        private CheckConstraintBuilder GetPropertyConstraint<T>(TableBuilder<T> builder, string name) where T : class
+        {
+            return builder.HasCheckConstraint(
+                $"ckProperty{name}_ProductOrTemplate",
+                $"\"{nameof(BaseProperty.ProductId)}\" IS NOT NULL OR \"{nameof(BaseProperty.PropertyTemplateId)}\" IS NOT NULL");
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -58,41 +76,92 @@ namespace Shop.Database
             RemoveCascadeDeleteConvention(modelBuilder);
             modelBuilder.HasDefaultSchema("public");
             modelBuilder.Entity<ApplicationUser>().ToTable("IdentityUser");
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.Entity<ApplicationUser>().OwnsOne(x => x.Properties,
-                builder =>
-                {
-                    builder.ToTable("IdentityUser");
-                    builder.ToJson();
-                });
+            modelBuilder.Entity<PropertyTemplate>().ToTable("PropertyTemplate");
             modelBuilder.Entity<Category>()
-             .HasOne(x => x.Image)
-             .WithOne(x => x.Category)
-             .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(c => c.Image)
+                .WithOne()
+                .HasForeignKey<Category>(c => c.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<bool>>()
-             .HasOne(x => x.Product)
-             .WithMany(x => x.BoolProperties)
-             .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Property<int>>()
-             .HasOne(x => x.Product)
-             .WithMany(x => x.IntProperties)
-             .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.BoolProperties)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<decimal>>()
+                .HasOne(x => x.Product)
+                .WithMany(x => x.DecimalProperties)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property<string>>()
-             .HasOne(x => x.Product)
-             .WithMany(x => x.StringProperties)
-             .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.StringProperties)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property<bool>>()
+                .ToTable(t => GetPropertyConstraint(t, "Bool"));
+            modelBuilder.Entity<Property<decimal>>()
+                .ToTable(t => GetPropertyConstraint(t, "Decimal"));
+            modelBuilder.Entity<Property<string>>()
+                .ToTable(t => GetPropertyConstraint(t, "String"));
             modelBuilder.Entity<Property<DateTime>>()
-             .HasOne(x => x.Product)
-             .WithMany(x => x.DateProperties)
-             .OnDelete(DeleteBehavior.Cascade);
+                .ToTable(t => GetPropertyConstraint(t, "DateTime"));
             modelBuilder.Entity<ProductImage>()
-             .HasOne(x => x.Product)
-             .WithMany(x => x.ProductImages)
-             .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Product)
+                .WithMany(x => x.ProductImages)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProductImage>()
-             .HasOne(x => x.Image)
-             .WithMany(x => x.ProductImages)
-             .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(x => x.Image)
+                .WithMany(x => x.ProductImages)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ProductImage>()
+                .HasIndex(p => new { p.ProductId, p.IsTitle })
+                .IsUnique()
+                .HasFilter("\"IsTitle\" = TRUE");
+            modelBuilder.Entity<Category>()
+                .HasOne(x => x.PropertyTemplate)
+                .WithOne(x => x.Category)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany()
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracja relacji między OrderItem a Product
+            // Każda pozycja zamówienia odnosi się do jednego produktu
+            // DeleteBehavior.Restrict oznacza, że nie można usunąć produktu, jeśli istnieją pozycje zamówienia z tym produktem
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(i => i.Order)
+                .WithMany(o => o.Items)
+                .HasForeignKey(i => i.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Konfiguracja relacji między OrderItem a Order
+            // Każda pozycja zamówienia (OrderItem) należy do jednego zamówienia (Order)
+            // Kolekcja Items w Order przechowuje wszystkie powiązane pozycje
+            // DeleteBehavior.Cascade oznacza, że usunięcie zamówienia spowoduje automatyczne usunięcie jego pozycji
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(i => i.Product)
+                .WithMany()
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<FavoriteProduct>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FavoriteProduct>()
+                .HasOne(f => f.Product)
+                .WithMany()
+                .HasForeignKey(f => f.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<DeliveryAddress>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.DeliveryAddress)
+                .WithMany(a => a.Orders)
+                .HasForeignKey(o => o.DeliveryAddressId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void RemovePluralizingTableNameConvention(ModelBuilder modelBuilder)

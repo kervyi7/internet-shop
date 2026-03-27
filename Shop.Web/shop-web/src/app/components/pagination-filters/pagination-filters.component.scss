@@ -1,0 +1,9 @@
+:host {
+  ::ng-deep .p-float-label .p-placeholder,
+  .p-float-label input::placeholder,
+  .p-float-label .p-inputtext::placeholder {
+    opacity: 1;
+    transition-property: all;
+    transition-timing-function: ease;
+  }
+}

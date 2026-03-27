@@ -1,0 +1,37 @@
+<div *ngIf="address" class="card p-3 border-round-lg min-w-full h-full">
+  <div class="flex align-items-center gap-2 justify-content-between">
+    <p-radioButton
+      name="defaultAddress"
+      [value]="address.id"
+      [(ngModel)]="selectedAddressId"
+      (onClick)="selectAddress(address)"
+    ></p-radioButton>
+    <div *ngIf="isEdit">
+      <button
+        pButton
+        icon="pi pi-pencil"
+        (click)="showEditForm(address)"
+        class="p-button-text"
+      ></button>
+      <button
+        pButton
+        icon="pi pi-trash"
+        (click)="deleteAddress(address)"
+        class="p-button-text"
+      ></button>
+    </div>
+  </div>
+  <div class="flex justify-content-between">
+    <div class="text-overflow-ellipsis">
+      <p>{{ address.firstName }} {{ address.lastName }}</p>
+      <p>{{ address.country }}, {{ address.city }}</p>
+      <p>
+        {{ address.street }} {{ address.houseNumber }}
+        {{ address.apartment }}
+      </p>
+      <p>{{ address.postcode }}</p>
+      <p>{{ address.phone }}</p>
+      <p>{{ address.email }}</p>
+    </div>
+  </div>
+</div>

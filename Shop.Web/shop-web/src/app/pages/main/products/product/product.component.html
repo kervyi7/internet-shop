@@ -1,0 +1,86 @@
+<div class="min-w-max max-w-full md:m-4 header">
+  <p-breadcrumb
+    [model]="breadcrumbItems"
+    [home]="{ icon: 'pi pi-home', routerLink: '/' }"
+    styleClass="border-none"
+  ></p-breadcrumb>
+</div>
+<div *ngIf="product" class="product-wrapper">
+  <div
+    class="flex w-11 sm:w-9 mx-auto justify-content-between gap-6 md:gap-8 flex-column md:flex-row"
+  >
+    <div class="md:w-30rem">
+      <shop-gallery
+        [images]="product.images"
+        [selectedImage]="product.images[0]"
+      ></shop-gallery>
+    </div>
+    <div class="flex flex-column gap-4 flex-1 justify-content-center">
+      <h1 class="m-0">{{ product.name }}</h1>
+      <div>
+        <ng-container *ngIf="product.count; else outOfStock">
+          <span class="count">In stock ({{ product.count }} left)</span>
+        </ng-container>
+        <ng-template #outOfStock>
+          <span class="count">Out of stock</span>
+        </ng-template>
+      </div>
+      <div
+        *ngIf="product.discountedPrice; else price"
+        class="flex flex-column gap-1"
+      >
+        <span class="discount text-4xl">{{
+          product.discountedPrice | currency : 'USD'
+        }}</span>
+        <span class="text-xs">
+          Usual price: {{ product.price | currency : 'USD' }}
+        </span>
+      </div>
+      <ng-template #price>
+        <span class="text-4xl">
+          {{ product.price | currency : 'USD' }}
+        </span>
+      </ng-template>
+      <div class="flex w-full gap-2">
+        <p-button
+          label="Add to cart"
+          styleClass="w-10rem md:w-15rem"
+          (onClick)="addToCart()"
+        >
+        </p-button>
+        <shop-favorites-button
+          [isFavorite]="isFav$ | async"
+          (click)="toggleFavorite($event)"
+        ></shop-favorites-button>
+      </div>
+      <div>
+        <p-accordion [activeIndex]="0">
+          <p-accordionTab header="Description">
+            <div *ngIf="product.description" class="description-container">
+              <div [innerHTML]="product.description"></div>
+            </div>
+          </p-accordionTab>
+          <p-accordionTab header="Properties">
+            <div class="properties-container">
+              <div class="default-values-container p-2">
+                <span>Brand:</span>
+                <span>{{ product.brand.name }}</span>
+                <span>Type:</span>
+                <span>{{ product.type.name }}</span>
+                <span>Category:</span>
+                <span>{{ product.category.name }}</span>
+              </div>
+              <shop-properties-list
+                [template]="product.category.propertyTemplate"
+                [properties]="getProperties(product)"
+                [isDeleteAllowed]="false"
+                [isEditable]="false"
+              >
+              </shop-properties-list>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
+    </div>
+  </div>
+</div>

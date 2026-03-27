@@ -170,9 +170,6 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
-                    b.Property<string>("Avatar")
-                        .HasColumnType("text");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -189,17 +186,13 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<string>("Language")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -219,8 +212,8 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Patronymic")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
@@ -229,8 +222,8 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("RegisterType")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -289,6 +282,65 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.ToTable("UserRefreshToken", "public");
                 });
 
+            modelBuilder.Entity("Shop.Database.Models.Banner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Header")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Type")
+                        .IsUnique();
+
+                    b.ToTable("Banner", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CartItem", "public");
+                });
+
             modelBuilder.Entity("Shop.Database.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -305,12 +357,7 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int>("ImageId")
+                    b.Property<int?>("ImageId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -323,11 +370,6 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
@@ -343,6 +385,103 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.ToTable("Category", "public");
                 });
 
+            modelBuilder.Entity("Shop.Database.Models.DeliveryAddress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Apartment")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Postcode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DeliveryAddress", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.FavoriteProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriteProduct", "public");
+                });
+
             modelBuilder.Entity("Shop.Database.Models.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -351,17 +490,15 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BannerId")
+                        .HasColumnType("integer");
+
                     b.Property<byte[]>("Body")
                         .IsRequired()
                         .HasColumnType("bytea");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("FileName")
                         .IsRequired()
@@ -370,9 +507,6 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<int>("FileSize")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsTitle")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("MimeType")
                         .IsRequired()
@@ -390,14 +524,145 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UpdatedByUser")
+                    b.HasKey("Id");
+
+                    b.HasIndex("BannerId");
+
+                    b.ToTable("Image", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.InfoPage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Header")
                         .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
+                        .HasColumnType("text");
+
+                    b.Property<string>("HtmlContent")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Image", "public");
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("InfoPage", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("DeliveryAddressId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ShippedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ShippingOptionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryAddressId");
+
+                    b.HasIndex("ShippingOptionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("PriceAtPurchase")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItem", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PaymentSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StripeSessionId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("PaymentSession", "public");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Product", b =>
@@ -419,19 +684,18 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<decimal>("Count")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<string>("Description")
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
 
-                    b.Property<string>("Currency")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsExist")
-                        .HasColumnType("boolean");
+                    b.Property<decimal?>("DiscountedPrice")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -446,11 +710,6 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
@@ -485,11 +744,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -497,11 +751,6 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
@@ -525,6 +774,9 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsTitle")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
@@ -534,6 +786,10 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.HasIndex("ProductId", "ImageId")
                         .IsUnique();
+
+                    b.HasIndex("ProductId", "IsTitle")
+                        .IsUnique()
+                        .HasFilter("\"IsTitle\" = TRUE");
 
                     b.ToTable("ProductImage", "public");
                 });
@@ -554,11 +810,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -566,11 +817,6 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
 
                     b.HasKey("Id");
 
@@ -599,11 +845,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -619,7 +860,10 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PropertyTemplateId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
@@ -629,11 +873,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
-
                     b.Property<DateTime>("Value")
                         .HasColumnType("timestamp with time zone");
 
@@ -641,13 +880,18 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("PropertyTemplateId");
+
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
 
                     b.HasIndex("Name", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Property<DateTime>", "public");
+                    b.ToTable("Property<DateTime>", "public", t =>
+                        {
+                            t.HasCheckConstraint("ckPropertyDateTime_ProductOrTemplate", "\"ProductId\" IS NOT NULL OR \"PropertyTemplateId\" IS NOT NULL");
+                        });
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<bool>", b =>
@@ -666,11 +910,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -686,7 +925,10 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PropertyTemplateId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
@@ -696,11 +938,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
-
                     b.Property<bool>("Value")
                         .HasColumnType("boolean");
 
@@ -708,16 +945,21 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("PropertyTemplateId");
+
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
 
                     b.HasIndex("Name", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Property<bool>", "public");
+                    b.ToTable("Property<bool>", "public", t =>
+                        {
+                            t.HasCheckConstraint("ckPropertyBool_ProductOrTemplate", "\"ProductId\" IS NOT NULL OR \"PropertyTemplateId\" IS NOT NULL");
+                        });
                 });
 
-            modelBuilder.Entity("Shop.Database.Models.Property<int>", b =>
+            modelBuilder.Entity("Shop.Database.Models.Property<decimal>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -733,11 +975,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -753,7 +990,10 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PropertyTemplateId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
@@ -763,17 +1003,14 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("PropertyTemplateId");
 
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
@@ -781,7 +1018,10 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.HasIndex("Name", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Property<int>", "public");
+                    b.ToTable("Property<decimal>", "public", t =>
+                        {
+                            t.HasCheckConstraint("ckPropertyDecimal_ProductOrTemplate", "\"ProductId\" IS NOT NULL OR \"PropertyTemplateId\" IS NOT NULL");
+                        });
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<string>", b =>
@@ -800,11 +1040,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -820,7 +1055,10 @@ namespace Shop.Postgre.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PropertyTemplateId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Suffix")
@@ -830,11 +1068,6 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UpdatedByUser")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("character varying(600)");
-
                     b.Property<string>("Value")
                         .HasColumnType("text");
 
@@ -842,13 +1075,135 @@ namespace Shop.Postgre.Migrations.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("PropertyTemplateId");
+
                     b.HasIndex("Code", "ProductId")
                         .IsUnique();
 
                     b.HasIndex("Name", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Property<string>", "public");
+                    b.ToTable("Property<string>", "public", t =>
+                        {
+                            t.HasCheckConstraint("ckPropertyString_ProductOrTemplate", "\"ProductId\" IS NOT NULL OR \"PropertyTemplateId\" IS NOT NULL");
+                        });
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PropertyTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Extension")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId")
+                        .IsUnique();
+
+                    b.ToTable("PropertyTemplate", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.ShippingOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShippingOption", "public");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.ShopContactInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Discord")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Facebook")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Github")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Instagram")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Linkedin")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Reddit")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Telegram")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Twitch")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Twitter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Youtube")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShopContactInfo", "public");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -902,29 +1257,6 @@ namespace Shop.Postgre.Migrations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Shop.Database.Identity.ApplicationUser", b =>
-                {
-                    b.OwnsOne("Shop.Database.Identity.UserProperties", "Properties", b1 =>
-                        {
-                            b1.Property<string>("ApplicationUserId")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
-                            b1.HasKey("ApplicationUserId");
-
-                            b1.ToTable("IdentityUser", "public");
-
-                            b1.ToJson("Properties");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ApplicationUserId");
-                        });
-
-                    b.Navigation("Properties");
-                });
-
             modelBuilder.Entity("Shop.Database.Identity.UserRefreshToken", b =>
                 {
                     b.HasOne("Shop.Database.Identity.ApplicationUser", "User")
@@ -936,15 +1268,128 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Shop.Database.Models.CartItem", b =>
+                {
+                    b.HasOne("Shop.Database.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Shop.Database.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Shop.Database.Models.Category", b =>
                 {
                     b.HasOne("Shop.Database.Models.Image", "Image")
-                        .WithOne("Category")
+                        .WithOne()
                         .HasForeignKey("Shop.Database.Models.Category", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Image");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.DeliveryAddress", b =>
+                {
+                    b.HasOne("Shop.Database.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.FavoriteProduct", b =>
+                {
+                    b.HasOne("Shop.Database.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Image");
+                    b.HasOne("Shop.Database.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.Image", b =>
+                {
+                    b.HasOne("Shop.Database.Models.Banner", "Banner")
+                        .WithMany("Images")
+                        .HasForeignKey("BannerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Banner");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.Order", b =>
+                {
+                    b.HasOne("Shop.Database.Models.DeliveryAddress", "DeliveryAddress")
+                        .WithMany("Orders")
+                        .HasForeignKey("DeliveryAddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Shop.Database.Models.ShippingOption", "ShippingOption")
+                        .WithMany()
+                        .HasForeignKey("ShippingOptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Shop.Database.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("DeliveryAddress");
+
+                    b.Navigation("ShippingOption");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.OrderItem", b =>
+                {
+                    b.HasOne("Shop.Database.Models.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shop.Database.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PaymentSession", b =>
+                {
+                    b.HasOne("Shop.Database.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Product", b =>
@@ -996,12 +1441,18 @@ namespace Shop.Postgre.Migrations.Migrations
             modelBuilder.Entity("Shop.Database.Models.Property<System.DateTime>", b =>
                 {
                     b.HasOne("Shop.Database.Models.Product", "Product")
-                        .WithMany("DateProperties")
+                        .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany()
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<bool>", b =>
@@ -1009,21 +1460,33 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.HasOne("Shop.Database.Models.Product", "Product")
                         .WithMany("BoolProperties")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("BoolProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
-            modelBuilder.Entity("Shop.Database.Models.Property<int>", b =>
+            modelBuilder.Entity("Shop.Database.Models.Property<decimal>", b =>
                 {
                     b.HasOne("Shop.Database.Models.Product", "Product")
-                        .WithMany("IntProperties")
+                        .WithMany("DecimalProperties")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("DecimalProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Property<string>", b =>
@@ -1031,10 +1494,27 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.HasOne("Shop.Database.Models.Product", "Product")
                         .WithMany("StringProperties")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Shop.Database.Models.PropertyTemplate", "PropertyTemplate")
+                        .WithMany("StringProperties")
+                        .HasForeignKey("PropertyTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Product");
+
+                    b.Navigation("PropertyTemplate");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PropertyTemplate", b =>
+                {
+                    b.HasOne("Shop.Database.Models.Category", "Category")
+                        .WithOne("PropertyTemplate")
+                        .HasForeignKey("Shop.Database.Models.PropertyTemplate", "CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Shop.Database.Identity.ApplicationUser", b =>
@@ -1042,25 +1522,38 @@ namespace Shop.Postgre.Migrations.Migrations
                     b.Navigation("UserRefreshTokens");
                 });
 
+            modelBuilder.Entity("Shop.Database.Models.Banner", b =>
+                {
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("Shop.Database.Models.Category", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("PropertyTemplate");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.DeliveryAddress", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Image", b =>
                 {
-                    b.Navigation("Category");
-
                     b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Shop.Database.Models.Product", b =>
                 {
                     b.Navigation("BoolProperties");
 
-                    b.Navigation("DateProperties");
-
-                    b.Navigation("IntProperties");
+                    b.Navigation("DecimalProperties");
 
                     b.Navigation("ProductImages");
 
@@ -1075,6 +1568,15 @@ namespace Shop.Postgre.Migrations.Migrations
             modelBuilder.Entity("Shop.Database.Models.ProductType", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Shop.Database.Models.PropertyTemplate", b =>
+                {
+                    b.Navigation("BoolProperties");
+
+                    b.Navigation("DecimalProperties");
+
+                    b.Navigation("StringProperties");
                 });
 #pragma warning restore 612, 618
         }

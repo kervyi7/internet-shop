@@ -14,12 +14,16 @@ export class AuthDataService extends BaseDataService {
   public baseUrl = 'auth';
 
   constructor(private readonly _http: HttpClient,
-    appConfigService: AppConfigService) {
-    super(appConfigService);
+    private _appConfigService: AppConfigService) {
+    super(_appConfigService);
   }
 
   public login(value: ILogin): Observable<IAuthResponse> {
     return this._http.post<IAuthResponse>(this.getUrl("login"), value, this.defaultHttpOptions);
+  }
+
+  public signUp(value: ILogin): Observable<IAuthResponse> {
+    return this._http.post<IAuthResponse>(this.getUrl("registration"), value, this.defaultHttpOptions);
   }
 
   public logout(): Observable<void> {
@@ -28,6 +32,6 @@ export class AuthDataService extends BaseDataService {
 
   public refresh(accessToken: string, refreshToken: string): Observable<IToken> {
     const body: IToken = { accessToken, refreshToken };
-    return this._http.post<IToken>("refresh", body);
+    return this._http.post<IToken>(this.getUrl("refresh"), body);
   }
 }

@@ -3,6 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
+import { SettingsModule } from './settings/settings.module';
+import { ShippingConfigurationComponent } from './shipping-configuration/shipping-configuration.component';
+import { OrdersComponent } from './orders/orders.component';
+import { InfoConfigComponent } from './info-config/info-config.component';
 
 const routes: Routes = [
   {
@@ -12,19 +16,42 @@ const routes: Routes = [
       {
         path: 'categories',
         loadChildren: (): Promise<Type<CategoriesModule>> =>
-          import('src/app/pages/admin/categories/categories.module').then(m => m.CategoriesModule)
+          import('src/app/pages/admin/categories/categories.module').then(
+            (m) => m.CategoriesModule
+          ),
       },
       {
         path: 'products',
         loadChildren: (): Promise<Type<ProductsModule>> =>
-          import('src/app/pages/admin/products/products.module').then(m => m.ProductsModule)
-      }
-    ]
-  }
+          import('src/app/pages/admin/products/products.module').then(
+            (m) => m.ProductsModule
+          ),
+      },
+      {
+        path: 'shipping',
+        component: ShippingConfigurationComponent,
+      },
+      {
+        path: 'orders',
+        component: OrdersComponent,
+      },
+      {
+        path: 'info',
+        component: InfoConfigComponent,
+      },
+      {
+        path: 'settings',
+        loadChildren: (): Promise<Type<SettingsModule>> =>
+          import('src/app/pages/admin/settings/settings.module').then(
+            (m) => m.SettingsModule
+          ),
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

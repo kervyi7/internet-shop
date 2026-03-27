@@ -8,13 +8,16 @@ namespace Shop.Database.Models
     [Index(nameof(Code), IsUnique = true)]
     public class Category : BaseCodeName
     {
-        public int ImageId { get; set; }
+        public int? ImageId { get; set; }
 
         [ForeignKey(nameof(ImageId))]
         public Image Image { get; set; }
 
         public int? Position { get; set; }
 
+        public PropertyTemplate PropertyTemplate { get; set; }
+
         public ICollection<Product> Products { get; } = new List<Product>();
+
     }
 }

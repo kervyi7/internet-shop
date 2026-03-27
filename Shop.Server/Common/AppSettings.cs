@@ -18,10 +18,12 @@ namespace Shop.Server.Common
         public bool IsDebugMode { get; private set; }
         public IdentityConfig IdentityConfig { get; private set; }
         public AuthConfig AuthConfig { get; private set; }
+        public PaymentConfig PaymentConfig { get; private set; }
 
         private void Load()
         {
             ConnectionString = _configuration.GetConnectionString(DefaultConnectionKey);
+            PaymentConfig = _configuration.GetSection(nameof(PaymentConfig)).Get<PaymentConfig>();
             IdentityConfig = _configuration.GetSection(nameof(IdentityConfig)).Get<IdentityConfig>();
             AuthConfig = _configuration.GetSection(nameof(AuthConfig)).Get<AuthConfig>();
             Verification(DefaultConnectionKey, ConnectionString);
@@ -42,21 +44,5 @@ namespace Shop.Server.Common
 
             return setting;
         }
-
-        //private T GetSettinByKey<T>(string key)
-        //{
-        //    var value = _configuration[key];
-        //    Verification(key, value);
-        //    var type = typeof(T);
-        //    try
-        //    {
-        //        var converter = TypeDescriptor.GetConverter(type);
-        //        return (T)converter.ConvertFromString(value);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //throw new AppSettingException($"invalid format value: '{value}' by key: '{key}', type must be '{type.Name}'", ex);
-        //    }
-        //}
     }
 }

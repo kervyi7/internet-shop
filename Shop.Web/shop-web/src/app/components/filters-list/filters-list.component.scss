@@ -1,0 +1,45 @@
+:host {
+  color: white;
+  text-transform: capitalize;
+  font-size: 1.25rem;
+}
+
+:host ::ng-deep .p-slider {
+  background-color: white;
+}
+
+:host ::ng-deep .p-slider .p-slider-handle {
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.buttons {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 40px);
+
+  ::ng-deep .p-element {
+    display: flex;
+  }
+}
+
+.form {
+  height: calc(100vh - 200px);
+}
+
+.form::-webkit-scrollbar {
+  width: 4px;
+}
+
+.form::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.form::-webkit-scrollbar-thumb {
+  background: #7e1212;
+  border-radius: 4px;
+}
+
+.form::-webkit-scrollbar-thumb:hover {
+  background: #440a0a;
+}

@@ -1,0 +1,106 @@
+<p-accordion [activeIndex]="isExpanded ? 0 : null">
+  <p-accordionTab *ngFor="let order of orders">
+    <ng-template pTemplate="header" *ngIf="order">
+      <div
+        class="flex justify-content-between sm:align-items-center w-full gap-4 flex-column sm:flex-row"
+      >
+        <div *ngIf="isEditable" class="w-13rem">
+          <p-button
+            (click)="onEdit(order)"
+            label="Edit Status"
+            icon="pi pi-pencil"
+          ></p-button>
+        </div>
+        <div class="w-full">
+          <div class="mr-2">Order #{{ order.id }}</div>
+          <div class="mr-2">
+            Date: {{ order.date | date : "dd/MM/yyyy hh:mm" }}
+          </div>
+          <div class="flex">
+            <div class="font-medium mr-1">Status:</div>
+            <!-- TODO: classes -->
+            <span
+              [ngClass]="{
+                'text-yellow-600': order.status === statuses.Pending,
+                'text-green-600': order.status === statuses.Paid,
+                'text-blue-600': order.status === statuses.Processing,
+                'text-gray-600': order.status === statuses.Shipped,
+                'text-purple-600': order.status === statuses.Delivered,
+                'text-red-600': order.status === statuses.Cancelled,
+                'text-orange-600': order.status === statuses.PaymentCancelled
+              }"
+              class="font-semibold"
+            >
+              {{ getStatusName(order) }}
+            </span>
+          </div>
+        </div>
+        <div class="flex align-items-center gap-3">
+          <p-button
+            *ngIf="
+              (order.status === statuses.Pending ||
+                order.status === statuses.PaymentCancelled) &&
+              showPayButton
+            "
+            (click)="onPayClick($event)"
+            label="Pay"
+            icon="pi pi-credit-card"
+          ></p-button>
+          <div class="font-bold sm:text-lg mr-4">
+            {{ order.totalPrice | currency }}
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <div *ngIf="order">
+      <div
+        class="flex justify-content-between mt-3 sm:align-items-center flex-column sm:flex-row"
+      >
+        <h4 class="font-medium mb-2 mt-0">Delivery address:</h4>
+        <span *ngIf="order.deliveryAddress"
+          >{{ order.deliveryAddress?.firstName }}
+          {{ order.deliveryAddress?.lastName }}
+          {{ order.deliveryAddress?.postcode }}
+          {{ order.deliveryAddress?.country }}
+          {{ order.deliveryAddress?.city }} {{ order.deliveryAddress?.street }}
+          {{ order.deliveryAddress?.houseNumber }}/
+          {{ order.deliveryAddress?.apartment }}
+        </span>
+      </div>
+      <div class="flex justify-content-between mt-3 align-items-center">
+        <h4 class="font-medium my-2">
+          Shipping ({{ order.shippingOption?.name }}):
+        </h4>
+        <span>{{ order.shippingOption?.cost | currency }}</span>
+      </div>
+      <h4 class="font-medium my-2">Items:</h4>
+
+      <div
+        *ngFor="let item of order.items"
+        class="flex justify-content-between gap-3 sm:align-items-center mb-3 border-bottom-1 pb-2 flex-column sm:flex-row"
+      >
+        <div class="flex align-items-center gap-1 sm:gap-3">
+          <img
+            [src]="
+              item.product?.images[0]?.smallBody || 'assets/img/nopicture.svg'
+            "
+            class="w-2rem sm:w-5rem border-round shadow-sm cursor-pointer"
+            (click)="onProductClick(item.product)"
+          />
+          <span class="cursor-pointer" (click)="onProductClick(item.product)">
+            {{ item.product?.name || "Product" }}
+          </span>
+        </div>
+        <span
+          >x{{ item.quantity }} — {{ item.priceAtPurchase | currency }}</span
+        >
+      </div>
+
+      <div class="flex justify-content-between mt-2 text-lg font-bold">
+        <span>Total:</span>
+        <span>{{ order.totalPrice | currency }}</span>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>

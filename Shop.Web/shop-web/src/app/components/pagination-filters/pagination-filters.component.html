@@ -1,0 +1,33 @@
+<div class="flex align-items-center gap-3 flex-wrap justify-content-center">
+  <div>
+    <span class="p-float-label">
+      <p-dropdown
+        id="count"
+        [options]="counterConfig"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="pagination.count"
+        (onChange)="onPaginationFiltersChange()"
+      ></p-dropdown>
+      <label htmlFor="count">
+        <span>Show</span>
+      </label>
+    </span>
+  </div>
+  <div *ngIf="isSortingShow">
+    <span class="p-float-label">
+      <p-dropdown
+        id="sortBy"
+        [options]="sortingConfig"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select a {{ sortingHeader }}"
+        [(ngModel)]="pagination.sortBy"
+        (onChange)="onPaginationFiltersChange()"
+      ></p-dropdown>
+      <label htmlFor="sortBy">
+        <span>{{ sortingHeader }} by</span>
+      </label>
+    </span>
+  </div>
+</div>

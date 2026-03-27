@@ -1,0 +1,33 @@
+<div class="flex flex-column lg:flex-row w-11 lg:w-9 m-auto gap-4">
+  <div class="steps flex flex-column gap-2 pt-2">
+    <p-button
+      *ngFor="let step of steps"
+      (click)="goToStep(step)"
+      [class.active]="isActive(step.route)"
+      [icon]="step.icon"
+      [label]="step.label"
+      [text]="true"
+      styleClass="w-full text-left border-round-lg"
+    >
+    </p-button>
+    <p-button
+      (click)="signOut()"
+      icon="pi pi-sign-out"
+      label="Sign out"
+      [text]="true"
+      styleClass="w-full text-left border-round-lg"
+    >
+    </p-button>
+  </div>
+  <div
+    class="lg:min-h-screen w-full shadow p-3 lg:p-5 pt-0 mt-2 border-round-lg"
+  >
+    <h2 class="text-center text-4xl">{{ activeTab }}</h2>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<shop-product-sections
+  [sections]="[SectionType.New, SectionType.Discounted]"
+></shop-product-sections>
+<p-confirmDialog />

@@ -10,5 +10,7 @@ export enum MatIcons {
   flip = 'flip',
   check_circle = 'check_circle',
   category = 'category',
-  shopping_cart = 'shopping_cart'
+  shopping_cart = 'shopping_cart',
+  settings = 'settings',
+  home = 'home'
 }

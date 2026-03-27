@@ -1,0 +1,75 @@
+<div
+  class="flex lg:justify-content-between md:justify-content-between sm:justify-content-center flex-wrap w-full flex-column sm:flex-row md:flex-row lg:flex-row gap-3 align-items-center border-y-1 border-primary p-3"
+>
+  <div class="w-min">
+    <p-breadcrumb
+      styleClass="max-w-18rem sm:max-w-full p-1 border-none sm:p-3 sm:border-1"
+      [model]="breadcrumbItems"
+      [home]="{ icon: 'pi pi-home', routerLink: '/' }"
+    ></p-breadcrumb>
+  </div>
+  <div class="flex align-items-center gap-3 flex-wrap justify-content-center">
+    <p-button
+      *ngIf="!isMobile"
+      (onClick)="changeProductsView()"
+      [text]="true"
+      [icon]="isRowsView ? 'pi pi-list' : 'pi pi-th-large'"
+      class="change-products-view"
+    ></p-button>
+    <p-button (onClick)="changeFiltersMenuState()" [label]="isFiltersApplied ? 'Filters | Applied' : 'Filters'"></p-button>
+    <shop-pagination-filters
+      [isSortingShow]="true"
+      [sortingConfig]="sortingConfig"
+      (onChange)="onPaginationFiltersChange($event)"
+    ></shop-pagination-filters>
+  </div>
+</div>
+<div class="filters-products-container my-4 flex justify-content-center">
+  <div
+    [class.filters-layout]="isFiltersOpen"
+    (click)="changeFiltersMenuState()"
+  ></div>
+  <div
+    class="filters-container flex flex-column align-items-end absolute top-0 p-4"
+    [@openClose]="isFiltersOpen ? 'open' : 'closed'"
+  >
+    <p-button
+      icon="pi pi-times"
+      [text]="true"
+      (onClick)="changeFiltersMenuState()"
+      styleClass="text-white"
+    ></p-button>
+    <shop-filters-list
+      [categoryName]="category"
+      [hidden]="!isFiltersOpen"
+      (filterApplied)="updateFilters($event)"
+      (reset)="resetFilters()"
+      class="w-full"
+    ></shop-filters-list>
+  </div>
+  <div
+    class="flex gap-4 flex-wrap justify-content-center"
+    [ngClass]="{
+      ' w-full flex-column products-container': isRowsView && !isMobile
+    }"
+  >
+    <div *ngFor="let product of products">
+      <shop-product-container
+        [product]="product"
+        [isRow]="isRowsView && !isMobile"
+      ></shop-product-container>
+    </div>
+  </div>
+</div>
+<div *ngIf="products" class="flex flex-column">
+  <p-paginator
+    [first]="pagination.skip"
+    [rows]="pagination.count"
+    [totalRecords]="total"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
+  <div class="flex align-self-center">
+    {{ pagination.skip + 1 }} - {{ pagination.skip + products.length }} of
+    {{ total }}
+  </div>
+</div>

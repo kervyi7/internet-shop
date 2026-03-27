@@ -1,35 +1,59 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Database.Identity;
 using Shop.Database.Models;
 using Shop.Server.Controllers.Abstract;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Shop.Server.Common;
 
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = nameof(ApplicationUserRole.Administrator))]
     public class AdminImageController : BaseEntityController<Image>
     {
         public AdminImageController(DataContext dataContext) : base(dataContext)
         {
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<ImageDto[]>> GetAll()
+        [HttpPost("get-all")]
+        public async Task<ActionResult<PageDataDto<ImageDto[]>>> GetAll(PaginationDto model)
         {
-            var images = await DataContext.Images.Include(x => x.Category).Include(x => x.ProductImages).ToListAsync();
-            return Ok(images.ToViewModels());
+            var allImages = DataContext.Images.Include(x => x.ProductImages).Select(x => new ImageDto
+            {
+                Id = x.Id,
+                SmallBody = Convert.ToBase64String(x.SmallBody),
+                Name = x.Name,
+                MimeType = x.MimeType,
+                IsBinding = x.ProductImages.Any()
+            });
+            if (!string.IsNullOrEmpty(model.SearchValue))
+            {
+                allImages = allImages.Where(x => x.Name.Contains(model.SearchValue));
+            }
+            var images = await allImages.OrderByDescending(x => x.Id)
+            .Skip(model.Skip)
+            .Take(model.Count)
+            .ToListAsync();
+            var count = allImages.Count();
+            var response = new PageDataDto<List<ImageDto>>
+            {
+                Data = images,
+                Count = count
+            };
+            return Ok(response);
         }
 
         [HttpPost()]
         public async Task<ActionResult> Create(ImageDto model)
         {
-            var user = "my user";
-            var image = CreateImage(model, user);
+            var image = CreateImage(model);
             DataContext.Images.Add(image);
             await DataContext.SaveChangesAsync();
             return Ok();
@@ -38,7 +62,6 @@ namespace Shop.Server.Controllers.Admin
         [HttpPut()]
         public async Task<ActionResult> Edit(ImageDto model)
         {
-            var user = "my user";
             var item = await DataContext.Images.FirstOrDefaultAsync(x => x.Id == model.Id);
             if (item == null)
             {
@@ -49,13 +72,12 @@ namespace Shop.Server.Controllers.Admin
             item.MimeType = model.MimeType;
             item.Body = Convert.FromBase64String(model.Body);
             item.SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody);
-            item.UpdatedByUser = user;
             item.UpdatedAt = DateTime.UtcNow;
             await DataContext.SaveChangesAsync();
             return Ok();
         }
 
-        private Image CreateImage(ImageDto model, string user)
+        private Image CreateImage(ImageDto model)
         {
             return new Image
             {
@@ -65,8 +87,6 @@ namespace Shop.Server.Controllers.Admin
                 MimeType = model.MimeType,
                 Body = Convert.FromBase64String(model.Body),
                 SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody),
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
         }
     }

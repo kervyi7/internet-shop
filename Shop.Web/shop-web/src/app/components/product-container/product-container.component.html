@@ -1,0 +1,6 @@
+<ng-container *ngIf="isRow; else card">
+  <shop-product-row [product]="product"></shop-product-row>
+</ng-container>
+<ng-template #card>
+  <shop-product-card [product]="product"></shop-product-card>
+</ng-template>

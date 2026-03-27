@@ -1,16 +1,22 @@
 <div class="tools-container">
-  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.searchImage}}"
-    [(ngModel)]="searchText" />
-  <shop-image-uploader (onSave)="saveImage($event)" (onFileChanged)="fileChanged($event)"></shop-image-uploader>
+  <input class="input" type="text" pInputText KeyupListener placeholder="{{lang.placeholders.searchImage}}"
+    [(ngModel)]="searchText" (hotkey)="searchImage()" />
+  <shop-image-uploader (onFileChanged)="fileChanged($event)"></shop-image-uploader>
+  <div class="paginator">
+    <p-paginator [first]="skip" [rows]="countPerPage" [totalRecords]="count" (onPageChange)="onPageChange($event)"
+      [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+      [showPageLinks]="false"></p-paginator>
+    <p-dropdown [options]="countOptions" optionLabel="label" optionValue="value" [(ngModel)]="countPerPage"
+      (ngModelChange)="onCountChange()"></p-dropdown>
+  </div>
 </div>
 <div class="images-container">
   <div *ngFor="let image of images" class="image-block">
-    <img [src]="image | toBase64" class="image">
+    <img [src]="image.smallBody" class="image">
     <span class="image-name">{{image.name}}</span>
     <div class="image-overflow">
-      <span class="material-icons-outline tool" (click)="deleteImage(image)">{{mIcons.delete}}</span>
+      <span class="material-icons-outline tool" (click)="deleteImage($event, image)">{{mIcons.delete}}</span>
       <p-confirmPopup></p-confirmPopup>
-      <span class="material-icons-outline tool" (click)="editImage(image)">{{mIcons.edit}}</span>
       <span class="material-icons-outline tool" (click)="selectImage(image)">{{mIcons.check_circle}}</span>
     </div>
   </div>

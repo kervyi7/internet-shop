@@ -1,0 +1,40 @@
+//TODO: review
+.product-wrapper {
+  background-size: 70px 70px;
+  background-position: -19px -19px;
+  //background-image: radial-gradient(#b0b0b0 1px, var(--main-background) 0);
+}
+
+.count {
+  color: #828282;
+  font-size: 24px;
+}
+
+.discount {
+  color: red;
+}
+
+.properties-container {
+  width: 50%;
+
+  .default-values-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(100px, 400px));
+    gap: 20px;
+  }
+}
+
+.header {
+  ::ng-deep .p-component {
+    font-size: 0.85rem;
+
+    .p-breadcrumb-list .p-menuitem-separator {
+      margin: 0;
+
+      .p-icon {
+        width: 0.85rem;
+        height: 0.85rem;
+      }
+    }
+  }
+}

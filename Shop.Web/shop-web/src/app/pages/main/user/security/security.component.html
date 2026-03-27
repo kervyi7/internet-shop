@@ -1,0 +1,55 @@
+<div
+  *ngIf="passwordForm"
+  [formGroup]="passwordForm"
+  class="flex flex-column gap-4 lg:w-4"
+>
+  <span class="p-float-label">
+    <input
+      class="input"
+      id="currentPassword"
+      type="password"
+      pInputText
+      placeholder="Current Password"
+      formControlName="currentPassword"
+    />
+    <label htmlFor="currentPassword">Current password</label>
+  </span>
+  <small class="p-error">{{ getErrorMessage("currentPassword") }}</small>
+
+  <span class="p-float-label">
+    <input
+      class="input"
+      id="newPassword"
+      type="password"
+      pInputText
+      placeholder="New Password"
+      formControlName="newPassword"
+    />
+    <label htmlFor="newPassword">New password</label>
+  </span>
+  <small class="p-error">{{ getErrorMessage("newPassword") }}</small>
+
+  <span class="p-float-label">
+    <input
+      class="input"
+      id="confirmPassword"
+      type="password"
+      pInputText
+      placeholder="Confirm New Password"
+      formControlName="confirmPassword"
+    />
+    <label htmlFor="currentPassword">Confirm New Password</label>
+  </span>
+  <small class="p-error">
+      {{ getErrorMessage('confirmPassword') || (passwordForm.errors?.['passwordMismatch'] ? 'Passwords do not match' : '') }}
+    </small>
+
+  <div class="p-field p-col-12">
+    <button
+      pButton
+      type="button"
+      label="Change Password"
+      (click)="changePassword()"
+    ></button>
+  </div>
+</div>

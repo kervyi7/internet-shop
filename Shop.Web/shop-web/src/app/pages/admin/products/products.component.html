@@ -1,10 +1,79 @@
-<p-button (click)="create()">{{lang.buttons.newProduct}}</p-button>
-<div *ngFor="let product of products" class="products-container" (click)="edit(product)">
-  <div class="product-name">{{product.name}}</div>
-  <div class="product-control">
-    <span class="material-icons-reg delete" (click)="delete($event, product)">
-      {{mIcons.delete}}
-    </span>
+<div class="flex gap-3 mb-3">
+  <p-button (click)="create()">{{ lang.buttons.newProduct }}</p-button>
+  <shop-pagination-filters
+    [isSortingShow]="true"
+    [sortingConfig]="sortingConfig"
+    (onChange)="onPaginationFiltersChange($event)"
+  ></shop-pagination-filters>
+</div>
+<p-table
+  *ngIf="products.length"
+  [value]="products"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  styleClass="p-datatable-gridlines"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>{{ lang.headers.image }}</th>
+      <th>{{ lang.placeholders.name }}</th>
+      <th>{{ lang.placeholders.code }}</th>
+      <th>{{ lang.placeholders.category }}</th>
+      <th>{{ lang.placeholders.type }}</th>
+      <th>{{ lang.placeholders.brand }}</th>
+      <th>{{ lang.placeholders.productCount }}</th>
+      <th>{{ lang.placeholders.productPrice }}</th>
+      <th>Discounted price</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr
+      (click)="edit(product)"
+      [class.danger-background]="!product.images.length"
+    >
+      <td *ngIf="product.images.length; else warnImage">
+        <img [src]="product.images[0].smallBody" class="image" />
+      </td>
+      <ng-template #warnImage>
+        <td class="danger">
+          <span pTooltip="{{ lang.tooltips.imageName }}">
+            {{ lang.warnings.titleImageIsMissing }}
+          </span>
+        </td>
+      </ng-template>
+      <td>{{ product.name }}</td>
+      <td>{{ product.code }}</td>
+      <td>{{ product.category.name }}</td>
+      <td>{{ product.type.name }}</td>
+      <td>{{ product.brand.name }}</td>
+      <td>{{ product.count }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.discountedPrice }}</td>
+      <td>
+        <span
+          class="material-icons-reg danger"
+          (click)="tryDelete($event, product)"
+        >
+          {{ mIcons.delete }}
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<div *ngIf="products.length" class="flex flex-column">
+  <p-paginator
+    [first]="pagination.skip"
+    [rows]="pagination.count"
+    [totalRecords]="total"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
+  <div class="flex align-self-center">
+    {{ pagination.skip + 1 }} - {{ pagination.skip + products.length }} of
+    {{ total }}
   </div>
 </div>
+<div *ngIf="!products.length" class="empty-label">
+  {{ lang.warnings.emptyProductsList }}
+</div>
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
 <router-outlet></router-outlet>

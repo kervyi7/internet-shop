@@ -1,0 +1,26 @@
+.steps {
+  font-size: 28px;
+  //color: #C0C0C0;
+
+  span {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: 0.2s;
+
+    &.active {
+      color: #000;
+      background: #f9f9f9;
+      font-weight: bold;
+    }
+
+    // &.disabled {
+    //   opacity: 0.5;
+    //   cursor: default;
+    // }
+
+    &:not(.disabled):hover {
+      background: #f9f9f9;
+    }
+  }
+}

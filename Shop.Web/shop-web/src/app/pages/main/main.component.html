@@ -1,1 +1,143 @@
-<p>main works!</p>
+<header>
+  <img
+    class="logo"
+    src="assets/img/logo.svg"
+    (click)="goToHome()"
+    [class.inverted]="!isLightTheme"
+  />
+
+  <p-button
+    [text]="true"
+    class="menu-toggle"
+    icon="pi pi-bars"
+    *ngIf="isMobile"
+    (click)="toggleMenu()"
+  >
+  </p-button>
+
+  <nav [class.open]="isMenuOpen || !isMobile">
+    <p-button
+      [text]="true"
+      icon="pi pi-heart"
+      class="button"
+      *ngIf="isAuthorized"
+      (click)="goToFavorites()"
+    >
+      <span *ngIf="isMobile" class="ml-3">Favorites</span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      icon="pi pi-shopping-cart"
+      class="button"
+      (click)="goToCart()"
+    >
+      <span *ngIf="isMobile" class="ml-3">Cart</span>
+      <span
+        *ngIf="!isMobile && totalQuantity$ | async as quantity"
+        class="cart-quantity"
+      >
+        {{ quantity }}
+      </span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      icon="pi pi-user"
+      class="button"
+      *ngIf="isAuthorized; else loginButton"
+      (click)="goToUser()"
+    >
+      <span *ngIf="isMobile" class="ml-3">Account</span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      class="button"
+      icon="pi pi-cog"
+      *ngIf="isAdmin"
+      (click)="goToAdmin()"
+    >
+      <span *ngIf="isMobile" class="ml-3">Admin</span>
+    </p-button>
+
+    <p-button
+      [text]="true"
+      [icon]="isLightTheme ? 'pi pi-sun' : 'pi pi-moon'"
+      class="button"
+      (click)="onThemeSwitchChange()"
+    >
+      <span *ngIf="isMobile" class="ml-3">{{
+        isLightTheme ? "Light" : "Dark"
+      }}</span>
+    </p-button>
+
+    <ng-template #loginButton>
+      <p-button [text]="true" (click)="goToLogin()">Sign In</p-button>
+    </ng-template>
+  </nav>
+</header>
+<main class="mb-4 min-h-screen">
+  <router-outlet></router-outlet>
+</main>
+<footer>
+  <div
+    class="flex justify-content-between gap-8 py-5 px-7 flex-column md:flex-row align-items-center md:align-items-start"
+  >
+    <div class="logo">
+      <img
+        src="assets/img/logo.svg"
+        (click)="goToHome()"
+        class="w-full max-w-20rem"
+      />
+    </div>
+    <div class="flex flex-column gap-3 align-items-center md:align-items-start">
+      <h2 class="text-center md:text-left">Account</h2>
+      <a class="text-white no-underline" routerLink="/user/delivery-addresses"
+        >Delivery</a
+      >
+      <a class="text-white no-underline" routerLink="/user/favorites"
+        >Favorites</a
+      >
+      <a class="text-white no-underline" routerLink="/user/orders">Orders</a>
+    </div>
+    <div class="flex flex-column gap-3 align-items-center md:align-items-start">
+      <h2 class="text-center md:text-left">Information</h2>
+      <a class="text-white no-underline" routerLink="/info/shipping"
+        >Shipping</a
+      >
+      <a class="text-white no-underline" routerLink="/info/refund">Refund</a>
+      <a class="text-white no-underline" routerLink="/info/legal">Legal</a>
+      <a class="text-white no-underline" routerLink="/info/terms">Terms</a>
+      <a class="text-white no-underline" routerLink="/info/privacy">Privacy</a>
+    </div>
+    <div class="flex flex-column gap-3">
+      <h2 class="text-center md:text-left">Contacts</h2>
+      <div *ngIf="contacts">
+        <div
+          class="flex flex-column gap-3 align-items-center md:align-items-start"
+        >
+          <span>{{ contacts.phone }}</span>
+          <span>{{ contacts.email }}</span>
+          <span class="text-center md:text-left">{{ contacts.address }}</span>
+          <div class="flex flex-wrap gap-3 mt-2">
+            <ng-container *ngFor="let social of socialLinks">
+              <a
+                *ngIf="contacts[social.key]"
+                [href]="contacts[social.key]"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-white no-underline flex align-items-center gap-1"
+              >
+                <i [class]="social.icon"></i>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="text-xs m-0 p-3 text-center">
+    © {{ date | date : "yyyy" }}, ShopName
+  </p>
+</footer>

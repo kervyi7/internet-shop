@@ -1,0 +1,23 @@
+<p class="w-full text-sm">
+  <ng-container *ngFor="let group of groups; let lastGroup = last">
+    <span class="group-name">{{ group.name }}: </span>
+    <ng-container
+      *ngFor="let property of group.properties; let last = last"
+      class="flex"
+    >
+      <span>{{ property.name }}: </span>
+      <span
+        *ngIf="
+          property.value === true || property.value === false;
+          else defaultValue
+        "
+      >
+        {{ property.value ? "Yes" : "No" }}
+      </span>
+      <ng-template #defaultValue>
+        <span>{{ property.value }} </span>
+        <span *ngIf="!(last && lastGroup)">&#183; </span>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</p>

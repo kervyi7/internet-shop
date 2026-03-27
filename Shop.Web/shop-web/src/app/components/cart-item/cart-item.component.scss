@@ -1,0 +1,26 @@
+.p-input {
+  padding: 0.5rem !important;
+}
+
+.count {
+  right: -10px;
+  top: -5px;
+  background: #9e1717;
+  color: white;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  min-width: 20px;
+  min-height: 20px;
+  text-align: center;
+}
+
+.cart-count {
+  width: 75px;
+}
+
+.cart-item {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

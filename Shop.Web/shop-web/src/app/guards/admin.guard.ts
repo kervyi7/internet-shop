@@ -12,10 +12,10 @@ export class AdminGuard {
   ) { }
 
   public canActivate(): boolean {
-    if (this._authService.isLoggedIn()) {
+    if (this._authService.isAdmin()) {
       return true;
     }
-    this._router.navigate(['/login']);
+    this._router.navigate(['/not-found']);
     return false;
   }
 }

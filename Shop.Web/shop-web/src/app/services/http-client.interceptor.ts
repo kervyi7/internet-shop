@@ -5,6 +5,7 @@ import { Observable, Subscriber } from "rxjs";
 import { ICallerRequest } from "../models/interfaces/caller-request";
 import { AuthService } from "./auth.service";
 import { AuthDataService } from "./data/auth-data.service";
+import { IToken } from "../models/interfaces/token";
 
 @Injectable()
 export class HttpClientInterceptor implements HttpInterceptor {
@@ -46,18 +47,19 @@ export class HttpClientInterceptor implements HttpInterceptor {
       const tokenExpired = errorResponse.headers.get("Token-Expired");
       if (tokenExpired === "true") {
         this.handleTokenExpiredError(subscriber, httpRequest);
-        return;
+      } else {
+        subscriber.complete();
+        this._router.navigate(['/not-found']);
       }
-      subscriber.complete();
-      this.redirectToLogin();
       return;
     }
-    if (errorResponse.status === 404 || errorResponse.status === 403) {
+    if (errorResponse.status === 404) {
       subscriber.complete();
       this._router.navigate(['/not-found']);
       return;
     }
     subscriber.error(errorResponse);
+
   }
 
   private handleTokenExpiredError(subscriber: Subscriber<unknown>, request: HttpRequest<unknown>) {
@@ -79,8 +81,9 @@ export class HttpClientInterceptor implements HttpInterceptor {
     this._authService.removeTokenInfo();
     this._authDataService.refresh(token, refreshToken)
       .subscribe({
-        next: () => {
+        next: (token: IToken) => {
           this.refreshInProgress = false;
+          this._authService.setToken(token);
           this.repeatFailedRequests();
         },
         error: () => this.processingFailureRefresh()

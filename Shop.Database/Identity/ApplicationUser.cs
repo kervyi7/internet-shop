@@ -7,39 +7,31 @@ namespace Shop.Database.Identity
 {
     public class ApplicationUser : IdentityUser
     {
+        // Konstruktor inicjalizujący kolekcję tokenów odświeżania użytkownika
         public ApplicationUser()
         {
             UserRefreshTokens = new Collection<UserRefreshToken>();
         }
 
-        [Required]
-        [MaxLength(250)]
-        public string FirstName { get; set; }
+        [Required, MaxLength(50)]
+        public string FirstName { get; set; } // Imię użytkownika, wymagane, maksymalnie 50 znaków
 
-        [Required]
-        [MaxLength(250)]
-        public string LastName { get; set; }
-
-        [MaxLength(250)]
-        public string Patronymic { get; set; }
-
-        [MaxLength(250)]
-        public string Address { get; set; }
-
-        public string Avatar { get; set; }
+        [Required, MaxLength(50)]
+        public string LastName { get; set; }  // Nazwisko użytkownika, wymagane, maksymalnie 50 znaków
 
         [MaxLength(50)]
-        public string Language { get; set; }
+        public string Patronymic { get; set; } // Drugie imię / patronimik, opcjonalne, maksymalnie 50 znaków
 
-        [MaxLength(50)]
-        public string RegisterType { get; set; }
+        [MaxLength(250)]
+        public string Address { get; set; } // Adres użytkownika, opcjonalny, maksymalnie 250 znaków
 
-        public bool Confirmed { get; set; }
+        [MaxLength(20)]
+        public string RegisterType { get; set; } // Typ rejestracji użytkownika, opcjonalny, maksymalnie 20 znaków
 
-        public bool Active { get; set; }
+        public bool Confirmed { get; set; } // Czy użytkownik potwierdził konto
 
-        public UserProperties Properties { get; set; }
+        public bool Active { get; set; }// Czy konto użytkownika jest aktywne
 
-        public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; }
+        public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; } // Kolekcja tokenów odświeżania przypisanych do użytkownika
     }
 }

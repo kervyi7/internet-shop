@@ -1,38 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shop.Common.Constants;
+using Shop.Common.Enums;
 using Shop.Database;
+using Shop.Database.Identity;
 using Shop.Database.Models;
+using Shop.Server.Common;
 using Shop.Server.Controllers.Abstract;
 using Shop.Server.Exceptions;
 using Shop.Server.Models.DTO;
-using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Shop.Server.Common;
-using Shop.Common.Constants;
+using System.Threading.Tasks;
 
 namespace Shop.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = nameof(ApplicationUserRole.Administrator))]
     public class AdminProductController : BaseEntityController<Product>
     {
         public AdminProductController(DataContext dataContext) : base(dataContext)
         {
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<ProductDto[]>> GetAll()
+        [HttpPost("get")]
+        public async Task<ActionResult<PageDataDto<IEnumerable<ProductDto>>>> GetAll(PaginationDto model)
         {
-            var products = await DataContext.Products
+            var query = DataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
                 .Include(x => x.Category)
+                .Include(x => x.ProductImages.Where(x => x.IsTitle))
+                .ThenInclude(x => x.Image)
                 .Include(x => x.StringProperties.Where(x => x.IsTitle))
-                .Include(x => x.IntProperties.Where(x => x.IsTitle))
+                .Include(x => x.DecimalProperties.Where(x => x.IsTitle))
                 .Include(x => x.BoolProperties.Where(x => x.IsTitle))
-                .Include(x => x.DateProperties.Where(x => x.IsTitle))
+                .AsQueryable();
+
+            query = model.SortBy switch
+            {
+                SortingType.Price_asc => query.OrderBy(x => x.Price),
+                SortingType.Price_desc => query.OrderByDescending(x => x.Price),
+                SortingType.Date_asc => query.OrderBy(x => x.CreatedAt),
+                SortingType.Date_desc => query.OrderByDescending(x => x.CreatedAt),
+                _ => query.OrderByDescending(x => x.Id)
+            };
+
+            var totalCount = await query.CountAsync();
+
+            var products = await query
+                .Skip(model.Skip)
+                .Take(model.Count)
                 .ToListAsync();
-            return Ok(products.ToViewModels());
+
+            var response = new PageDataDto<IEnumerable<ProductDto>>
+            {
+                Data = products.ToViewModels(),
+                Count = totalCount
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id:int}")]
@@ -41,13 +70,13 @@ namespace Shop.Server.Controllers.Admin
             var product = await DataContext.Products
                 .Include(x => x.Brand)
                 .Include(x => x.Type)
-                .Include(x => x.Category)
                 .Include(x => x.StringProperties)
-                .Include(x => x.IntProperties)
+                .Include(x => x.DecimalProperties)
                 .Include(x => x.BoolProperties)
-                .Include(x => x.DateProperties)
                 .Include(x => x.ProductImages)
                 .ThenInclude(x => x.Image)
+                .Include(x => x.Category)
+                .ThenInclude(x => x.PropertyTemplate)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
@@ -57,33 +86,48 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPost()]
-        public async Task<ActionResult> Create(CreateProductDto model)
+        public async Task<ActionResult> Create(ProductDto model)
         {
-            var user = "my user";
+            var template = await DataContext.PropertyTemplate
+                .Include(x => x.StringProperties)
+                .Include(x => x.DecimalProperties)
+                .Include(x => x.BoolProperties)
+                .FirstOrDefaultAsync(x => x.CategoryId == model.Category.Id);
+            if (model.DiscountedPrice > model.Price)
+            {
+                throw new ConflictException("The discount price cannot be higher than the regular price.");
+            }
             var item = new Product
             {
-                CategoryId = model.CategoryId,
+                CategoryId = model.Category.Id,
                 Name = model.Name,
                 Code = model.Code,
-                TypeId = model.TypeId,
-                BrandId = model.BrandId,
+                TypeId = model.Type.Id,
+                BrandId = model.Brand.Id,
+                DiscountedPrice = model.DiscountedPrice,
+                Description = model.Description,
+                Count = model.Count,
                 Price = model.Price,
-                Currency = model.Currency,
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
             DataContext.Products.Add(item);
+            var transaction = DataContext.Database.BeginTransaction();
             await DataContext.SaveChangesAsync();
-            return Ok(new BaseDto
+            AddPropertiesByTemplate(template.StringProperties, item);
+            AddPropertiesByTemplate(template.DecimalProperties, item);
+            AddPropertiesByTemplate(template.BoolProperties, item);
+            await DataContext.SaveChangesAsync();
+            transaction.Commit();
+
+            return Ok(new CreateProductResponse
             {
-                Id = item.Id
+                Id = item.Id,
+                PropertyTemplate = Extensions.CreatePropertyTemplateDto(template)
             });
         }
 
         [HttpPost("add-image")]
         public async Task<ActionResult> AddImage(ImageDto model)
         {
-            var user = "my user";
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ReferenceKey);
             if (!isProductExist)
             {
@@ -93,37 +137,10 @@ namespace Shop.Server.Controllers.Admin
             DataContext.ProductImages.Add(new ProductImage
             {
                 ProductId = model.ReferenceKey,
-                Image = image
+                Image = image,
+                IsTitle = model.IsTitle
             });
             await DataContext.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.String}")]
-        public async Task<ActionResult> AddPropertyString(PropertyDto<string> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.Number}")]
-        public async Task<ActionResult> AddPropertyInt(PropertyDto<int> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.Bool}")]
-        public async Task<ActionResult> AddPropertyBool(PropertyDto<bool> model)
-        {
-            await AddProperty(model);
-            return Ok();
-        }
-
-        [HttpPost($"add-property/{PropertyTypes.Date}")]
-        public async Task<ActionResult> AddPropertyDate(PropertyDto<DateTime> model)
-        {
-            await AddProperty(model);
             return Ok();
         }
 
@@ -135,30 +152,22 @@ namespace Shop.Server.Controllers.Admin
         }
 
         [HttpPut($"edit-property/{PropertyTypes.Number}/" + "{id:int}")]
-        public async Task<ActionResult> EditPropertyInt(int id, PropertyDto<int> model)
+        public async Task<ActionResult> EditPropertyInt(int id, PropertyDto<decimal> model)
         {
             await EditProperty(id, model);
             return Ok();
         }
 
-        [HttpPut($"edit-property/{PropertyTypes.Bool}/"+"{id:int}")]
+        [HttpPut($"edit-property/{PropertyTypes.Bool}/" + "{id:int}")]
         public async Task<ActionResult> EditPropertyBool(int id, PropertyDto<bool> model)
         {
             await EditProperty(id, model);
             return Ok();
         }
 
-        [HttpPut($"edit-property/{PropertyTypes.Date}/"+"{id:int}")]
-        public async Task<ActionResult> EditPropertyDate(int id, PropertyDto<DateTime> model)
-        {
-            await EditProperty(id, model);
-            return Ok();
-        }
-
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Edit(int id, CreateProductDto model)
+        public async Task<ActionResult> Edit(int id, ProductDto model)
         {
-            var user = "my user";
             if (id != model.Id)
             {
                 return BadRequest();
@@ -170,12 +179,13 @@ namespace Shop.Server.Controllers.Admin
             }
             item.Name = model.Name;
             item.Code = model.Code;
-            item.TypeId = model.TypeId;
-            item.BrandId = model.BrandId;
+            item.TypeId = model.Type.Id;
+            item.BrandId = model.Brand.Id;
+            item.DiscountedPrice = model.DiscountedPrice;
+            item.Description = model.Description;
+            item.Count = model.Count;
             item.Price = model.Price;
-            item.Currency = model.Currency;
             item.UpdatedAt = DateTime.UtcNow;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
             return Ok();
         }
@@ -188,28 +198,16 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("not reference");
             }
-            var isReference = await DataContext.ProductImages.AnyAsync(x => x.ImageId == imageId && x.Id != item.Id);
-            if (!isReference)
-            {
-                await DataContext.Images.Where(x => x.Id == imageId).ExecuteDeleteAsync();
-            }
-            else
-            {
-                DataContext.ProductImages.Remove(item);
-                await DataContext.SaveChangesAsync();
-            }
-            return Ok();
-        }
-
-        [HttpDelete("remove-property/{id:int}/property/{propertyId:int}/type/{type}")]
-        public async Task<ActionResult> DeleteProperty(int id, int propertyId, string type)
-        {
-            var result = await GetPropertyListByType(type, DataContext).AnyAsync(x => x.Id == propertyId && x.ProductId == id);
-            if (!result)
-            {
-                throw new ConflictException("not reference");
-            }
-            await GetPropertyListByType(type, DataContext).Where(x => x.Id == propertyId).ExecuteDeleteAsync();
+            //var isReference = await DataContext.ProductImages.AnyAsync(x => x.ImageId == imageId && x.Id != item.Id);
+            //if (!isReference)
+            //{
+            await DataContext.Images.Where(x => x.Id == imageId).ExecuteDeleteAsync();
+            //}
+            //else
+            //{
+            //DataContext.ProductImages.Remove(item);
+            await DataContext.SaveChangesAsync();
+            //}
             return Ok();
         }
 
@@ -220,34 +218,18 @@ namespace Shop.Server.Controllers.Admin
                 case PropertyTypes.String:
                     return dataContext.StringProperties;
                 case PropertyTypes.Number:
-                    return dataContext.IntProperties;
+                    return dataContext.DecimalProperties;
                 case PropertyTypes.Bool:
                     return dataContext.BoolProperties;
-                case PropertyTypes.Date:
-                    return dataContext.DateProperties;
                 default:
                     throw new ConflictException("not reference");
             }
         }
 
-        private Image CreateImage(ImageDto model, string user)
+        private async Task AddProperty<T>(Property<T> model, int productId)
         {
-            return new Image
-            {
-                FileName = model.FileName,//todo fix(in category and product same func)
-                Name = model.Name,
-                FileSize = model.FileSize,
-                MimeType = model.MimeType,
-                Body = Convert.FromBase64String(model.Body),
-                SmallBody = string.IsNullOrEmpty(model.SmallBody) ? null : Convert.FromBase64String(model.SmallBody),
-                CreatedByUser = user,
-                UpdatedByUser = user,
-            };
-        }
-
-        private async Task AddProperty<T>(PropertyDto<T> model)
-        {
-            var user = "user";
+            model.Id = 0;
+            model.ProductId = productId;
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ProductId);
             if (!isProductExist)
             {
@@ -259,26 +241,31 @@ namespace Shop.Server.Controllers.Admin
             {
                 throw new ConflictException("property already exist");
             }
-            var newProperty = new Property<T>
-            {
-                ProductId = model.ProductId,
-                IsPrimary = model.IsPrimary,
-                Name = model.Name,
-                Code = model.Code,
-                IsTitle = model.IsTitle,
-                Description = model.Description,
-                Suffix = model.Suffix,
-                Value = model.Value,
-                CreatedByUser = user,
-                UpdatedByUser = user
-            };
-            DataContext.Set<Property<T>>().Add(newProperty);
+            DataContext.Set<Property<T>>().Add(model);
             await DataContext.SaveChangesAsync();
+        }
+
+        private void AddPropertiesByTemplate<T>(IEnumerable<Property<T>> models, Product product)
+        {
+            foreach (var model in models)
+            {
+                var property = new Property<T>
+                {
+                    ProductId = product.Id,
+                    IsPrimary = model.IsPrimary,
+                    Name = model.Name,
+                    Code = model.Code,
+                    IsTitle = model.IsTitle,
+                    Description = model.Description,
+                    Suffix = model.Suffix,
+                    Value = model.Value,
+                };
+                DataContext.Set<Property<T>>().Add(property);
+            }
         }
 
         private async Task EditProperty<T>(int id, PropertyDto<T> model)
         {
-            var user = "my user";
             var isProductExist = await DataContext.Products.AnyAsync(x => x.Id == model.ProductId);
             if (!isProductExist)
             {
@@ -297,8 +284,6 @@ namespace Shop.Server.Controllers.Admin
             item.Description = model.Description;
             item.Suffix = model.Suffix;
             item.Value = model.Value;
-            item.CreatedByUser = user;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
         }
     }

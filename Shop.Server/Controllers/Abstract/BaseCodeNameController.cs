@@ -43,13 +43,10 @@ namespace Shop.Server.Controllers.Abstract
         [HttpPost()]
         public async Task<ActionResult> Create(CodeNameDto model)
         {
-            var user = "my user";
             var item = new T
             {
                 Name = model.Name,
                 Code = model.Code,
-                CreatedByUser = user,
-                UpdatedByUser = user
             };
             DataContext.Set<T>().Add(item);
             await DataContext.SaveChangesAsync();
@@ -62,7 +59,6 @@ namespace Shop.Server.Controllers.Abstract
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Edit(int id, CodeNameDto model)
         {
-            var user = "my user";
             if (id != model.Id)
             {
                 return BadRequest();
@@ -75,7 +71,6 @@ namespace Shop.Server.Controllers.Abstract
             item.Name = model.Name;
             item.Code = model.Code;
             item.UpdatedAt = DateTime.UtcNow;
-            item.UpdatedByUser = user;
             await DataContext.SaveChangesAsync();
             return Ok();
         }

@@ -1,0 +1,20 @@
+<ng-container *ngFor="let group of groups">
+  <div class="inputs-wrapper">
+    <div class="template-group-container">
+      <h4>{{group.name}}</h4>
+    </div>
+    <div *ngFor="let property of group.properties">
+      <div class="property-item">
+        <p>{{property.name}}:</p>
+      </div>
+      <div class="property-item">
+        <p *ngIf="property.value === true || property.value === false; else defaultValue">
+          {{property.value === true ? lang.boolProperties.yes : lang.boolProperties.no}}
+        </p>
+        <ng-template #defaultValue>
+          <p>{{property.value}}</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-container>

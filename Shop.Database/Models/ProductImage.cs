@@ -14,5 +14,7 @@ namespace Shop.Database.Models
 
         [ForeignKey(nameof(ImageId))]
         public Image Image { get; set; }
+
+        public bool IsTitle { get; set; } 
     }
 }

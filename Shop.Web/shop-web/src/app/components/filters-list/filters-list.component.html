@@ -1,0 +1,109 @@
+<form
+  *ngIf="filterForm"
+  [formGroup]="filterForm"
+  class="flex flex-column gap-4 overflow-y-auto form"
+>
+  <div>
+    <label class="block mb-2">Brands</label>
+    <div
+      *ngFor="let brand of filters?.brands"
+      class="flex items-center gap-2 mb-1"
+    >
+      <p-checkbox
+        [inputId]="'brand-' + brand.id"
+        [value]="brand.id"
+        [binary]="false"
+        formControlName="brands"
+      ></p-checkbox>
+      <label [for]="'brand-' + brand.id">{{ brand.name }}</label>
+    </div>
+  </div>
+
+  <div>
+    <label class="block mb-2">Types</label>
+    <div
+      *ngFor="let type of filters?.types"
+      class="flex items-center gap-2 mb-1"
+    >
+      <p-checkbox
+        [inputId]="'type-' + type.id"
+        [value]="type.id"
+        [binary]="false"
+        formControlName="types"
+      ></p-checkbox>
+      <label [for]="'type-' + type.id">{{ type.name }}</label>
+    </div>
+  </div>
+
+  <div>
+    <div class="flex items-center gap-2 mb-4 flex-column">
+      <label>Price:</label>
+      <div class="flex justify-content-between mr-2">
+        <input
+          pInputText
+          type="number"
+          [min]="filters?.minPrice"
+          [max]="filters?.maxPrice"
+          [value]="rangeControl.value[0]"
+          (input)="onPriceInputChange($event, 0)"
+          class="px-2 py-1 w-20"
+        />
+        <span>-</span>
+        <input
+          pInputText
+          type="number"
+          [min]="filters?.minPrice"
+          [max]="filters?.maxPrice"
+          [value]="rangeControl.value[1]"
+          (input)="onPriceInputChange($event, 1)"
+          class="px-2 py-1 w-20"
+        />
+      </div>
+    </div>
+    <p-slider
+      [formControl]="rangeControl"
+      [range]="true"
+      [min]="filters?.minPrice"
+      [max]="filters?.maxPrice"
+      styleClass="w-11 mx-auto"
+    ></p-slider>
+  </div>
+
+  <div formArrayName="properties" class="flex flex-column gap-4">
+    <div
+      *ngFor="let propCtrl of properties.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <label class="block mb-2">{{ propCtrl.get("name")?.value }}</label>
+
+      <div
+        *ngFor="let option of getPropertyOptions(i)"
+        class="flex items-center gap-2 mb-1"
+      >
+        <p-checkbox
+          [inputId]="'prop-' + i + '-' + option.value"
+          [value]="option.value"
+          [binary]="false"
+          formControlName="values"
+        ></p-checkbox>
+        <label [for]="'prop-' + i + '-' + option.value">{{
+          option.label
+        }}</label>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="buttons flex flex-column mb-4 gap-4">
+  <p-button
+    (onClick)="applyFilters()"
+    label="Apply"
+    styleClass="w-full"
+  ></p-button>
+  <p-button
+    (onClick)="resetFilters()"
+    label="Reset"
+    styleClass="border-2 border-primary text-white w-full"
+    [text]="true"
+  ></p-button>
+</div>

@@ -1,0 +1,17 @@
+.d-grid {
+  display: grid;
+}
+
+.editable-list-grid {
+  grid-template-columns: repeat(2, minmax(100px, 400px)) repeat(2, 50px);
+}
+
+.view-list-grid {
+  grid-template-columns: repeat(2, minmax(100px, 400px));
+}
+
+:host {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

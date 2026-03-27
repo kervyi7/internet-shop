@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { IProperty } from '../../../models/interfaces/property';
-import { AdminProductDataService } from '../../../services/data/admin-product-data.service';
+import { AdminProductDataService } from '../../../services/data/admin/admin-product-data.service';
 import { PropertyTypes } from '../../../models/enums/property-types';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageTypes } from '../../../models/enums/message-types';
-import { NotificationService } from '../../../services/notification.service';
 import { IDialogData } from '../../../models/interfaces/dialog-data';
 import { Util } from '../../../common/util';
 import { BaseCompleteComponent } from '../../base/base-complete.component';
+import { Property } from '../../../models/classes/property';
+import { AdminCategoryDataService } from '../../../services/data/admin/admin-category-data.service';
+import { IBaseModel } from '../../../models/interfaces/base/base-model';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'shop-property-dialog',
@@ -15,45 +18,36 @@ import { BaseCompleteComponent } from '../../base/base-complete.component';
   styleUrls: ['./property-dialog.component.scss']
 })
 export class PropertyDialogComponent extends BaseCompleteComponent implements OnInit {
-  private data: IDialogData;
+  private _data: IDialogData;
   public selectedType = PropertyTypes.string;
   public propertyTypes = PropertyTypes;
   public property: IProperty;
-  public editedProperty: IProperty;
+  public editedProperty: Property = new Property();
   public isDisabled = false;
 
   constructor(private _adminProductService: AdminProductDataService,
+    private _adminCategoryService: AdminCategoryDataService,
     private _ref: DynamicDialogRef,
-    private _refConfig: DynamicDialogConfig,
-    private _notificationService: NotificationService) {
+    private _refConfig: DynamicDialogConfig) {
     super();
   }
 
   public ngOnInit(): void {
-    this.data = this._refConfig.data;
-    if (!this.data.id) {
+    debugger
+    this._data = this._refConfig.data;
+    if (this._data.items) {
       this.isDisabled = true;
-      this.property = this._refConfig.data.items;
+      this.property = this._data.items;
       this.editedProperty = structuredClone(this.property);
-      this.selectedType = Util.getPropertyType(this.editedProperty);
-    } else {
-      this.editedProperty = {//create class
-        id: 0,
-        productId: 0,
-        isPrimary: false,
-        isTitle: false,
-        description: '',
-        value: '',
-        code: '',
-        name: '',
-        suffix: ''
-      }
-    }
+      this.selectedType = this.editedProperty.type;
+    };
   }
 
   public save(): void {
     const property: IProperty = {
-      productId: this.editedProperty.productId || this._refConfig.data.id,
+      type: this.selectedType,
+      productId: this.editedProperty.productId || this._refConfig.data.productId,
+      propertyTemplateId: this.editedProperty.propertyTemplateId || this._refConfig.data.templateId,
       isPrimary: this.editedProperty.isPrimary,
       isTitle: this.editedProperty.isTitle,
       description: this.editedProperty.description,
@@ -67,7 +61,7 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
       if (this.isBoolProperty() && this.isValueEmpty(property.value)) {
         property.value = false;
       } else {
-        this._notificationService.showMessage(MessageTypes.error, "Error", "Invalid data");
+        this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.invalidData);
         return;
       }
     }
@@ -76,21 +70,38 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
         this._ref.close();
         return;
       }
-      this._adminProductService.editProperty(property.id, property).subscribe({
-        error: err => this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected"),//todo create message enum
-        complete: () => {
-          this._notificationService.showMessage(MessageTypes.success, "Success", "Changes were saved")
-          this._ref.close();
-        }
-      });
+      if (!this.property.productId) {
+        this._adminCategoryService.editProperty(property.id, property)
+          .pipe(takeUntil(this.__unsubscribe$))
+          .subscribe({
+            error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+            complete: () => {
+              this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved);
+              this._ref.close(property);
+            }
+          });
+      } else {
+        this._adminProductService.editProperty(property.id, property)
+          .pipe(takeUntil(this.__unsubscribe$))
+          .subscribe({
+            error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+            complete: () => {
+              this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved);
+              this._ref.close(property);
+            }
+          });
+      }
     } else {
-      this._adminProductService.addProperty(property).subscribe({
-        error: err => this._notificationService.showMessage(MessageTypes.error, "Error", "Changes were not detected"),
-        complete: () => {
-          this._notificationService.showMessage(MessageTypes.success, "Success", "Changes were saved")
-          this._ref.close();
-        }
-      });
+      this._adminCategoryService.addProperty(property)
+        .pipe(takeUntil(this.__unsubscribe$))
+        .subscribe({
+          error: err => this.notificationService.showMessage(MessageTypes.error, this.lang.notifications.error, this.lang.notifications.notChanged),
+          next: (data: IBaseModel) => {
+            this.notificationService.showMessage(MessageTypes.success, this.lang.notifications.success, this.lang.notifications.changesSaved);
+            property.id = data.id;
+            this._ref.close(property);
+          }
+        });
     }
   }
 
@@ -99,11 +110,11 @@ export class PropertyDialogComponent extends BaseCompleteComponent implements On
   }
 
   private isValueEmpty(value: propertyValue): boolean {
-    return value == '';
+    return value == '' || value == undefined;
   }
 
   private isDataValid(editedString: IProperty): boolean {
-    const isRequiredFilled = editedString.name != '' && editedString.code != '' && editedString.value !== '';
+    const isRequiredFilled = editedString.name != '' && editedString.code != '' && editedString.value !== '' && editedString.value !== undefined;
     return isRequiredFilled;
   }
 }

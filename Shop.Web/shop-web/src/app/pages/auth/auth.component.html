@@ -1,0 +1,116 @@
+<div
+  class="flex flex-column lg:flex-row m-auto justify-content-between align-items-center lg:h-screen gap-4 p-3 lg:p-1 lg:w-9"
+>
+  <div class="lg:w-5 flex flex-column gap-3">
+    <p-button [text]="true" (onClick)="goToHome()">
+      <span class="material-icons-outline mr-2">{{ mIcons.arrow_back }}</span>
+      <span>Back to shopping</span>
+    </p-button>
+    <img src="assets/img/logo.svg" />
+    <h2 class="text-4xl my-5 text-center">
+      {{ isSignUp ? "Create your account" : "Welcome back" }}
+    </h2>
+    <p class="text-gray-600 text-lg max-w-md m-0">
+      {{
+        isSignUp
+          ? "Sign up to enjoy exclusive features like order tracking, saved favorites, and faster checkout with stored shipping details."
+          : "Log in to access your account, track your orders, manage favorites, and enjoy faster checkout with saved delivery info."
+      }}
+    </p>
+  </div>
+
+  <div class="form-container p-3">
+    <div class="flex align-items-center">
+      <p-button [text]="true" [disabled]="!isSignUp" (onClick)="toggleAuth()">
+        <span>{{ lang.headers.signIn }}</span>
+      </p-button>
+      <span>/</span>
+      <p-button [text]="true" [disabled]="isSignUp" (onClick)="toggleAuth()">
+        <span>Sign Up</span>
+      </p-button>
+    </div>
+    <div class="error text-center w-full" *ngIf="formError">
+      {{ formError }}
+    </div>
+    <form
+      (ngSubmit)="submit()"
+      [formGroup]="userForm"
+      novalidate
+      class="flex flex-column gap-3 align-items-center"
+    >
+      <input
+        class="input"
+        type="text"
+        pInputText
+        [placeholder]="lang.placeholders.login"
+        formControlName="userName"
+        [maxlength]="20"
+      />
+      <div class="error" *ngIf="getErrorMessage('userName') as error">
+        {{ error }}
+      </div>
+
+      <ng-container *ngIf="isSignUp">
+        <input
+          class="input"
+          type="text"
+          pInputText
+          placeholder="First name"
+          formControlName="firstName"
+          [maxlength]="50"
+        />
+        <div class="error" *ngIf="getErrorMessage('firstName') as error">
+          {{ error }}
+        </div>
+        <input
+          class="input"
+          type="text"
+          pInputText
+          placeholder="Last name"
+          formControlName="lastName"
+          [maxlength]="50"
+        />
+        <div class="error" *ngIf="getErrorMessage('lastName') as error">
+          {{ error }}
+        </div>
+        <input
+          class="input"
+          type="text"
+          pInputText
+          placeholder="Email"
+          formControlName="email"
+        />
+        <div class="error" *ngIf="getErrorMessage('email') as error">
+          {{ error }}
+        </div>
+      </ng-container>
+
+      <input
+        class="input"
+        type="password"
+        pInputText
+        [placeholder]="lang.placeholders.password"
+        [maxlength]="20"
+        formControlName="password"
+      />
+      <div class="error" *ngIf="getErrorMessage('password') as error">
+        {{ error }}
+      </div>
+      <input
+        *ngIf="isSignUp"
+        class="input"
+        type="password"
+        pInputText
+        [placeholder]="'Confirm ' + lang.placeholders.password"
+        formControlName="confirmPassword"
+        [maxlength]="20"
+      />
+      <div class="error" *ngIf="getErrorMessage('confirmPassword') as error">
+        {{ error }}
+      </div>
+      <p-button type="submit">{{
+        isSignUp ? "Sign Up" : lang.buttons.login
+      }}</p-button>
+    </form>
+  </div>
+</div>

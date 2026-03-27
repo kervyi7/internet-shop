@@ -1,0 +1,48 @@
+<div *ngIf="cart$ | async as cart" class="mx-auto w-11 lg:w-9">
+  <div
+    *ngIf="cart.length; else emptyCart"
+    class="flex justify-content-between gap-6 flex-column lg:flex-row"
+  >
+    <div class="w-full">
+      <div class="controls flex align-items-center gap-1 lg:gap-3">
+        <p-checkbox
+          label="Select all"
+          [binary]="true"
+          [ngModel]="selectAll"
+          (ngModelChange)="toggleSelectAll()"
+        >
+        </p-checkbox>
+        <p-button
+          label="Remove all"
+          icon="pi pi-trash"
+          (click)="clearCart()"
+          [text]="true"
+        />
+      </div>
+      <shop-cart-item
+        *ngFor="let item of cart"
+        [item]="item"
+        [isCart]="true"
+        (quantityChange)="updateQuantity(item)"
+        (remove)="removeItem(item.productId)"
+        (toggleSelect)="toggleSelection(item)"
+      >
+      </shop-cart-item>
+    </div>
+
+    <div>
+      <shop-order-summary
+        [itemsAmount]="getSelectedTotal(cart)"
+        [isCart]="true"
+        [isDisabled]="isSelectedItems(cart)"
+      ></shop-order-summary>
+    </div>
+  </div>
+</div>
+
+<shop-product-sections
+  [sections]="[SectionType.New, SectionType.Discounted]"
+></shop-product-sections>
+<ng-template #emptyCart>
+  <h2 class="text-center">Your cart is empty</h2>
+</ng-template>

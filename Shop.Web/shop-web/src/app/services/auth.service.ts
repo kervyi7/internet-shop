@@ -1,9 +1,10 @@
-import { Injectable } from "@angular/core";
-import { IToken } from "../models/interfaces/token";
-import { Constants } from "../common/constants";
+import { Injectable } from '@angular/core';
+import { IToken } from '../models/interfaces/token';
+import { Constants } from '../common/constants';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   public getToken(): string | null {
@@ -27,5 +28,32 @@ export class AuthService {
   public isLoggedIn(): boolean {
     const token = this.getToken();
     return Boolean(token);
+  }
+
+  public isAdmin(): boolean {
+    return this.getRole() === 'Administrator';
+  }
+
+  public getUserId(): string {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+    const decoded: any = jwtDecode(token);
+    return decoded[
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+    ];
+  }
+
+  private getRole(): string | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+
+    const decoded: any = jwtDecode(token);
+    return decoded[
+      'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+    ];
   }
 }

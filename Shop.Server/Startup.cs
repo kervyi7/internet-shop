@@ -14,6 +14,7 @@ using Shop.Database;
 using Shop.Database.Identity;
 using Shop.Server.Auth;
 using Shop.Server.Common;
+using Shop.Server.Middlewares;
 using System;
 using System.IO.Compression;
 using System.Net;
@@ -80,7 +81,7 @@ namespace Shop.Server
                     dataContext.MigrateAndSeed();
                 }
             }
-            //app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 #if DEBUG
             app.UseCors(AppConstants.ClientCorsPolicy);
 #endif
@@ -95,22 +96,6 @@ namespace Shop.Server
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(MapEndpoints);
-        }
-
-        private void MapEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            endpoints.MapControllers();
-            MapNotSupportedEndpoints(endpoints, "/api");
-            endpoints.MapFallbackToController("Index", "Home");
-        }
-
-        private void MapNotSupportedEndpoints(IEndpointRouteBuilder endpoints, string query)
-        {
-            endpoints.Map(query + "/{**x}", async context =>
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                await context.Response.WriteAsync(nameof(HttpStatusCode.NotFound));
-            });
         }
 
         private void AddIdentityCore(IServiceCollection services)
@@ -132,42 +117,51 @@ namespace Shop.Server
                 .AddDefaultTokenProviders();
         }
 
+        // Implementacja konfiguracji JWT
         private void AddAuthentication(IServiceCollection services)
         {
+            // Ustawienie domyślnego schematu autoryzacji jako JWT Bearer
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = null;
-            }).AddJwtBearer(options =>
+            })
+                // Konfiguracja sposobu weryfikacji tokenów JWT
+                .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = false;  // wyłączenie wymogu HTTPS w środowisku testowym
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateIssuer = true,
-                    ValidIssuer = AuthOptions.Issuer,
-                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero, // brak tolerancji czasowej
+                    ValidateIssuer = true, // Weryfikacja, czy token został wydany przez zaufanego wystawcę.
+                    ValidIssuer = AuthOptions.Issuer, // Wartość Issuer – nazwa lub identyfikator wystawcy tokenu (np. nazwa aplikacji).
+                    ValidateAudience = false, // Brak weryfikacji odbiorcy tokenu (Audience), gdy aplikacja nie wymaga tego pola.
                     ValidAudience = AuthOptions.Audience,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true, // Sprawdzenie, czy token nie wygasł (czy nadal jest ważny).
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(), // Klucz kryptograficzny używany do weryfikacji podpisu tokenu.
+                    ValidateIssuerSigningKey = true,  // Wymuszenie sprawdzania poprawności podpisu JWT.
                 };
+                // Obsługa zdarzeń związanych z tokenem JWT
                 options.Events = new JwtBearerEvents
                 {
+                    // Reakcja na błędny lub przeterminowany token
                     OnAuthenticationFailed = context =>
                     {
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                         {
+                            // Dodanie informacji w nagłówkach odpowiedzi o wygaśnięciu tokenu.
                             context.Response.Headers.Append("Access-Control-Expose-Headers", "Token-Expired");
                             context.Response.Headers.Append("Token-Expired", "true");
                         }
                         return Task.CompletedTask;
                     },
+                    // Obsługa odbioru tokenu z parametrów zapytania
                     OnMessageReceived = context =>
                     {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
+                        var accessToken = context.Request.Query["access_token"]; // Próba odczytania tokenu z parametrów zapytania (query string).
+                        var path = context.HttpContext.Request.Path; // Ścieżka żądania – wykorzystywana np. przez SignalR (notificationhub).
+                        // Jeśli token istnieje i dotyczy określonego endpointu, przypisz go do kontekstu.
                         if (!string.IsNullOrEmpty(accessToken) &&
                             path.StartsWithSegments("/notificationhub"))
                         {
@@ -176,6 +170,22 @@ namespace Shop.Server
                         return Task.CompletedTask;
                     }
                 };
+            });
+        }
+
+        private void MapEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapControllers();
+            MapNotSupportedEndpoints(endpoints, "/api");
+            endpoints.MapFallbackToController("Index", "Home");
+        }
+
+        private void MapNotSupportedEndpoints(IEndpointRouteBuilder endpoints, string query)
+        {
+            endpoints.Map(query + "/{**x}", async context =>
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                await context.Response.WriteAsync(nameof(HttpStatusCode.NotFound));
             });
         }
 

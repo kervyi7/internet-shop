@@ -1,0 +1,7 @@
+<form (ngSubmit)="submit()" [formGroup]="codeNameForm" novalidate class="input-container">
+  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.name}}"
+    [formControl]="codeNameForm.controls.name" />
+  <input class="input" type="text" pInputText placeholder="{{lang.placeholders.code}}"
+    [formControl]="codeNameForm.controls.code" />
+  <p-button type="submit" label="{{lang.buttons.add}}"></p-button>
+</form>

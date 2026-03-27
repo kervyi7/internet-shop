@@ -1,0 +1,27 @@
+:host {
+  width: min-content;
+}
+.main-block {
+  box-shadow: 0 0 8px 0px #7f7f7f;
+  border-radius: 5px;
+  min-width: 280px;
+  max-width: 350px;
+
+  h3 {
+    margin-top: 0;
+  }
+
+  .summary {
+    height: 250px;
+  }
+}
+
+.p-button {
+  width: 100%;
+}
+
+.continue-button {
+  ::ng-deep .p-button {
+    color: var(--main-text);
+  }
+}

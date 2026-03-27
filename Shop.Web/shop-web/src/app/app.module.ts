@@ -7,6 +7,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './services/app-config.service';
 import { HttpClientInterceptor } from './services/http-client.interceptor';
+import { AuthModule } from './pages/auth/auth.module';
 
 export function init(appConfigService: AppConfigService): Function {
   return (): Promise<void> => appConfigService.load();
@@ -20,7 +21,8 @@ export function init(appConfigService: AppConfigService): Function {
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    AuthModule  
   ],
   providers: [MessageService,
     {
